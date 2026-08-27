@@ -1,0 +1,11 @@
+# Il file grezzo e' binario: nessuna conversione di fine riga, mai.
+# Git lo riconoscerebbe da solo, ma qui e' scritto — un editor di testo lo ha gia'
+# rovinato una volta, riscrivendolo in UTF-8 e portandolo da 45 a 84 MB.
+*.xlsx binary
+*.xls  binary
+
+# Testo, normalizzato a LF nel repo.
+*.py   text eol=lf
+*.sql  text eol=lf
+*.md   text eol=lf
+*.csv  text eol=lf
