@@ -1,0 +1,178 @@
+==============================================================================
+AUDIT — si cercano errori e bias, non conferme
+==============================================================================
+
+──────────────────────────────────────────────────────────────────────────────
+A. Il 22,8% di righe senza cliente puo' ribaltare il tasso di ritorno?
+──────────────────────────────────────────────────────────────────────────────
+cerca: un limite dichiarato sul fatturato ma MAI applicato al 72% che torna
+
+  clienti identificati                        5,852
+  di cui tornano                              4,234   72.4%
+  fatture SENZA cliente (DATI-SPORCHI §2)     8,752
+
+  Il 72,3% e' calcolato solo su chi ha un identificativo. Chi non ce l'ha e'
+  fuori dal conto — e non e' un pezzo neutro: se quelle fatture fossero clienti
+  occasionali, sarebbero tutti «uno e basta».
+
+  I due estremi, per capire quanto e' larga l'incertezza:
+    se ogni fattura anonima fosse un cliente diverso e mai piu' tornato
+      clienti = 14,604   tornano = 29.0%
+    se le fatture anonime fossero degli stessi clienti gia' contati
+      clienti = 5,852   tornano = 72.4%
+
+[ok] Il tasso di ritorno sta fra il 29% e il 72% a seconda di chi sono gli anonimi.
+    RISULTATI.md lo dice, e dice che il 72,3% e' sui clienti identificati.
+
+──────────────────────────────────────────────────────────────────────────────
+B. L'appaiamento lascia dentro uno squilibrio?
+──────────────────────────────────────────────────────────────────────────────
+cerca: chi torna che, DENTRO il suo decile, aveva comunque il primo ordine piu' grosso
+
+  decile   primo ordine medio: chi torna / chi non torna    scarto
+     0            74 /        68       +8.9%
+     1           127 /       128       -1.1%
+     2           168 /       168       +0.3%
+     3           211 /       212       -0.8%
+     4           262 /       259       +1.2%
+     5           308 /       309       -0.3%
+     6           360 /       361       -0.3%
+     7           444 /       445       -0.4%
+     8           609 /       608       +0.1%
+     9         1,510 /     1,701      -11.2%
+
+  squilibrio medio residuo dentro i decili: -0.4%
+
+  Dentro lo stesso decile chi torna parte comunque un po' piu' in alto. Il
+  decile e' una scatola larga, e l'appaiamento non la chiude del tutto.
+
+  Prova diretta: la differenza calcolata sulla spesa DOPO il primo ordine, che
+  toglie di mezzo il primo acquisto invece di controllarlo.
+
+    differenza appaiata sulla spesa totale         1,374
+    differenza appaiata sulla spesa dopo il 1o     1,391
+    quanto e' dovuto al primo ordine residuo         -16   (-1.2%)
+
+[ok] Il primo ordine residuo pesa il -1.2% della differenza appaiata.
+    Sotto il 5% e' rumore; sopra, la cifra da pubblicare e' quella
+    sulla spesa dopo il primo ordine (1,391), non 1,374.
+
+──────────────────────────────────────────────────────────────────────────────
+C. L'intervallo della differenza appaiata e' onesto?
+──────────────────────────────────────────────────────────────────────────────
+cerca: un bootstrap che ricampiona gli strati invece dei clienti, e sbaglia la larghezza
+
+  stima                                     1,374
+  (1) ricampionando gli strati    [   1,129,    1,683]   ampiezza     554
+  (2) ricampionando i clienti     [   1,186,    1,602]   ampiezza     416
+
+  Sono due domande diverse. (1) chiede quanto ballerebbe il risultato con un
+  altro insieme di strati; (2) quanto ballerebbe con altri clienti dentro gli
+  stessi strati. La seconda e' quella giusta qui: gli strati non sono un
+  campione di niente, sono una griglia decisa da noi.
+
+[ok] L'intervallo pubblicato e' il (1), largo 554; il (2) e' largo 416.
+    Si pubblica il piu' largo, e RISULTATI.md dichiara quale dei due e'.
+
+──────────────────────────────────────────────────────────────────────────────
+D. La stagionalita' regge se le celle non contano tutte uguale?
+──────────────────────────────────────────────────────────────────────────────
+cerca: un R^2 dominato da coorti piccole e rumorose
+
+  celle: 253   livelli di 'mese di vita': 22   livelli di 'mese del calendario': 12
+
+                              non pesato   pesato per dimensione coorte
+  mese di vita del cliente        16.6%      15.6%
+  mese del calendario             34.8%      33.5%
+
+  Nota sui gradi di liberta': il 'mese di vita' ha PIU' livelli del calendario
+  (22 contro 12), quindi partiva avvantaggiato — piu' gruppi spiegano sempre
+  piu' varianza. Perde lo stesso. Se il confronto fosse stato al contrario
+  sarebbe stato un artefatto; cosi' la conclusione ne esce rafforzata.
+
+  Prova dentro ogni coorte: il dicembre di quella coorte sta sotto
+  la media dei suoi mesi vicini?
+    coorti in cui dicembre sta sotto i suoi vicini: 10 su 11
+
+[ok] Il calo di dicembre si vede in 10 coorti su 11: e' dentro le coorti,
+    non un effetto di composizione fra coorti diverse.
+
+  Limite che resta e va scritto: eta' + coorte = calendario, per costruzione.
+  Con due anni di dati le tre cose non si separano davvero. Quello che si puo'
+  dire — e che si dice — e' che il calendario spiega piu' dell'eta'. Non che
+  l'eta' non conti.
+
+──────────────────────────────────────────────────────────────────────────────
+E. I percentili del tempo al secondo ordine sono troncati?
+──────────────────────────────────────────────────────────────────────────────
+cerca: una frase che dice 'di chi tornera'' quando i dati dicono 'entro l'anno'
+
+  massimo osservato: 365 giorni — e la finestra e' 365.
+  clienti al 2o ordine fra 300 e 365 giorni: 109
+
+  La distribuzione e' tagliata a 365 per costruzione: chi ha fatto il secondo
+  ordine al giorno 400 qui risulta «non tornato». Quindi ogni percentuale e'
+  condizionata a «torna ENTRO L'ANNO», non a «torna».
+
+[ok] Le percentuali sono condizionate a «torna entro l'anno».
+    RISULTATI.md le introduce cosi', e spiega il denominatore.
+
+──────────────────────────────────────────────────────────────────────────────
+F. «Grossista di articoli da regalo» e' un fatto o un'impressione?
+──────────────────────────────────────────────────────────────────────────────
+cerca: un'interpretazione comoda appoggiata alla scheda del dataset invece che ai dati
+
+  valore mediano di un ordine             303
+  valore medio                            466
+  righe per ordine, mediana                15
+  pezzi per ordine, mediana               153
+  ordini sopra 500                      23.0%
+  ordini sotto 50                        6.2%
+
+[ok] Un ordine mediano ha 15 righe e 153 pezzi: compatibile con l'ingrosso, non
+    dimostrativo — il 6,2% degli ordini sta sotto 50.
+    RISULTATI.md tiene separati il fatto e la lettura.
+
+──────────────────────────────────────────────────────────────────────────────
+G. Il controllo con la geometrica e' una prova o un giro a vuoto?
+──────────────────────────────────────────────────────────────────────────────
+cerca: un modello tarato sugli stessi numeri che poi dice di prevedere
+
+  p stimato dai gradini 2..6:  0.7227
+  scarto max fra le sopravvivenze e la loro media: 1.09 punti
+
+  Il parametro p viene dalle stesse sopravvivenze che il modello poi riproduce:
+  la tabella «attesa contro osservata» NON e' una verifica indipendente, e'
+  un'altra scrittura dello stesso fatto. Quello che aggiunge e' che un modello
+  a UN parametro basta a ricostruire tutta la distribuzione — non che il
+  modello sia stato messo alla prova.
+
+[ok] La geometrica e' tarata sugli stessi numeri che poi riproduce.
+    RISULTATI.md la chiama per quello che e': una riscrittura, non una prova.
+
+──────────────────────────────────────────────────────────────────────────────
+H. La conclusione dipende dall'aver scelto 365 giorni?
+──────────────────────────────────────────────────────────────────────────────
+cerca: un risultato che si regge su una scelta arbitraria della finestra
+
+  finestra   clienti   chi torna   differenza appaiata
+    180 gg     4,001       58.4%                 895
+    270 gg     3,637       65.7%               1,134
+    365 gg     3,334       71.2%               1,374
+    450 gg     2,437       78.1%               1,581
+
+  La cifra cresce con la finestra, e deve: piu' tempo, piu' ordini. Non e' un
+  difetto — e' il motivo per cui la finestra va SEMPRE citata insieme al
+  numero. «1.374» da solo non vuol dire niente; «1.374 nel primo anno» si'.
+
+[ok] Il segno e l'ordine di grandezza non dipendono dalla finestra scelta.
+
+==============================================================================
+DA SISTEMARE: 0
+==============================================================================
+Nessuno.
+
+I controlli A, C, E, F e G non guardano solo i dati: leggono anche
+RISULTATI.md, e passano perche' il documento dice quello che i dati
+permettono di dire. Se un giorno quelle frasi vengono riscritte in modo
+piu' generoso, questo script torna rosso — e' il suo lavoro.

@@ -1,0 +1,281 @@
+
+============================================================================
+1. La matrice di retention
+============================================================================
+  Una cella dice: di cento clienti entrati nel mese X, quanti hanno ordinato
+  al mese X+n. Le celle che il calendario non ha ancora raggiunto restano
+  vuote, non a zero: `mesi_osservabili` conta solo i mesi FINITI, e dicembre
+  2011 e' lungo nove giorni.
+
+  coorti utili                          23
+  celle piene e osservate (n >= 1)     253
+  (la coorte di novembre 2011 non ha nemmeno un mese intero davanti:
+   esiste, ma non porta celle alla matrice)
+
+  coorte      n      0    1    2    3    4    5    6    7    8    9   10   11   12
+  2010-01   368    100   21   32   32   27   31   27   23   29   33   31   18   23
+  2010-02   375    100   23   23   29   25   20   19   29   26   28   11   13   15
+  2010-03   441    100   19   23   24   23   20   25   31   28   11   12   15   20
+  2010-04   294    100   19   19   16   18   22   28   27   11   11    7   14   14
+  2010-05   255    100   16   17   18   18   25   21   13    6    8   11   13   15
+  2010-06   267    100   18   19   21   23   28   13    9    8   11   10   14   15
+  2010-07   185    100   16   18   30   29   14   11   15   15   11   14   15   13
+  2010-08   163    100   20   29   33   17   12   10   13   14   13   13   12   15
+  2010-09   239    100   23   23   13    9   10   14   10   13   13   12   10   23
+  2010-10   375    100   26   15   13    9    8   13   14   11    9   11   13   19
+  2010-11   326    100   17   10   10    8    9   13   10    9    9   11   15   25
+  2010-12    76    100    9    5    9   12    7    5    9    5    3    9   20    .
+  2011-01    72    100   17   22   19   22   15   15   12   11   21   25    .    .
+  2011-02   125    100   16   16   18   22   16   16   15   15   18    .    .    .
+  2011-03   179    100   18   22   20   22   15   21   20   24    .    .    .    .
+  2011-04   106    100   25   20   20   18   24   18   25    .    .    .    .    .
+  2011-05   111    100   23   24   16   22   21   26    .    .    .    .    .    .
+  2011-06   108    100   23   21   27   20   28    .    .    .    .    .    .    .
+  2011-07   101    100   21   30   28   35    .    .    .    .    .    .    .    .
+  2011-08   107    100   26   30   26    .    .    .    .    .    .    .    .    .
+  2011-09   188    100   27   38    .    .    .    .    .    .    .    .    .    .
+  2011-10   221    100   32    .    .    .    .    .    .    .    .    .    .    .
+  2011-11   191    100    .    .    .    .    .    .    .    .    .    .    .    .
+     (valori in percentuale; il punto e' una cella non ancora osservabile)
+
+============================================================================
+2. La retention non e' una discesa: e' un calendario
+============================================================================
+  Prima di leggere la matrice come una curva di abbandono, conviene chiedersi
+  se scende per il motivo che sembra. Ogni cella sta a un mese di vita del
+  cliente E a un mese del calendario. Si guarda quale dei due la spiega.
+
+  il mese di vita del cliente (+1, +2, +3...)  spiega il  16.6%
+  il mese del calendario (gennaio, febbraio...) spiega il  34.8%
+  tutti e due insieme                           spiegano l'85.8%
+
+  Il calendario conta piu' del doppio dell'eta' del cliente.
+
+  media della retention per mese del calendario:
+    gen   11.3%  ###########   <- un anno solo (2011)
+    feb   12.0%  ############
+    mar   15.9%  ################
+    apr   15.4%  ###############
+    mag   18.4%  ##################
+    giu   17.3%  #################
+    lug   16.5%  ################
+    ago   15.6%  ################
+    set   19.6%  ####################
+    ott   21.7%  ######################
+    nov   25.0%  #########################
+    dic   13.8%  ##############   <- un anno solo (2010)
+
+  Novembre 25%, gennaio 11%, e il picco arriva PRIMA di Natale, non durante.
+  La lettura naturale e' che molti di questi clienti siano negozi che si
+  riforniscono in autunno: la stagione sarebbe del compratore, non del
+  venditore. I dati la sostengono — ordine mediano 303, con 15 righe e 153
+  pezzi — ma non la dimostrano. Il picco e' un fatto, il perche' e' una
+  lettura, e quello che segue non dipende dal perche'.
+
+  I due estremi sono anche i meno sostenuti: nella finestra dei dati c'e' un
+  dicembre solo e un gennaio solo. La forma regge sui mesi centrali, che hanno
+  due anni a testa; sui due estremi si dice la direzione, non la cifra.
+
+  Conseguenza pratica, ed e' la ragione per cui questa sezione viene prima
+  delle altre: due coorti non si confrontano se non hanno vissuto gli stessi
+  mesi. Chi entra a ottobre ha Natale davanti; chi entra a gennaio ha undici
+  mesi di attesa. Una classifica delle coorti per retention misurerebbe il mese
+  di ingresso, non la qualita' dei clienti.
+
+============================================================================
+3. Quanto scende davvero, a parita' di coorti
+============================================================================
+  Nella tabella per mese di vita, ogni riga e' fatta di coorti diverse: al
+  mese +12 arrivano solo le coorti vecchie. Se quelle fossero migliori, la
+  curva sembrerebbe piatta senza esserlo. Si rifa' il conto sulle coorti che
+  hanno tutti i dodici mesi, sempre le stesse in ogni riga.
+
+  coorti nel panel bilanciato: 11  (2010-01 -> 2010-11)
+
+    +1    19.8%  ####################
+    +2    20.7%  #####################
+    +3    21.5%  ######################
+    +4    18.6%  ###################
+    +5    18.2%  ##################
+    +6    17.6%  ##################
+    +7    17.4%  #################
+    +8    15.2%  ###############
+    +9    14.3%  ##############
+    +10   13.1%  #############
+    +11   13.6%  ##############
+    +12   17.9%  ##################
+
+  quanto cambia rispetto alla versione sbilanciata:
+    +1   sbilanciato  20.7%   bilanciato  19.8%   scarto -0.8
+    +6   sbilanciato  17.3%   bilanciato  17.6%   scarto +0.2
+    +12  sbilanciato  17.9%   bilanciato  17.9%   scarto +0.0
+
+  Lo scarto e' sotto il punto percentuale: il difetto c'era ma non mordeva. Si
+  usa comunque il panel bilanciato, perche' qui costa niente e altrove no.
+
+  La curva scende dal 20% al 13% e poi RISALE al 18% al dodicesimo mese. Non e'
+  un ritorno di fiamma: per una coorte del 2010, il mese +12 e' lo stesso mese
+  del calendario un anno dopo. E' la stagionalita' della sezione 2 che rientra
+  dalla finestra.
+
+============================================================================
+4. La finestra di osservazione, per la domanda sul valore
+============================================================================
+  ultimo giorno nei dati: 2011-12-09
+  finestra per cliente  : 365 giorni dal SUO primo ordine
+
+  Confrontare "quanto ha speso finora" fra un cliente entrato a gennaio 2010 e
+  uno entrato a ottobre 2011 non misura il cliente: misura quanto tempo ha
+  avuto. Si guardano i primi 365 giorni di ciascuno, e restano solo i
+  clienti che quei giorni li hanno avuti per intero.
+
+  Nota: questa selezione vale per il valore, non per la matrice. La matrice
+  gestisce lo stesso problema in un altro modo, lasciando vuote le celle non
+  osservate, e non ha bisogno di buttare via nessuno.
+
+  clienti in tutto                         5,852
+  meno le coorti 2009-12 e 2011-12           979
+  meno chi non ha 365 giorni davanti      1,539
+  clienti nell'analisi del valore          3,334
+  coorti coinvolte: 2010-01 -> 2010-12
+
+  Sono tutte coorti del 2010, e dopo la sezione 2 questo NON e' un dettaglio:
+  il gruppo non e' piu' un campione di tutti i clienti, e' un campione di chi
+  e' entrato nel 2010. Vale come confronto interno fra questi clienti, non come
+  ritratto della base.
+
+============================================================================
+5. Il funnel di riacquisto, dentro i 365 giorni
+============================================================================
+  gradino   clienti   quota   sopravvive dal gradino prima
+      1      3,334   100.0%
+      2      2,373    71.2%      71.2%
+      3      1,715    51.4%      72.3%
+      4      1,249    37.5%      72.8%
+      5        905    27.1%      72.5%
+      6        657    19.7%      72.6%
+      7        488    14.6%      74.3%
+      8        371    11.1%      76.0%
+
+  Sopravvivenza media sui primi sei gradini: 72.3%, e non si muove.
+  Questo contraddice il conto della Fase 2, dove il primo salto sembrava il piu'
+  duro (72% e poi 78%, 80%, 81%). Quel conto guardava tutta la vita di ogni
+  cliente: chi e' entrato nel 2010 aveva due anni per arrivare all'ottavo
+  ordine, chi e' entrato a settembre 2011 ne aveva tre mesi. La sopravvivenza
+  che saliva era il tempo in piu' di chi era arrivato in fondo, non una fedelta'
+  che cresce. A tempo fissato la salita sparisce.
+
+  Il processo non ha memoria: arrivare al secondo ordine non mette al sicuro.
+  «Portali al secondo acquisto e sono tuoi» qui non e' vero.
+
+  Controllo: con una sopravvivenza costante il numero di ordini
+  segue una geometrica. Confronto fra quello che quel modello
+  prevede e quello che si osserva:
+
+    ordini medi per cliente    attesi  3.61    osservati  3.81
+
+     ordini   attesa  osservata
+         1     27.7%      28.8%
+         2     20.0%      19.7%
+         3     14.5%      14.0%
+         4     10.5%      10.3%
+         5      7.6%       7.4%
+         6      5.5%       5.1%
+         7      4.0%       3.5%
+
+  Fino al sesto ordine lo scarto sta sotto il mezzo punto. Piu' in la' la
+  sopravvivenza sale davvero (dal 74% al 77%): li' non e' piu' il tempo, sono i
+  clienti — chi ha gia' comprato otto volte e' un negozio che si rifornisce, e
+  non somiglia piu' agli altri.
+
+============================================================================
+6. Quanto tempo passa fra il primo e il secondo ordine
+============================================================================
+  clienti che arrivano al secondo entro la finestra: 2,373
+
+    25o percentile:   26 giorni
+    50o percentile:   64 giorni
+    75o percentile:  139 giorni
+    90o percentile:  231 giorni
+
+  Letto come soglia operativa:
+    entro  30 giorni e' gia' tornato il  28.4% di chi torna entro l'anno
+    entro  60 giorni e' gia' tornato il  48.2% di chi torna entro l'anno
+    entro  90 giorni e' gia' tornato il  60.9% di chi torna entro l'anno
+    entro 120 giorni e' gia' tornato il  70.1% di chi torna entro l'anno
+    entro 180 giorni e' gia' tornato il  83.3% di chi torna entro l'anno
+
+  Non c'e' un burrone: la curva non ha un punto in cui la probabilita' crolla.
+  A 90 giorni sono tornati sei su dieci, a 180 poco piu' di otto. Chi cercava
+  una soglia netta oltre la quale «il cliente e' perso» qui non la trova, e
+  dichiararne una sarebbe inventarla.
+
+============================================================================
+7. Quanto vale chi torna, contro chi si ferma al primo ordine
+============================================================================
+  chi torna       2,373 clienti   media     1,990   mediana    1,091
+  chi non torna     961 clienti   media       337   mediana      229
+
+  Media e mediana sono lontane: la distribuzione ha una coda lunga e la
+  media la sente. Si mostrano tutte e due, non si sceglie la piu' comoda.
+
+  differenza grezza:   1,653   IC 95% [1,453, 1,915]   (5.9x)
+  L'intervallo viene da 2.000 ricampionamenti dei CLIENTI, non degli ordini:
+  ricampionare gli ordini tratterebbe due acquisti dello stesso cliente come
+  due osservazioni indipendenti, e restituirebbe un intervallo troppo stretto.
+
+============================================================================
+8. La stessa differenza, fra clienti che partivano uguali
+============================================================================
+  Chi torna era gia' diverso il primo giorno: se ha speso di piu' al primo
+  ordine spendera' di piu' anche in totale, e quella parte del divario non
+  dipende dal ritorno. Si confrontano allora clienti appaiati per decile di
+  primo ordine e per coorte, e si guarda quanto della differenza sopravvive.
+
+  strati con almeno 3 clienti per parte: 105  (3,176 clienti su 3,334, il 95%)
+  differenza appaiata:   1,374   IC 95% [1,125, 1,658]
+  resta il 83% della differenza grezza: l'appaiamento ne toglie il 17%.
+
+  Da dove arriva il maggior ricavo, per cliente che torna:
+    il secondo ordine             348
+    dal terzo in poi            1,202
+  Il secondo ordine porta solo il 22% del maggior ricavo.
+
+  E si incastra con la sezione 5. Se la sopravvivenza e' la stessa a ogni
+  gradino, un cliente portato al secondo ordine non ha comprato una volta in
+  piu': e' entrato in una fila in cui ogni passo ha la stessa probabilita' di
+  averne un altro dietro. Quello che si compra riattivandolo non e' il secondo
+  ordine, e' la coda che gli si apre dietro — ed e' li' che stanno i quattro
+  quinti dei soldi.
+
+============================================================================
+9. Il punto di pareggio, e cosa non dice
+============================================================================
+  La cifra su cui si decide e' quella appaiata: 1,374 in piu' in un anno,
+  con un intervallo fra 1,125 e 1,658.
+
+  Riattivare conviene finche' costa meno di   margine x differenza.
+  Il margine non sta nei dati — non c'e' il costo del venduto — quindi resta
+  una manopola, e la tabella si legge per righe:
+
+      margine    soglia sulla stima    soglia prudente
+          10%                   137                112
+          20%                   275                225
+          30%                   412                337
+          40%                   550                450
+          50%                   687                562
+
+  La colonna di destra usa il capo basso dell'intervallo: e' la soglia che
+  regge anche se la stima e' ottimista, ed e' quella da portare a una riunione.
+
+  Cosa NON dice questo numero. L'appaiamento toglie il pezzo di divario dovuto
+  al fatto che certi clienti partivano gia' piu' grossi. Non toglie quello che
+  non si e' misurato: chi torna magari aveva un bisogno ricorrente fin
+  dall'inizio, e sarebbe tornato comunque. Il conto vale se un cliente convinto
+  a tornare poi si comporta come i clienti che tornano da soli — ed e'
+  un'ipotesi, non un risultato. Con dati osservativi non si dimostra:
+  servirebbe un test in cui la riattivazione viene assegnata a caso.
+
+============================================================================
+matrice salvata in risultati/matrice_retention.csv
+============================================================================
