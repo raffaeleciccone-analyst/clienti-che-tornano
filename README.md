@@ -60,8 +60,31 @@ python 04_carica.py         pulisce, carica MySQL, controlla dopo il caricamento
 python 05_analisi.py        le misure -> risultati/misure.txt
 python 06_ricontrollo.py    63 controlli sulle cifre di RISULTATI.md
 python 07_audit.py          cerca errori e bias nelle DECISIONI, non nelle cifre
+python 08_dati_pagina.py    quello che serve alla pagina -> sito/dati.json
+python 09_pagina.py         cuce dati e modello -> index.html
+node   sito/prova_pagina.js fa girare lo script della pagina con un DOM finto
 python anteprima_dati.py    una pagina per guardare il file grezzo senza Excel
 ```
+
+### La pagina
+
+`index.html` e' la pagina pubblicata. I dati sono **incorporati**, non caricati con
+`fetch`: `fetch` su `file://` e' bloccato dal browser, e una pagina che funziona solo
+quando sta su un server e' una pagina che chi la scarica vede rotta senza capire
+perche'.
+
+Il problema di progetto era uno solo: **impedire che la matrice si legga come una
+discesa**. Quindi la matrice non e' un'illustrazione, e' l'interazione centrale — le
+stesse celle, allineabili per eta' del cliente o per mese del calendario. Nel secondo
+allineamento ogni riga parte dal suo mese vero e le colonne si accendono tutte insieme:
+la stagionalita' si vede invece di doverla credere. Nessun dato viene rimaneggiato per
+ottenere l'effetto, cambiano solo le posizioni.
+
+`sito/prova_pagina.js` fa girare lo script della pagina fuori dal browser con un DOM
+finto. Non disegna niente e non sa niente di layout: serve a intercettare l'errore che
+rompe le pagine piu' spesso, cioe' quello che lascia il documento vuoto senza dire
+perche'. Controlla anche che le cifre chiave compaiano davvero nel testo prodotto, non
+solo nei dati.
 
 `03_schema.sql` lo applica `04_carica.py`. Serve **MySQL 8** (funzioni finestra) e la
 password in `DB_PASSWORD`.
