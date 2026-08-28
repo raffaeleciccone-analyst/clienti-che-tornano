@@ -1,0 +1,591 @@
+<title>Clienti che tornano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --carta:#eceef0; --foglio:#ffffff; --inchiostro:#15181b; --tenue:#5d656c;
+  --riga:#d6dade; --ottone:#8a6414; --ottone-chiaro:#a9741d;
+  --freddo:#7f9cb4; --tiepido:#e9e3d5; --caldo:#a9741d;
+  --segna:#faf3e2; --ombra:0 1px 2px rgba(20,25,30,.06),0 8px 24px rgba(20,25,30,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --carta:#14171a; --foglio:#1c2024; --inchiostro:#e9ecef; --tenue:#98a1a9;
+    --riga:#2b3137; --ottone:#d9a441; --ottone-chiaro:#c9922f;
+    --freddo:#4d6b85; --tiepido:#3a3730; --caldo:#c9922f;
+    --segna:#2a2418; --ombra:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --carta:#14171a; --foglio:#1c2024; --inchiostro:#e9ecef; --tenue:#98a1a9;
+  --riga:#2b3137; --ottone:#d9a441; --ottone-chiaro:#c9922f;
+  --freddo:#4d6b85; --tiepido:#3a3730; --caldo:#c9922f;
+  --segna:#2a2418; --ombra:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--carta);color:var(--inchiostro);
+  font-family:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.col{max-width:720px;margin:0 auto;padding:0 24px}
+.largo{max-width:1140px;margin:0 auto;padding:0 24px}
+
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+h1{font-size:clamp(2.3rem,6vw,3.8rem);font-weight:700;margin:0 0 .4em}
+h2{font-size:clamp(1.5rem,3.4vw,2.05rem);margin:0 0 .35em}
+h3{font-size:1.12rem;margin:2.4em 0 .3em;font-weight:600}
+p{margin:0 0 1.05em}
+a{color:var(--ottone);text-underline-offset:3px}
+strong{font-weight:600}
+.num,td.n,th.n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* ── testata ─────────────────────────────────────────────────────── */
+header{padding:clamp(64px,11vw,120px) 0 0}
+.occhiello{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--tenue);font-weight:600;margin:0 0 1.6em}
+.domanda{font-family:Fraunces,Georgia,serif;font-size:clamp(1.15rem,2.4vw,1.42rem);
+  line-height:1.45;border-left:3px solid var(--ottone);padding-left:20px;margin:0 0 1.6em;
+  color:var(--inchiostro)}
+.guida{color:var(--tenue);font-size:1.02rem}
+
+/* ── sezioni ─────────────────────────────────────────────────────── */
+section{padding:clamp(56px,8vw,92px) 0 0}
+.eti{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ottone);margin:0 0 .9em;font-weight:500}
+
+/* ── la matrice ──────────────────────────────────────────────────── */
+.pannello{background:var(--foglio);border:1px solid var(--riga);border-radius:12px;
+  box-shadow:var(--ombra);padding:20px;margin:26px 0 0}
+.barra{display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  justify-content:space-between;margin:0 0 18px}
+.interruttore{display:inline-flex;background:var(--carta);border:1px solid var(--riga);
+  border-radius:9px;padding:3px;gap:3px}
+.interruttore button{font:inherit;font-size:.86rem;font-weight:500;border:0;cursor:pointer;
+  background:transparent;color:var(--tenue);padding:7px 14px;border-radius:6px;
+  transition:background .18s,color .18s}
+.interruttore button[aria-pressed="true"]{background:var(--foglio);color:var(--inchiostro);
+  box-shadow:0 1px 2px rgba(20,25,30,.12);font-weight:600}
+.interruttore button:focus-visible{outline:2px solid var(--ottone);outline-offset:2px}
+
+.scorre{overflow-x:auto;overflow-y:hidden;padding-bottom:6px}
+.griglia{--c:26px;--h:22px;font-family:"IBM Plex Mono",monospace;font-size:.68rem}
+.intestazioni{display:flex;height:20px;margin-left:var(--etichetta);position:relative}
+.intestazioni span{position:absolute;width:var(--c);text-align:center;color:var(--tenue);
+  transition:transform .62s cubic-bezier(.4,0,.2,1);white-space:nowrap;font-size:.64rem}
+.rigam{display:flex;align-items:center;height:calc(var(--h) + 3px)}
+.etichetta{width:var(--etichetta);flex:0 0 var(--etichetta);font-size:.68rem;color:var(--tenue);
+  white-space:nowrap;padding-right:10px;text-align:right}
+.etichetta b{color:var(--inchiostro);font-weight:500}
+.corsia{position:relative;height:var(--h);flex:1}
+.cella{position:absolute;top:0;width:calc(var(--c) - 2px);height:var(--h);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;font-size:.62rem;
+  transition:transform .62s cubic-bezier(.4,0,.2,1);cursor:default}
+.cella.zero{background:transparent;border:1px dashed var(--riga);color:var(--tenue)}
+.legenda{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--tenue);
+  margin:16px 0 0;flex-wrap:wrap}
+.scala{height:9px;width:150px;border-radius:5px;
+  background:linear-gradient(90deg,var(--freddo),var(--tiepido),var(--caldo))}
+
+.didascalia{font-size:.9rem;color:var(--tenue);margin:14px 0 0;max-width:72ch}
+
+/* ── nota che spiega la trappola ─────────────────────────────────── */
+.nota{background:var(--segna);border:1px solid var(--riga);border-left:3px solid var(--ottone);
+  border-radius:0 8px 8px 0;padding:16px 20px;margin:26px 0}
+.nota p:last-child{margin-bottom:0}
+.nota strong{color:var(--ottone)}
+
+/* ── tabelle ─────────────────────────────────────────────────────── */
+.tab{width:100%;border-collapse:collapse;font-size:.92rem;margin:20px 0 0}
+.tab th{text-align:left;font-weight:600;font-size:.78rem;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--tenue);padding:0 12px 8px 0;
+  border-bottom:1px solid var(--riga)}
+.tab th.n,.tab td.n{text-align:right}
+.tab td{padding:9px 12px 9px 0;border-bottom:1px solid var(--riga)}
+.tab tr:last-child td{border-bottom:0}
+.tab .forte td{font-weight:600}
+
+/* ── barre del funnel ────────────────────────────────────────────── */
+.gradino{display:grid;grid-template-columns:64px 1fr 74px;gap:12px;align-items:center;
+  margin:0 0 7px;font-size:.88rem}
+.gradino .b{height:26px;background:var(--carta);border-radius:4px;overflow:hidden}
+.gradino .b i{display:block;height:100%;background:var(--ottone-chiaro);
+  border-radius:4px;opacity:.85}
+.gradino .q{text-align:right;color:var(--tenue)}
+.gradino .s{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--ottone);
+  text-align:right}
+
+/* ── il pareggio ─────────────────────────────────────────────────── */
+.manopola{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-end;margin:22px 0 0}
+.manopola label{display:block;font-size:.82rem;color:var(--tenue);margin:0 0 8px;
+  font-weight:500}
+input[type=range]{width:min(320px,100%);accent-color:var(--ottone)}
+.risposta{font-family:Fraunces,Georgia,serif;font-size:clamp(2rem,5vw,2.9rem);
+  font-weight:700;line-height:1;color:var(--ottone);letter-spacing:-.02em}
+.risposta small{display:block;font-family:"Instrument Sans",sans-serif;font-size:.82rem;
+  font-weight:400;color:var(--tenue);letter-spacing:0;margin-top:8px;line-height:1.4}
+
+/* ── grafico del tempo ───────────────────────────────────────────── */
+.grafico{width:100%;height:auto;display:block;margin:20px 0 0}
+.grafico .assi{stroke:var(--riga);stroke-width:1}
+.grafico .linea{fill:none;stroke:var(--ottone);stroke-width:2.5;
+  stroke-linecap:round;stroke-linejoin:round}
+.grafico .area{fill:var(--ottone);opacity:.09}
+.grafico text{font-family:"IBM Plex Mono",monospace;font-size:10px;fill:var(--tenue)}
+.grafico .guidaX{stroke:var(--riga);stroke-dasharray:2 3}
+
+/* ── chiusura ────────────────────────────────────────────────────── */
+footer{margin-top:clamp(64px,9vw,110px);padding:34px 0 70px;
+  border-top:1px solid var(--riga);color:var(--tenue);font-size:.88rem}
+footer a{color:var(--tenue)}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+</style>
+
+<header>
+  <div class="col">
+    <p class="occhiello">Online Retail II · 1.067.371 righe · 2009–2011</p>
+    <h1>Clienti che tornano</h1>
+    <p class="domanda">Quanto vale un cliente che torna, e conviene di piu&#39; trattenerlo
+      o acquisirne uno nuovo?</p>
+    <p class="guida">Questa domanda e&#39; stata scritta prima di aprire SQL, e ha una
+      risposta con una cifra dentro. Ma la prima cosa che i dati hanno detto e&#39; che la
+      domanda di solito viene letta male &mdash; e conviene partire da li&#39;.</p>
+  </div>
+</header>
+
+<!-- ═══ 1. la matrice ═══════════════════════════════════════════════ -->
+<section>
+  <div class="col">
+    <p class="eti">01 &middot; La matrice</p>
+    <h2>Di cento clienti nuovi, quanti tornano</h2>
+    <p>Ogni riga e&#39; un mese di clienti nuovi. Ogni cella dice quanti di loro hanno
+      ordinato a distanza di uno, due, tre mesi. E&#39; il grafico che chiunque produce per
+      primo, e si legge da sinistra a destra: una discesa.</p>
+    <p><strong>Guardala, e poi premi il secondo pulsante.</strong> Le celle sono le
+      stesse: cambia solo dove stanno.</p>
+  </div>
+
+  <div class="largo">
+    <div class="pannello">
+      <div class="barra">
+        <div class="interruttore" role="group" aria-label="Come allineare la matrice">
+          <button id="b-eta" aria-pressed="true">per eta&#39; del cliente</button>
+          <button id="b-cal" aria-pressed="false">per mese del calendario</button>
+        </div>
+        <div class="legenda">
+          <span>meno</span><div class="scala" role="img"
+            aria-label="scala di colore: dal blu freddo per la retention bassa all&#39;ottone caldo per quella alta"></div><span>piu&#39;</span>
+        </div>
+      </div>
+      <div class="scorre">
+        <div class="griglia" id="griglia"></div>
+      </div>
+      <p class="didascalia" id="didascalia"></p>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="nota" id="nota-trappola">
+      <p><strong>Quello che si vede allineando per calendario.</strong> Le colonne si
+        accendono e si spengono tutte insieme: novembre acceso in ogni riga, gennaio
+        spento in ogni riga. Non e&#39; l&#39;eta&#39; del cliente a muovere il numero,
+        e&#39; il mese dell&#39;anno.</p>
+      <p id="quanto-spiega"></p>
+    </div>
+    <p>Novembre vale piu&#39; del doppio di gennaio, e il picco arriva <em>prima</em> di
+      Natale, non durante. La lettura naturale e&#39; che molti di questi clienti non
+      siano consumatori ma negozi, che si riforniscono in autunno e poi stanno fermi: un
+      ordine mediano vale 303&nbsp;&pound; e ha 15 righe per 153 pezzi. Ma il picco e&#39;
+      un fatto e il perche&#39; e&#39; una lettura, e vanno tenuti separati.</p>
+    <p><strong>Cosa cambia in pratica:</strong> due coorti non si confrontano se non hanno
+      vissuto gli stessi mesi. Chi entra a ottobre ha il Natale davanti, chi entra a
+      gennaio ha undici mesi di attesa. Una classifica delle coorti per retention
+      misurerebbe il mese di ingresso e lo chiamerebbe qualita&#39; dei clienti.</p>
+    <p class="guida">Un limite, detto dove serve: nella finestra dei dati c&#39;e&#39; un
+      dicembre solo e un gennaio solo. I mesi centrali hanno due anni a testa e reggono;
+      sui due estremi si dice la direzione, non la cifra.</p>
+  </div>
+</section>
+
+<!-- ═══ 2. il funnel ════════════════════════════════════════════════ -->
+<section>
+  <div class="col">
+    <p class="eti">02 &middot; Il riacquisto</p>
+    <h2>Il secondo ordine non mette al sicuro</h2>
+    <p>Su cento clienti che fanno un ordine, quanti ne fanno un secondo, un terzo, un
+      quarto. Non e&#39; un funnel di conversione &mdash; in dati transazionali non
+      esistono sessioni ne&#39; carrelli abbandonati &mdash; e&#39; la sopravvivenza da un
+      ordine al successivo.</p>
+    <div class="pannello">
+      <div id="funnel"></div>
+    </div>
+    <p class="didascalia">Sui <span class="num" id="n-campione"></span> clienti entrati
+      nel 2010 che hanno avuto 365 giorni interi davanti. La colonna di destra e&#39; la
+      quota che sopravvive da un gradino al successivo.</p>
+
+    <div class="nota">
+      <p><strong>La colonna di destra non si muove: <span id="p-medio"></span> a ogni
+        gradino.</strong> Arrivare al secondo ordine non rende un cliente piu&#39; fedele
+        di quanto fosse. &laquo;Portali al secondo acquisto e sono tuoi&raquo; qui e&#39;
+        falso.</p>
+    </div>
+
+    <h3>E il conto di prima era sbagliato</h3>
+    <p>Contando <em>tutta la vita</em> di ogni cliente veniva 72%, poi 78%, 80%, 81%: una
+      fedelta&#39; che cresce a ogni acquisto. Ma le vite non sono lunghe uguali &mdash;
+      chi e&#39; entrato a gennaio 2010 ha avuto due anni per arrivare all&#39;ottavo
+      ordine, chi e&#39; entrato a settembre 2011 ne ha avuti tre mesi. Quella salita era
+      il tempo in piu&#39; di chi era arrivato in fondo. A tempo fissato sparisce.</p>
+  </div>
+</section>
+
+<!-- ═══ 3. il tempo ═════════════════════════════════════════════════ -->
+<section>
+  <div class="col">
+    <p class="eti">03 &middot; Il tempo</p>
+    <h2>La soglia oltre la quale un cliente e&#39; perso non esiste</h2>
+    <p>Era la domanda che doveva produrre la leva: se esiste un numero di giorni di
+      silenzio oltre il quale la probabilita&#39; di ritorno crolla, quello e&#39; il
+      momento in cui una riattivazione ha senso.</p>
+    <div class="pannello">
+      <div id="curva"></div>
+    </div>
+    <p class="didascalia">Di chi torna entro l&#39;anno, quanti sono gia&#39; tornati
+      dopo N giorni. La curva cala in modo regolare e non ha nessun punto in cui
+      precipita.</p>
+    <div class="nota">
+      <p><strong>Non c&#39;e&#39; nessun burrone.</strong> Chi cercava una soglia netta
+        qui non la trova, e dichiararne una vorrebbe dire inventarla. Quello che si
+        puo&#39; dire e&#39; piu&#39; modesto e ancora utile: <strong>la mediana e&#39;
+        <span id="mediana-gg"></span> giorni</strong>. Una riattivazione mandata al
+        secondo mese arriva quando meta&#39; di chi tornera&#39; non e&#39; ancora
+        tornato. Non e&#39; una soglia, e&#39; un momento ragionevole.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4. il valore ════════════════════════════════════════════════ -->
+<section>
+  <div class="col">
+    <p class="eti">04 &middot; Il valore</p>
+    <h2>Quanto vale, davvero, chi torna</h2>
+    <p>Nel suo primo anno &mdash; finestra uguale per tutti, se no si misura quanto tempo
+      ha avuto il cliente, non il cliente:</p>
+    <table class="tab" id="tab-valore"></table>
+    <p class="didascalia">Media e mediana sono lontane: la distribuzione ha una coda
+      lunga. Si mostrano tutte e due, non si sceglie la piu&#39; comoda.</p>
+
+    <h3>Ma chi torna era gia&#39; diverso il primo giorno</h3>
+    <p>Se aveva speso di piu&#39; al primo acquisto spendera&#39; di piu&#39; anche in
+      totale, e quella parte del divario non dipende dal ritorno. Allora si confrontano
+      solo clienti <strong>appaiati per dimensione del primo ordine e per mese di
+      ingresso</strong>, e si guarda quanto della differenza sopravvive.</p>
+    <table class="tab" id="tab-appaiata"></table>
+    <p class="didascalia" id="quanto-resta"></p>
+
+    <div class="nota">
+      <p><strong>E i soldi non stanno nel secondo ordine.</strong> Per cliente che torna,
+        il secondo ordine porta <span class="num" id="v-secondo"></span>&nbsp;&pound; e
+        tutti gli ordini successivi <span class="num" id="v-terzo"></span>&nbsp;&pound;.
+        Se la sopravvivenza e&#39; uguale a ogni gradino, chi viene riportato al secondo
+        ordine non ha comprato una volta in piu&#39;: e&#39; entrato in una fila dove ogni
+        passo ha la stessa probabilita&#39; di averne un altro dietro. Quello che si
+        compra riattivandolo e&#39; la coda che gli si apre dietro.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5. il pareggio ══════════════════════════════════════════════ -->
+<section>
+  <div class="col">
+    <p class="eti">05 &middot; La risposta</p>
+    <h2>Fino a quanto conviene spendere</h2>
+    <p>La domanda di partenza era se convenga trattenere o acquisire. <strong>Questi dati
+      non possono dirlo</strong>: non contengono il costo di acquisizione, e nemmeno il
+      costo del venduto. Ma il buco non si tappa dichiarandolo &mdash; si chiude cambiando
+      cosa si consegna. Invece del verdetto, la soglia:</p>
+    <div class="pannello">
+      <div class="manopola">
+        <div>
+          <label for="margine">Il tuo margine: <b id="v-margine" class="num">20%</b></label>
+          <input type="range" id="margine" min="5" max="60" step="1" value="20"
+            aria-describedby="esito-pareggio">
+        </div>
+        <div class="risposta" id="esito-pareggio"></div>
+      </div>
+    </div>
+    <p class="didascalia">Il margine e&#39; una manopola dichiarata, non un risultato: senza
+      il costo del venduto quello che si misura e&#39; ricavo, non profitto. La cifra usa
+      l&#39;estremo basso dell&#39;intervallo, cioe&#39; la soglia che regge anche se la
+      stima e&#39; ottimista.</p>
+  </div>
+</section>
+
+<!-- ═══ 6. i limiti ═════════════════════════════════════════════════ -->
+<section>
+  <div class="col">
+    <p class="eti">06 &middot; Quello che questi numeri non dicono</p>
+    <h2>Il limite piu&#39; grosso non era fra quelli previsti</h2>
+    <p>Il <strong>22,8% delle righe non ha un identificativo cliente</strong> &mdash;
+      8.752 fatture. Era gia&#39; dichiarato, ma l&#39;avvertenza era stata applicata solo
+      al fatturato e non alla cifra che apre tutto: quanti clienti tornano.</p>
+    <table class="tab" id="tab-anonimi"></table>
+    <p>Se le fatture anonime fossero clienti occasionali sarebbero tutte
+      &laquo;uno e basta&raquo;. <strong>Il tasso vero sta fra il 29% e il 72%</strong>, e
+      con questi dati non si stringe. Quindi la frase corretta e&#39; &laquo;tre clienti
+      <em>identificati</em> su quattro tornano&raquo;, mai &laquo;tre clienti su
+      quattro&raquo;.</p>
+    <p>Il resto regge, e non e&#39; un salvataggio: sono confronti <em>interni</em>
+      &mdash; chi torna contro chi non torna, novembre contro gennaio, gradino contro
+      gradino. Gli anonimi non stanno su nessuno dei due lati, quindi non li inclinano.</p>
+
+    <h3>E il limite che nessuno puo&#39; togliere</h3>
+    <p>Chi torna magari aveva un bisogno ricorrente fin dall&#39;inizio, e sarebbe tornato
+      comunque. L&#39;appaiamento toglie il divario dovuto a chi partiva gia&#39; piu&#39;
+      grosso, non quello che non si e&#39; misurato. Perche&#39; questa pagina scrive
+      sempre <strong>&laquo;i clienti che tornano valgono N volte&raquo;</strong> e mai
+      &laquo;farli tornare li fa valere N volte&raquo;: la seconda richiederebbe un
+      esperimento con la riattivazione assegnata a caso, e la differenza fra le due frasi
+      e&#39; la differenza fra un&#39;analisi che si puo&#39; usare e una che fa perdere
+      soldi.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="col">
+    <p>Dati: <a href="https://archive.ics.uci.edu/dataset/502/online+retail+ii">Online
+      Retail II</a>, UCI Machine Learning Repository. Negozio online britannico di
+      articoli da regalo, dicembre 2009 &ndash; dicembre 2011.</p>
+    <p>Ogni cifra di questa pagina esce da <span class="num">08_dati_pagina.py</span> ed
+      e&#39; ricontrollata da <span class="num">06_ricontrollo.py</span>, che rifa&#39; 63
+      conti dalle tabelle di base senza passare dalle viste.
+      <span class="num">07_audit.py</span> cerca invece gli errori nelle decisioni, e
+      cinque dei suoi controlli leggono il testo dei documenti: se una frase diventa
+      piu&#39; generosa di quanto i dati permettano, torna rosso.</p>
+  </div>
+</footer>
+
+<script>
+const D = {"coorti":[{"coorte":"2010-01","anno":2010,"mese":1,"entrati":368,"celle":[100.0,21.5,32.1,31.5,27.2,31.0,26.9,23.4,28.5,32.6,31.0,17.9,22.8,17.9,19.6,15.2,24.5,20.4,19.3,20.1,25.3,19.8,25.3]},{"coorte":"2010-02","anno":2010,"mese":2,"entrati":375,"celle":[100.0,23.5,22.7,29.3,24.5,19.7,19.2,28.8,25.6,27.7,11.5,12.5,15.2,17.6,12.3,20.0,16.0,16.3,14.4,22.9,22.9,16.5]},{"coorte":"2010-03","anno":2010,"mese":3,"entrati":441,"celle":[100.0,19.1,23.1,24.3,23.1,20.4,24.7,30.6,27.7,10.9,11.6,14.5,19.9,16.3,19.9,17.0,17.5,15.7,17.7,20.4,21.3]},{"coorte":"2010-04","anno":2010,"mese":4,"entrati":294,"celle":[100.0,19.1,19.1,16.0,18.4,22.1,27.6,26.5,10.5,10.9,7.5,13.9,14.3,15.7,15.7,15.7,13.9,15.0,18.0,22.8]},{"coorte":"2010-05","anno":2010,"mese":5,"entrati":255,"celle":[100.0,15.7,16.9,17.6,17.6,25.5,21.2,12.6,5.9,8.2,11.4,13.3,15.3,15.3,9.8,12.6,13.7,16.5,15.3]},{"coorte":"2010-06","anno":2010,"mese":6,"entrati":267,"celle":[100.0,17.6,18.7,20.6,23.2,28.5,12.7,9.0,8.2,11.2,10.5,13.9,15.0,12.4,11.2,12.4,13.1,20.2]},{"coorte":"2010-07","anno":2010,"mese":7,"entrati":185,"celle":[100.0,15.7,18.4,29.7,29.2,14.1,11.3,14.6,14.6,11.3,13.5,14.6,13.0,13.5,19.5,17.3,23.8]},{"coorte":"2010-08","anno":2010,"mese":8,"entrati":163,"celle":[100.0,19.6,28.8,32.5,16.6,11.7,9.8,12.9,13.5,12.9,12.9,11.7,14.7,17.2,17.2,19.6]},{"coorte":"2010-09","anno":2010,"mese":9,"entrati":239,"celle":[100.0,23.0,23.4,13.0,8.8,10.5,13.8,9.6,13.0,13.0,12.1,10.0,22.6,16.7,16.7]},{"coorte":"2010-10","anno":2010,"mese":10,"entrati":375,"celle":[100.0,25.9,14.7,12.5,8.8,8.3,13.1,13.9,10.7,9.3,10.7,12.8,19.2,23.2]},{"coorte":"2010-11","anno":2010,"mese":11,"entrati":326,"celle":[100.0,17.5,9.5,9.5,7.7,8.9,12.9,10.1,8.6,9.2,11.0,14.7,25.1]},{"coorte":"2010-12","anno":2010,"mese":12,"entrati":76,"celle":[100.0,9.2,5.3,9.2,11.8,6.6,5.3,9.2,5.3,2.6,9.2,19.7]},{"coorte":"2011-01","anno":2011,"mese":1,"entrati":72,"celle":[100.0,16.7,22.2,19.4,22.2,15.3,15.3,12.5,11.1,20.8,25.0]},{"coorte":"2011-02","anno":2011,"mese":2,"entrati":125,"celle":[100.0,16.0,16.0,18.4,21.6,16.0,16.0,15.2,15.2,18.4]},{"coorte":"2011-03","anno":2011,"mese":3,"entrati":179,"celle":[100.0,17.9,21.8,20.1,22.4,15.1,20.7,20.1,24.0]},{"coorte":"2011-04","anno":2011,"mese":4,"entrati":106,"celle":[100.0,24.5,19.8,19.8,17.9,23.6,17.9,25.5]},{"coorte":"2011-05","anno":2011,"mese":5,"entrati":111,"celle":[100.0,23.4,24.3,16.2,21.6,20.7,26.1]},{"coorte":"2011-06","anno":2011,"mese":6,"entrati":108,"celle":[100.0,23.1,21.3,26.9,20.4,27.8]},{"coorte":"2011-07","anno":2011,"mese":7,"entrati":101,"celle":[100.0,20.8,29.7,27.7,34.6]},{"coorte":"2011-08","anno":2011,"mese":8,"entrati":107,"celle":[100.0,26.2,29.9,26.2]},{"coorte":"2011-09","anno":2011,"mese":9,"entrati":188,"celle":[100.0,27.1,37.8]},{"coorte":"2011-10","anno":2011,"mese":10,"entrati":221,"celle":[100.0,31.7]},{"coorte":"2011-11","anno":2011,"mese":11,"entrati":191,"celle":[100.0]}],"per_mese_calendario":[{"mese":1,"quota":11.3,"anni":[2011]},{"mese":2,"quota":12.0,"anni":[2010,2011]},{"mese":3,"quota":15.9,"anni":[2010,2011]},{"mese":4,"quota":15.4,"anni":[2010,2011]},{"mese":5,"quota":18.4,"anni":[2010,2011]},{"mese":6,"quota":17.3,"anni":[2010,2011]},{"mese":7,"quota":16.5,"anni":[2010,2011]},{"mese":8,"quota":15.6,"anni":[2010,2011]},{"mese":9,"quota":19.6,"anni":[2010,2011]},{"mese":10,"quota":21.7,"anni":[2010,2011]},{"mese":11,"quota":25.0,"anni":[2010,2011]},{"mese":12,"quota":13.8,"anni":[2010]}],"spiegata":{"eta":16.6,"calendario":34.8,"insieme":85.8},"panel_bilanciato":{"coorti":11,"curva":[{"mese":1,"quota":19.8},{"mese":2,"quota":20.7},{"mese":3,"quota":21.5},{"mese":4,"quota":18.6},{"mese":5,"quota":18.2},{"mese":6,"quota":17.6},{"mese":7,"quota":17.4},{"mese":8,"quota":15.2},{"mese":9,"quota":14.3},{"mese":10,"quota":13.1},{"mese":11,"quota":13.6},{"mese":12,"quota":17.9}]},"campione":{"clienti":3334,"totali":5852,"coorte_da":"2010-01","coorte_a":"2010-12"},"funnel":[{"gradino":1,"clienti":3334,"quota":100.0,"sopravvive":null},{"gradino":2,"clienti":2373,"quota":71.2,"sopravvive":71.2},{"gradino":3,"clienti":1715,"quota":51.4,"sopravvive":72.3},{"gradino":4,"clienti":1249,"quota":37.5,"sopravvive":72.8},{"gradino":5,"clienti":905,"quota":27.1,"sopravvive":72.5},{"gradino":6,"clienti":657,"quota":19.7,"sopravvive":72.6},{"gradino":7,"clienti":488,"quota":14.6,"sopravvive":74.3},{"gradino":8,"clienti":371,"quota":11.1,"sopravvive":76.0}],"sopravvivenza_media":72.3,"geometrica":[{"ordini":1,"attesa":27.7,"osservata":28.8},{"ordini":2,"attesa":20.0,"osservata":19.7},{"ordini":3,"attesa":14.5,"osservata":14.0},{"ordini":4,"attesa":10.5,"osservata":10.3},{"ordini":5,"attesa":7.6,"osservata":7.4},{"ordini":6,"attesa":5.5,"osservata":5.1}],"tempo_secondo":{"clienti":2373,"percentili":{"25":26,"50":64,"75":139,"90":231},"cumulata":[{"giorni":10,"quota":12.9},{"giorni":20,"quota":20.9},{"giorni":30,"quota":28.4},{"giorni":40,"quota":35.7},{"giorni":50,"quota":43.6},{"giorni":60,"quota":48.2},{"giorni":70,"quota":53.1},{"giorni":80,"quota":57.0},{"giorni":90,"quota":60.9},{"giorni":100,"quota":64.5},{"giorni":110,"quota":67.0},{"giorni":120,"quota":70.1},{"giorni":130,"quota":73.1},{"giorni":140,"quota":75.5},{"giorni":150,"quota":77.6},{"giorni":160,"quota":79.5},{"giorni":170,"quota":81.7},{"giorni":180,"quota":83.3},{"giorni":190,"quota":84.8},{"giorni":200,"quota":86.2},{"giorni":210,"quota":87.5},{"giorni":220,"quota":88.7},{"giorni":230,"quota":90.0},{"giorni":240,"quota":90.9},{"giorni":250,"quota":91.6},{"giorni":260,"quota":92.4},{"giorni":270,"quota":93.2},{"giorni":280,"quota":94.1},{"giorni":290,"quota":94.7},{"giorni":300,"quota":95.4},{"giorni":310,"quota":95.9},{"giorni":320,"quota":96.2},{"giorni":330,"quota":96.8},{"giorni":340,"quota":97.3},{"giorni":350,"quota":98.0},{"giorni":360,"quota":99.2}]},"valore":{"torna":{"clienti":2373,"media":1990,"mediana":1091},"non_torna":{"clienti":961,"media":337,"mediana":229},"grezza":1653,"grezza_ic":[1453,1915],"appaiata":1374,"appaiata_ic":[1125,1658],"strati":105,"coperti":95,"secondo_ordine":348,"dal_terzo":1202},"anonimi":{"fatture":8752,"clienti_noti":5852,"tornano":4234,"quota_alta":72.3,"quota_bassa":29.0}};
+const MESI = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+/* useGrouping:"always" e' voluto. In italiano il raggruppamento predefinito
+   parte da cinque cifre, quindi 1374 uscirebbe "1374" mentre i documenti del
+   progetto scrivono "1.374": due modi di scrivere lo stesso numero nella stessa
+   pagina sono un modo di far dubitare di tutti e due. */
+const FMT = new Intl.NumberFormat("it-IT", { useGrouping: "always" });
+const n0 = (x) => FMT.format(x);
+
+/* ── colore: diverge intorno alla media, cosi' i mesi sotto la media
+      leggono freddi e quelli sopra caldi. Non e' decorazione: e' la
+      differenza che la sezione 1 deve far vedere. ─────────────────── */
+const stile = getComputedStyle(document.documentElement);
+function tinta(q, media, min, max){
+  const leggi = (n) => stile.getPropertyValue(n).trim();
+  const [a,b] = q < media
+    ? [leggi("--freddo"), leggi("--tiepido")]
+    : [leggi("--tiepido"), leggi("--caldo")];
+  const t = q < media ? 1 - (media - q)/(media - min || 1) : (q - media)/(max - media || 1);
+  return misc(a, b, Math.max(0, Math.min(1, t)));
+}
+function misc(a, b, t){
+  const p = (c) => { const s = c.replace("#","");
+    return [0,2,4].map(i => parseInt(s.substr(i,2),16)); };
+  const [x,y] = [p(a), p(b)];
+  return "rgb(" + x.map((v,i) => Math.round(v + (y[i]-v)*t)).join(",") + ")";
+}
+
+/* ── la matrice ──────────────────────────────────────────────────── */
+const griglia = document.getElementById("griglia");
+const didascalia = document.getElementById("didascalia");
+let vista = "eta";
+
+const tutte = D.coorti.flatMap(c => c.celle.slice(1).filter(v => v !== null));
+const media = tutte.reduce((s,v) => s+v, 0) / tutte.length;
+const min = Math.min(...tutte), max = Math.max(...tutte);
+const inizio = D.coorti[0];
+const offset = (c) => (c.anno - inizio.anno) * 12 + (c.mese - inizio.mese);
+const larghezzaCal = Math.max(...D.coorti.map(c => offset(c) + c.celle.length));
+const larghezzaEta = Math.max(...D.coorti.map(c => c.celle.length));
+
+function disegna(){
+  const nCol = vista === "eta" ? larghezzaEta : larghezzaCal;
+  griglia.style.setProperty("--etichetta", "78px");
+  let h = '<div class="intestazioni" id="teste"></div>';
+  for (const c of D.coorti){
+    h += '<div class="rigam"><div class="etichetta"><b>' + c.coorte + '</b> &middot; '
+       + n0(c.entrati) + '</div><div class="corsia" data-c="' + c.coorte + '"></div></div>';
+  }
+  griglia.innerHTML = h;
+  griglia.style.minWidth = (78 + nCol * 26 + 8) + "px";
+
+  const teste = document.getElementById("teste");
+  let th = "";
+  for (let i = 0; i < nCol; i++){
+    const et = vista === "eta"
+      ? (i === 0 ? "0" : "+" + i)
+      : MESI[(inizio.mese - 1 + i) % 12] + ((inizio.mese - 1 + i) % 12 === 0 || i === 0
+          ? " " + String(inizio.anno + Math.floor((inizio.mese - 1 + i)/12)).slice(2) : "");
+    th += '<span data-i="' + i + '">' + et + '</span>';
+  }
+  teste.innerHTML = th;
+
+  D.coorti.forEach(c => {
+    const corsia = griglia.querySelector('[data-c="' + c.coorte + '"]');
+    let ch = "";
+    c.celle.forEach((v, i) => {
+      if (i === 0){
+        ch += '<div class="cella zero" data-i="0" title="' + c.coorte
+            + ': ' + n0(c.entrati) + ' clienti nuovi">100</div>';
+      } else if (v !== null){
+        const quando = new Date(c.anno, c.mese - 1 + i);
+        ch += '<div class="cella" data-i="' + i + '" style="background:' + tinta(v, media, min, max)
+            + ';color:' + (v > media * 1.35 ? "#fff" : "var(--inchiostro)") + '" title="coorte '
+            + c.coorte + ', mese +' + i + ' (' + MESI[quando.getMonth()] + ' '
+            + quando.getFullYear() + '): ' + v + '% tornati">' + Math.round(v) + '</div>';
+      }
+    });
+    corsia.innerHTML = ch;
+  });
+  posiziona();
+}
+
+function posiziona(){
+  D.coorti.forEach(c => {
+    const off = vista === "cal" ? offset(c) : 0;
+    griglia.querySelectorAll('[data-c="' + c.coorte + '"] .cella').forEach(el => {
+      el.style.transform = "translateX(" + ((+el.dataset.i + off) * 26) + "px)";
+    });
+  });
+  document.querySelectorAll("#teste span").forEach(el => {
+    el.style.transform = "translateX(" + (+el.dataset.i * 26) + "px)";
+  });
+  didascalia.textContent = vista === "eta"
+    ? "Allineata per eta’: la colonna +1 e’ il primo mese di vita di ogni coorte, quale che sia il mese dell’anno. Si legge da sinistra a destra, e sembra una discesa."
+    : "Allineata per calendario: ogni riga parte dal suo mese vero. Le stesse celle, spostate. Ora si legge dall’alto in basso — e le colonne si accendono tutte insieme.";
+}
+
+document.getElementById("b-eta").onclick = () => cambia("eta");
+document.getElementById("b-cal").onclick = () => cambia("cal");
+function cambia(v){
+  if (v === vista) return;
+  vista = v;
+  document.getElementById("b-eta").setAttribute("aria-pressed", v === "eta");
+  document.getElementById("b-cal").setAttribute("aria-pressed", v === "cal");
+  const nCol = v === "eta" ? larghezzaEta : larghezzaCal;
+  griglia.style.minWidth = (78 + nCol * 26 + 8) + "px";
+  posiziona();
+}
+disegna();
+
+document.getElementById("quanto-spiega").innerHTML =
+  "Messo in numero: il mese del calendario spiega il <b>" + D.spiegata.calendario
+  + "%</b> della variazione fra le celle, l’eta’ del cliente solo il <b>"
+  + D.spiegata.eta + "%</b>. Il calendario conta piu’ del doppio — e partiva "
+  + "pure svantaggiato, perche’ ha dodici livelli contro i ventidue dell’eta’.";
+
+/* ── il funnel ───────────────────────────────────────────────────── */
+document.getElementById("funnel").innerHTML = D.funnel.map(g =>
+  '<div class="gradino"><span>' + g.gradino + 'º ordine</span>'
+  + '<div class="b"><i style="width:' + g.quota + '%"></i></div>'
+  + '<span class="q num">' + g.quota.toFixed(1) + '%</span></div>'
+  + (g.sopravvive ? '' : '')).join("")
+  + '<div style="margin-top:14px;font-size:.8rem;color:var(--tenue)">'
+  + D.funnel.slice(1).map(g => '<span style="display:inline-block;margin-right:16px">'
+  + g.gradino + 'º <b class="num" style="color:var(--ottone)">' + g.sopravvive
+  + '%</b></span>').join("") + '</div>';
+document.getElementById("n-campione").textContent = n0(D.campione.clienti);
+document.getElementById("p-medio").textContent = D.sopravvivenza_media + "%";
+
+/* ── la curva del tempo ──────────────────────────────────────────── */
+(function(){
+  const W = 660, H = 240, ml = 42, mb = 30, mt = 12, mr = 12;
+  const px = (g) => ml + (g / 365) * (W - ml - mr);
+  const py = (q) => mt + (1 - q / 100) * (H - mt - mb);
+  const pt = D.tempo_secondo.cumulata;
+  const linea = pt.map((p,i) => (i ? "L" : "M") + px(p.giorni).toFixed(1) + " "
+    + py(p.quota).toFixed(1)).join(" ");
+  let s = '<svg class="grafico" viewBox="0 0 ' + W + ' ' + H + '" role="img" '
+    + 'aria-label="Curva dei ritorni: sale in modo regolare dal 10% a 10 giorni fino al '
+    + '100% a 365, senza nessun gradino o crollo">';
+  s += '<title>Quanti sono gia’ tornati, giorno per giorno</title>';
+  [0,25,50,75,100].forEach(q => {
+    s += '<line class="guidaX" x1="' + ml + '" y1="' + py(q) + '" x2="' + (W-mr)
+       + '" y2="' + py(q) + '"/><text x="' + (ml-8) + '" y="' + (py(q)+3.5)
+       + '" text-anchor="end">' + q + '%</text>';
+  });
+  s += '<path class="area" d="' + linea + ' L' + px(365) + ' ' + py(0) + ' L'
+     + px(10) + ' ' + py(0) + ' Z"/>';
+  s += '<path class="linea" d="' + linea + '"/>';
+  [30,90,180,365].forEach(g => {
+    s += '<text x="' + px(g) + '" y="' + (H-8) + '" text-anchor="middle">' + g + 'gg</text>';
+  });
+  const med = D.tempo_secondo.percentili["50"];
+  s += '<line x1="' + px(med) + '" y1="' + py(0) + '" x2="' + px(med) + '" y2="' + py(50)
+     + '" stroke="var(--ottone)" stroke-width="1.5" stroke-dasharray="3 3"/>';
+  s += '<circle cx="' + px(med) + '" cy="' + py(50) + '" r="4" fill="var(--ottone)"/>';
+  s += '<text x="' + (px(med)+9) + '" y="' + (py(50)-8) + '" fill="var(--ottone)">meta’ a '
+     + med + ' giorni</text>';
+  s += '<line class="assi" x1="' + ml + '" y1="' + py(0) + '" x2="' + (W-mr) + '" y2="' + py(0) + '"/>';
+  s += '</svg>';
+  document.getElementById("curva").innerHTML = s;
+  document.getElementById("mediana-gg").textContent = med;
+})();
+
+/* ── le tabelle del valore ───────────────────────────────────────── */
+const v = D.valore;
+document.getElementById("tab-valore").innerHTML =
+  '<thead><tr><th></th><th class="n">clienti</th><th class="n">spesa media</th>'
+  + '<th class="n">mediana</th></tr></thead><tbody>'
+  + '<tr class="forte"><td>chi torna</td><td class="n">' + n0(v.torna.clienti)
+  + '</td><td class="n">' + n0(v.torna.media) + ' £</td><td class="n">'
+  + n0(v.torna.mediana) + ' £</td></tr>'
+  + '<tr><td>chi si ferma al primo ordine</td><td class="n">' + n0(v.non_torna.clienti)
+  + '</td><td class="n">' + n0(v.non_torna.media) + ' £</td><td class="n">'
+  + n0(v.non_torna.mediana) + ' £</td></tr></tbody>';
+
+document.getElementById("tab-appaiata").innerHTML =
+  '<thead><tr><th>confronto</th><th class="n">differenza</th>'
+  + '<th class="n">intervallo 95%</th></tr></thead><tbody>'
+  + '<tr><td>grezzo</td><td class="n">' + n0(v.grezza) + ' £</td><td class="n">'
+  + n0(v.grezza_ic[0]) + ' – ' + n0(v.grezza_ic[1]) + '</td></tr>'
+  + '<tr class="forte"><td>fra clienti appaiati</td><td class="n">' + n0(v.appaiata)
+  + ' £</td><td class="n">' + n0(v.appaiata_ic[0]) + ' – '
+  + n0(v.appaiata_ic[1]) + '</td></tr></tbody>';
+
+const resta = Math.round(v.appaiata / v.grezza * 100);
+document.getElementById("quanto-resta").innerHTML =
+  "Sopravvive l’<b>" + resta + "%</b> della differenza grezza: l’appaiamento ne "
+  + "toglie il " + (100 - resta) + "%. Non si dimezza — la dimensione del primo "
+  + "ordine spiega una fetta del divario, e non la fetta grossa. "
+  + v.strati + " strati, che coprono il " + v.coperti + "% dei clienti.";
+document.getElementById("v-secondo").textContent = n0(v.secondo_ordine);
+document.getElementById("v-terzo").textContent = n0(v.dal_terzo);
+
+/* ── il pareggio ─────────────────────────────────────────────────── */
+const slider = document.getElementById("margine");
+function pareggio(){
+  const m = +slider.value;
+  document.getElementById("v-margine").textContent = m + "%";
+  document.getElementById("esito-pareggio").innerHTML =
+    n0(Math.round(v.appaiata_ic[0] * m / 100)) + " £"
+    + "<small>per cliente riportato al secondo ordine. Oltre questa cifra, "
+    + "riattivare costa piu’ di quanto rende.</small>";
+}
+slider.addEventListener("input", pareggio);
+pareggio();
+
+/* ── i limiti ────────────────────────────────────────────────────── */
+const a = D.anonimi;
+document.getElementById("tab-anonimi").innerHTML =
+  '<thead><tr><th>ipotesi su chi sono gli anonimi</th><th class="n">clienti</th>'
+  + '<th class="n">tornano</th></tr></thead><tbody>'
+  + '<tr><td>sono gli stessi gia’ contati</td><td class="n">' + n0(a.clienti_noti)
+  + '</td><td class="n">' + a.quota_alta + '%</td></tr>'
+  + '<tr><td>ognuno e’ un cliente diverso, mai piu’ tornato</td><td class="n">'
+  + n0(a.clienti_noti + a.fatture) + '</td><td class="n">' + a.quota_bassa
+  + '%</td></tr></tbody>';
+</script>
