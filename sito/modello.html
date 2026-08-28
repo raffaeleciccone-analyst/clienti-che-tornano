@@ -169,8 +169,8 @@ footer a{color:var(--tenue)}
     <p class="eti">01 &middot; La matrice</p>
     <h2>Di cento clienti nuovi, quanti tornano</h2>
     <p>Ogni riga e&#39; una <strong>coorte</strong>: i clienti che hanno comprato per la
-      prima volta nello stesso mese. La riga <span id="coorte-esempio"></span> sono
-      <span class="num" id="coorte-esempio-n"></span> clienti entrati in quel mese, e da
+      prima volta nello stesso mese. Nella riga <span id="coorte-esempio"></span> ci sono
+      i <span class="num" id="coorte-esempio-n"></span> clienti entrati in quel mese, e da
       li&#39; in poi li seguiamo come gruppo. Ogni cella dice quanti di loro hanno
       ordinato a distanza di uno, due, tre mesi. E&#39; il grafico che chiunque produce per
       primo, e si legge da sinistra a destra: una discesa.</p>
@@ -245,7 +245,7 @@ footer a{color:var(--tenue)}
 
     <h3>E il conto di prima era sbagliato</h3>
     <p>Contando <em>tutta la vita</em> di ogni cliente veniva 72%, poi 78%, 80%, 81%: una
-      fedelta&#39; che cresce a ogni acquisto. Ma le vite non sono lunghe uguali &mdash;
+      fedelta&#39; che cresce a ogni acquisto. Ma le vite non hanno la stessa lunghezza &mdash;
       chi e&#39; entrato a gennaio 2010 ha avuto due anni per arrivare all&#39;ottavo
       ordine, chi e&#39; entrato a settembre 2011 ne ha avuti tre mesi. Quella salita era
       il tempo in piu&#39; di chi era arrivato in fondo. A tempo fissato sparisce.</p>
@@ -537,8 +537,8 @@ function posiziona(){
     didascalia.innerHTML = "Allineata per eta’: la colonna +1 e’ il primo mese di vita di "
       + "ogni coorte, quale che sia il mese dell’anno. <b>Guarda le barre in fondo</b>, non le "
       + "celle: partono da " + un(primo.m) + " e scendono fino a " + un(bassa[1].m) + " al mese "
-      + etColonna(bassa[0], "eta") + ". Letta cosi’, la storia e’ che i clienti si stancano "
-      + "invecchiando.";
+      + etColonna(bassa[0], "eta") + ". Letta da sinistra a destra, la matrice racconta "
+      + "che i clienti si stancano invecchiando.";
   } else {
     // Gli estremi si prendono dai mesi dell’anno messi insieme, non dalla singola
     // colonna: ott e nov 2010 distano quattro centesimi di punto, e nominare il primo
@@ -547,10 +547,10 @@ function posiziona(){
     const su = perMese.reduce((a,b) => b.quota > a.quota ? b : a);
     const giu = perMese.reduce((a,b) => b.quota < a.quota ? b : a);
     didascalia.innerHTML = "Le stesse identiche celle, ognuna spostata al suo mese vero. "
-      + "<b>Le barre adesso non scendono: salgono e crollano.</b> Sommando i mesi "
-      + "dell’anno, " + MESI_LUNGHI[su.mese - 1] + " vale " + un(su.quota) + " e "
-      + MESI_LUNGHI[giu.mese - 1] + " " + un(giu.quota) + ": piu’ del doppio, con dentro "
-      + "le stesse persone di prima. Non e’ l’eta’ del cliente a muovere il numero, "
+      + "<b>Le barre adesso non scendono: salgono e crollano.</b> Messi insieme anno per "
+      + "anno, " + MESI_LUNGHI[su.mese - 1] + " vale " + un(su.quota) + " contro "
+      + un(giu.quota) + " di " + MESI_LUNGHI[giu.mese - 1] + ": piu’ del doppio, e dentro "
+      + "ci sono le stesse persone. Non e’ l’eta’ del cliente a muovere il numero, "
       + "e’ il mese dell’anno.";
   }
 }
