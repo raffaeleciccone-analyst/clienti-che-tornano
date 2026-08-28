@@ -32,6 +32,8 @@ function nodo(id){
     get value(){ return "20"; },
     querySelectorAll: () => [],
     querySelector: () => nodo(id + "/figlio"),
+    // la larghezza di una colonna, che nel browser vera la da' il CSS
+    getBoundingClientRect: () => ({ width: 26, height: 22, left: 0, right: 26, top: 0, bottom: 22 }),
   };
   return el;
 }
@@ -47,9 +49,14 @@ global.document = {
 };
 global.getComputedStyle = () => ({
   getPropertyValue(n){
-    return { "--freddo": "#7f9cb4", "--tiepido": "#e9e3d5", "--caldo": "#a9741d" }[n] || "#000000";
+    // le misure della matrice: senza queste misure() restituisce NaN e le celle
+    // finiscono tutte a translateX(NaN)
+    return { "--freddo": "#7f9cb4", "--tiepido": "#e9e3d5", "--caldo": "#a9741d",
+             "--c": "26px", "--etichetta": "104px" }[n] || "#000000";
   }
 });
+// La pagina si riaggancia a resize per rimettere le celle quando cambia il passo.
+global.addEventListener = (tipo) => { (ascoltatori["window"] ||= []).push(tipo); };
 global.window = global;
 
 let uscita = 0;
@@ -82,6 +89,13 @@ for (const id of ["coorte-esempio", "coorte-esempio-n"]){
   if (!ok) uscita = 1;
   console.log(`  [${ok ? "ok" : "NO"}] ${id.padEnd(16)} ${v || "VUOTO"}`);
 }
+
+// Senza questo la matrice resta ferma alla larghezza di partenza quando si gira il
+// telefono o si stringe la finestra.
+const suFinestra = (ascoltatori["window"] || []).includes("resize");
+if (!suFinestra) uscita = 1;
+console.log("");
+console.log(`  [${suFinestra ? "ok" : "NO"}] la matrice si ridisegna al resize`);
 
 const clic = Object.keys(ascoltatori);
 console.log(`\ncomandi collegati: ${clic.join(", ") || "NESSUNO"}`);
