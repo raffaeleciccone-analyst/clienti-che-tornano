@@ -84,8 +84,9 @@ section{padding:clamp(56px,8vw,92px) 0 0}
   /* Il testo che viene dopo il grafico non ha piu' niente accanto: sta largo quanto
      tutto il resto, non incolonnato a sinistra con mezzo schermo vuoto di fianco. */
   .dopo{grid-area:dopo;margin-top:34px;max-width:82ch}
-  /* la visuale resta ferma mentre si legge la colonna accanto */
-  .visivo{grid-area:visivo;position:sticky;top:28px}
+  /* Niente «sticky»: il testo che segue attraversa entrambe le colonne, e un grafico
+     che resta incollato in alto gli finisce sopra. Sta fermo dov'e'. */
+  .visivo{grid-area:visivo}
 
   /* Sezione a grafico intero: quando il grafico guadagna a essere largo si prende
      tutta la riga e il testo gli sta sopra e sotto, non di fianco. */
@@ -97,7 +98,6 @@ section{padding:clamp(56px,8vw,92px) 0 0}
   .piano .due{grid-template-columns:minmax(0,1fr);grid-template-areas:"intero"}
   .intero{grid-area:intero;max-width:82ch}
   .col{max-width:1500px;padding:0 40px}
-  .ampio .visivo{position:static}
   /* Le celle crescono fin dove ha senso; quello che avanza si divide equamente ai
      due lati, invece di lasciare un vuoto tutto a destra. */
   .ampio .griglia{--max-c:34px;--h:26px;width:fit-content;margin-inline:auto}
