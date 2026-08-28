@@ -69,8 +69,22 @@ section{padding:clamp(56px,8vw,92px) 0 0}
   box-shadow:0 1px 2px rgba(20,25,30,.12);font-weight:600}
 .interruttore button:focus-visible{outline:2px solid var(--ottone);outline-offset:2px}
 
-.scorre{overflow-x:auto;overflow-y:hidden;padding-bottom:6px}
-.griglia{--n:23;--c:min(26px,calc((100vw - 200px) / var(--n)));--h:22px;--etichetta:104px;font-family:"IBM Plex Mono",monospace;font-size:.68rem}
+/* ── due colonne: la spiegazione accanto al grafico, non sopra ────── */
+.due{max-width:768px;margin:0 auto;padding:0 24px}
+@media (min-width:1080px){
+  .due{max-width:1500px;display:grid;padding:0 40px;align-items:start;
+       grid-template-columns:minmax(300px,380px) minmax(0,1fr);
+       grid-template-areas:"intro visivo" "dopo visivo";
+       column-gap:clamp(32px,3.4vw,64px)}
+  .intro{grid-area:intro}
+  .dopo{grid-area:dopo}
+  /* la visuale resta ferma mentre si legge la colonna accanto */
+  .visivo{grid-area:visivo;position:sticky;top:28px}
+}
+/* Il passo delle colonne si misura sullo spazio che la matrice ha davvero — la sua
+   colonna — non sulla finestra: da quando ci sono due colonne non coincidono piu'. */
+.scorre{overflow-x:auto;overflow-y:hidden;padding-bottom:6px;container-type:inline-size}
+.griglia{--n:23;--c:min(26px,calc((100cqw - var(--etichetta) - 10px) / var(--n)));--h:22px;--etichetta:104px;font-family:"IBM Plex Mono",monospace;font-size:.68rem}
 .intestazioni{display:flex;height:20px;margin-left:var(--etichetta);position:relative}
 .intestazioni span{position:absolute;width:var(--c);text-align:center;color:var(--tenue);
   transition:transform .62s cubic-bezier(.4,0,.2,1);white-space:nowrap;font-size:.64rem}
@@ -152,7 +166,7 @@ footer a{color:var(--tenue)}
    resta il colore, che e' quello che porta il senso. Il numero esatto sta nel
    titolo di ogni cella, dove chi lo vuole lo trova. */
 @media (max-width:720px){
-  .griglia{--c:min(14px,calc((100vw - 110px) / var(--n)));--h:13px;--etichetta:50px}
+  .griglia{--c:min(14px,calc((100cqw - var(--etichetta) - 10px) / var(--n)));--h:13px;--etichetta:50px}
   .cella{font-size:0;border-radius:2px}
   .cella.zero{display:none}
   .intestazioni span,.etichetta{font-size:.56rem}
@@ -183,195 +197,213 @@ footer a{color:var(--tenue)}
 
 <!-- ═══ 1. la matrice ═══════════════════════════════════════════════ -->
 <section>
-  <div class="col">
-    <p class="eti">01 &middot; La matrice</p>
-    <h2>Di cento clienti nuovi, quanti tornano</h2>
-    <p>Ogni riga e&#39; una <strong>coorte</strong>: i clienti che hanno comprato per la
+  <div class="due">
+    <div class="intro">
+      <p class="eti">01 &middot; La matrice</p>
+      <h2>Di cento clienti nuovi, quanti tornano</h2>
+      <p>Ogni riga e&#39; una <strong>coorte</strong>: i clienti che hanno comprato per la
       prima volta nello stesso mese. Nella riga <span id="coorte-esempio"></span> ci sono
       i <span class="num" id="coorte-esempio-n"></span> clienti entrati in quel mese, e da
       li&#39; in poi li seguiamo come gruppo. Ogni cella dice quanti di loro hanno
       ordinato a distanza di uno, due, tre mesi. E&#39; il grafico che chiunque produce per
       primo, e si legge da sinistra a destra: una discesa.</p>
-    <p><strong>Guardala, e poi premi il secondo pulsante.</strong> Le celle sono le
+      <p><strong>Guardala, e poi premi il secondo pulsante.</strong> Le celle sono le
       stesse: cambia solo dove stanno.</p>
-  </div>
-
-  <div class="largo">
-    <div class="pannello">
-      <div class="barra">
-        <div class="interruttore" role="group" aria-label="Come allineare la matrice">
-          <button id="b-eta" aria-pressed="true">per eta&#39; del cliente</button>
-          <button id="b-cal" aria-pressed="false">per mese del calendario</button>
-        </div>
-        <div class="legenda">
-          <span>meno</span><div class="scala" role="img"
-            aria-label="scala di colore: dal blu freddo per la retention bassa all&#39;ottone caldo per quella alta"></div><span>piu&#39;</span>
-        </div>
-      </div>
-      <div class="scorre">
-        <div class="griglia" id="griglia"></div>
-      </div>
-      <p class="didascalia" id="didascalia"></p>
     </div>
-  </div>
-
-  <div class="col">
-    <div class="nota" id="nota-trappola">
-      <p><strong>Quello che si vede allineando per calendario.</strong> Le colonne si
-        accendono e si spengono tutte insieme: novembre acceso in ogni riga, gennaio
-        spento in ogni riga. Non e&#39; l&#39;eta&#39; del cliente a muovere il numero,
-        e&#39; il mese dell&#39;anno.</p>
-      <p id="quanto-spiega"></p>
+    <div class="visivo">
+      <div class="pannello">
+        <div class="barra">
+          <div class="interruttore" role="group" aria-label="Come allineare la matrice">
+            <button id="b-eta" aria-pressed="true">per eta&#39; del cliente</button>
+            <button id="b-cal" aria-pressed="false">per mese del calendario</button>
+          </div>
+          <div class="legenda">
+            <span>meno</span><div class="scala" role="img"
+              aria-label="scala di colore: dal blu freddo per la retention bassa all&#39;ottone caldo per quella alta"></div><span>piu&#39;</span>
+          </div>
+        </div>
+        <div class="scorre">
+          <div class="griglia" id="griglia"></div>
+        </div>
+        <p class="didascalia" id="didascalia"></p>
+      </div>
     </div>
-    <p>Novembre vale piu&#39; del doppio di gennaio, e il picco arriva <em>prima</em> di
+    <div class="dopo">
+      <div class="nota" id="nota-trappola">
+        <p><strong>Quello che si vede allineando per calendario.</strong> Le colonne si
+          accendono e si spengono tutte insieme: novembre acceso in ogni riga, gennaio
+          spento in ogni riga. Non e&#39; l&#39;eta&#39; del cliente a muovere il numero,
+          e&#39; il mese dell&#39;anno.</p>
+        <p id="quanto-spiega"></p>
+      </div>
+      <p>Novembre vale piu&#39; del doppio di gennaio, e il picco arriva <em>prima</em> di
       Natale, non durante. La lettura naturale e&#39; che molti di questi clienti non
       siano consumatori ma negozi, che si riforniscono in autunno e poi stanno fermi: un
       ordine mediano vale 303&nbsp;&pound; e ha 15 righe per 153 pezzi. Ma il picco e&#39;
       un fatto e il perche&#39; e&#39; una lettura, e vanno tenuti separati.</p>
-    <p><strong>Cosa cambia in pratica:</strong> due coorti non si confrontano se non hanno
+      <p><strong>Cosa cambia in pratica:</strong> due coorti non si confrontano se non hanno
       vissuto gli stessi mesi. Chi entra a ottobre ha il Natale davanti, chi entra a
       gennaio ha undici mesi di attesa. Una classifica delle coorti per retention
       misurerebbe il mese di ingresso e lo chiamerebbe qualita&#39; dei clienti.</p>
-    <p class="guida">Un limite, detto dove serve: nella finestra dei dati c&#39;e&#39; un
+      <p class="guida">Un limite, detto dove serve: nella finestra dei dati c&#39;e&#39; un
       dicembre solo e un gennaio solo. I mesi centrali hanno due anni a testa e reggono;
       sui due estremi si dice la direzione, non la cifra.</p>
+    </div>
   </div>
 </section>
 
 <!-- ═══ 2. il funnel ════════════════════════════════════════════════ -->
 <section>
-  <div class="col">
-    <p class="eti">02 &middot; Il riacquisto</p>
-    <h2>Il secondo ordine non mette al sicuro</h2>
-    <p>Su cento clienti che fanno un ordine, quanti ne fanno un secondo, un terzo, un
+  <div class="due">
+    <div class="intro">
+      <p class="eti">02 &middot; Il riacquisto</p>
+      <h2>Il secondo ordine non mette al sicuro</h2>
+      <p>Su cento clienti che fanno un ordine, quanti ne fanno un secondo, un terzo, un
       quarto. Non e&#39; un funnel di conversione &mdash; in dati transazionali non
       esistono sessioni ne&#39; carrelli abbandonati &mdash; e&#39; la sopravvivenza da un
       ordine al successivo.</p>
-    <div class="pannello">
-      <div id="funnel"></div>
     </div>
-    <p class="didascalia">Sui <span class="num" id="n-campione"></span> clienti entrati
+    <div class="visivo">
+      <div class="pannello">
+        <div id="funnel"></div>
+      </div>
+      <p class="didascalia">Sui <span class="num" id="n-campione"></span> clienti entrati
       nel 2010 che hanno avuto 365 giorni interi davanti. La colonna di destra e&#39; la
       quota che sopravvive da un gradino al successivo.</p>
-
-    <div class="nota">
-      <p><strong>La colonna di destra non si muove: <span id="p-medio"></span> a ogni
-        gradino.</strong> Arrivare al secondo ordine non rende un cliente piu&#39; fedele
-        di quanto fosse. &laquo;Portali al secondo acquisto e sono tuoi&raquo; qui e&#39;
-        falso.</p>
     </div>
-
-    <h3>E il conto di prima era sbagliato</h3>
-    <p>Contando <em>tutta la vita</em> di ogni cliente veniva 72%, poi 78%, 80%, 81%: una
+    <div class="dopo">
+      <div class="nota">
+        <p><strong>La colonna di destra non si muove: <span id="p-medio"></span> a ogni
+          gradino.</strong> Arrivare al secondo ordine non rende un cliente piu&#39; fedele
+          di quanto fosse. &laquo;Portali al secondo acquisto e sono tuoi&raquo; qui e&#39;
+          falso.</p>
+      </div>
+      <h3>E il conto di prima era sbagliato</h3>
+      <p>Contando <em>tutta la vita</em> di ogni cliente veniva 72%, poi 78%, 80%, 81%: una
       fedelta&#39; che cresce a ogni acquisto. Ma le vite non hanno la stessa lunghezza &mdash;
       chi e&#39; entrato a gennaio 2010 ha avuto due anni per arrivare all&#39;ottavo
       ordine, chi e&#39; entrato a settembre 2011 ne ha avuti tre mesi. Quella salita era
       il tempo in piu&#39; di chi era arrivato in fondo. A tempo fissato sparisce.</p>
+    </div>
   </div>
 </section>
 
 <!-- ═══ 3. il tempo ═════════════════════════════════════════════════ -->
 <section>
-  <div class="col">
-    <p class="eti">03 &middot; Il tempo</p>
-    <h2>La soglia oltre la quale un cliente e&#39; perso non esiste</h2>
-    <p>Era la domanda che doveva produrre la leva: se esiste un numero di giorni di
+  <div class="due">
+    <div class="intro">
+      <p class="eti">03 &middot; Il tempo</p>
+      <h2>La soglia oltre la quale un cliente e&#39; perso non esiste</h2>
+      <p>Era la domanda che doveva produrre la leva: se esiste un numero di giorni di
       silenzio oltre il quale la probabilita&#39; di ritorno crolla, quello e&#39; il
       momento in cui una riattivazione ha senso.</p>
-    <div class="pannello">
-      <div id="curva"></div>
     </div>
-    <p class="didascalia">Di chi torna entro l&#39;anno, quanti sono gia&#39; tornati
+    <div class="visivo">
+      <div class="pannello">
+        <div id="curva"></div>
+      </div>
+      <p class="didascalia">Di chi torna entro l&#39;anno, quanti sono gia&#39; tornati
       dopo N giorni. La curva sale in modo regolare e non ha nessun gradino: non
       esiste il giorno in cui i ritorni si fermano di colpo.</p>
-    <div class="nota">
-      <p><strong>Non c&#39;e&#39; nessun burrone.</strong> Chi cercava una soglia netta
-        qui non la trova, e dichiararne una vorrebbe dire inventarla. Quello che si
-        puo&#39; dire e&#39; piu&#39; modesto e ancora utile: <strong>la mediana e&#39;
-        <span id="mediana-gg"></span> giorni</strong>. Una riattivazione mandata al
-        secondo mese arriva quando meta&#39; di chi tornera&#39; non e&#39; ancora
-        tornato. Non e&#39; una soglia, e&#39; un momento ragionevole.</p>
+    </div>
+    <div class="dopo">
+      <div class="nota">
+        <p><strong>Non c&#39;e&#39; nessun burrone.</strong> Chi cercava una soglia netta
+          qui non la trova, e dichiararne una vorrebbe dire inventarla. Quello che si
+          puo&#39; dire e&#39; piu&#39; modesto e ancora utile: <strong>la mediana e&#39;
+          <span id="mediana-gg"></span> giorni</strong>. Una riattivazione mandata al
+          secondo mese arriva quando meta&#39; di chi tornera&#39; non e&#39; ancora
+          tornato. Non e&#39; una soglia, e&#39; un momento ragionevole.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ═══ 4. il valore ════════════════════════════════════════════════ -->
 <section>
-  <div class="col">
-    <p class="eti">04 &middot; Il valore</p>
-    <h2>Quanto vale, davvero, chi torna</h2>
-    <p>Nel suo primo anno &mdash; finestra uguale per tutti, se no si misura quanto tempo
+  <div class="due">
+    <div class="intro">
+      <p class="eti">04 &middot; Il valore</p>
+      <h2>Quanto vale, davvero, chi torna</h2>
+      <p>Nel suo primo anno &mdash; finestra uguale per tutti, se no si misura quanto tempo
       ha avuto il cliente, non il cliente:</p>
-    <table class="tab" id="tab-valore"></table>
-    <p class="didascalia">Media e mediana sono lontane: la distribuzione ha una coda
+      <table class="tab" id="tab-valore"></table>
+    </div>
+    <div class="visivo">
+      <p class="didascalia">Media e mediana sono lontane: la distribuzione ha una coda
       lunga. Si mostrano tutte e due, non si sceglie la piu&#39; comoda.</p>
-
-    <h3>Ma chi torna era gia&#39; diverso il primo giorno</h3>
-    <p>Se aveva speso di piu&#39; al primo acquisto spendera&#39; di piu&#39; anche in
+      <p class="didascalia" id="quanto-resta"></p>
+    </div>
+    <div class="dopo">
+      <h3>Ma chi torna era gia&#39; diverso il primo giorno</h3>
+      <p>Se aveva speso di piu&#39; al primo acquisto spendera&#39; di piu&#39; anche in
       totale, e quella parte del divario non dipende dal ritorno. Allora si confrontano
       solo clienti <strong>appaiati per dimensione del primo ordine e per mese di
       ingresso</strong>, e si guarda quanto della differenza sopravvive.</p>
-    <table class="tab" id="tab-appaiata"></table>
-    <p class="didascalia" id="quanto-resta"></p>
-
-    <div class="nota">
-      <p><strong>E i soldi non stanno nel secondo ordine.</strong> Per cliente che torna,
-        il secondo ordine porta <span class="num" id="v-secondo"></span>&nbsp;&pound; e
-        tutti gli ordini successivi <span class="num" id="v-terzo"></span>&nbsp;&pound;.
-        Se la sopravvivenza e&#39; uguale a ogni gradino, chi viene riportato al secondo
-        ordine non ha comprato una volta in piu&#39;: e&#39; entrato in una fila dove ogni
-        passo ha la stessa probabilita&#39; di averne un altro dietro. Quello che si
-        compra riattivandolo e&#39; la coda che gli si apre dietro.</p>
+      <table class="tab" id="tab-appaiata"></table>
+      <div class="nota">
+        <p><strong>E i soldi non stanno nel secondo ordine.</strong> Per cliente che torna,
+          il secondo ordine porta <span class="num" id="v-secondo"></span>&nbsp;&pound; e
+          tutti gli ordini successivi <span class="num" id="v-terzo"></span>&nbsp;&pound;.
+          Se la sopravvivenza e&#39; uguale a ogni gradino, chi viene riportato al secondo
+          ordine non ha comprato una volta in piu&#39;: e&#39; entrato in una fila dove ogni
+          passo ha la stessa probabilita&#39; di averne un altro dietro. Quello che si
+          compra riattivandolo e&#39; la coda che gli si apre dietro.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ═══ 5. il pareggio ══════════════════════════════════════════════ -->
 <section>
-  <div class="col">
-    <p class="eti">05 &middot; La risposta</p>
-    <h2>Fino a quanto conviene spendere</h2>
-    <p>La domanda di partenza era se convenga trattenere o acquisire. <strong>Questi dati
+  <div class="due">
+    <div class="intro">
+      <p class="eti">05 &middot; La risposta</p>
+      <h2>Fino a quanto conviene spendere</h2>
+      <p>La domanda di partenza era se convenga trattenere o acquisire. <strong>Questi dati
       non possono dirlo</strong>: non contengono il costo di acquisizione, e nemmeno il
       costo del venduto. Ma il buco non si tappa dichiarandolo &mdash; si chiude cambiando
       cosa si consegna. Invece del verdetto, la soglia:</p>
-    <div class="pannello">
-      <div class="manopola">
-        <div>
-          <label for="margine">Il tuo margine: <b id="v-margine" class="num">20%</b></label>
-          <input type="range" id="margine" min="5" max="60" step="1" value="20"
-            aria-describedby="esito-pareggio">
-        </div>
-        <div class="risposta" id="esito-pareggio"></div>
-      </div>
     </div>
-    <p class="didascalia">Il margine e&#39; una manopola dichiarata, non un risultato: senza
+    <div class="visivo">
+      <div class="pannello">
+        <div class="manopola">
+          <div>
+            <label for="margine">Il tuo margine: <b id="v-margine" class="num">20%</b></label>
+            <input type="range" id="margine" min="5" max="60" step="1" value="20"
+              aria-describedby="esito-pareggio">
+          </div>
+          <div class="risposta" id="esito-pareggio"></div>
+        </div>
+      </div>
+      <p class="didascalia">Il margine e&#39; una manopola dichiarata, non un risultato: senza
       il costo del venduto quello che si misura e&#39; ricavo, non profitto. La cifra usa
       l&#39;estremo basso dell&#39;intervallo, cioe&#39; la soglia che regge anche se la
       stima e&#39; ottimista.</p>
+    </div>
   </div>
 </section>
 
 <!-- ═══ 6. i limiti ═════════════════════════════════════════════════ -->
 <section>
-  <div class="col">
-    <p class="eti">06 &middot; Quello che questi numeri non dicono</p>
-    <h2>Il limite piu&#39; grosso non era fra quelli previsti</h2>
-    <p>Il <strong>22,8% delle righe non ha un identificativo cliente</strong> &mdash;
+  <div class="due">
+    <div class="intro">
+      <p class="eti">06 &middot; Quello che questi numeri non dicono</p>
+      <h2>Il limite piu&#39; grosso non era fra quelli previsti</h2>
+      <p>Il <strong>22,8% delle righe non ha un identificativo cliente</strong> &mdash;
       8.752 fatture. Era gia&#39; dichiarato, ma l&#39;avvertenza era stata applicata solo
       al fatturato e non alla cifra che apre tutto: quanti clienti tornano.</p>
-    <table class="tab" id="tab-anonimi"></table>
-    <p>Se le fatture anonime fossero clienti occasionali sarebbero tutte
+      <table class="tab" id="tab-anonimi"></table>
+      <p>Se le fatture anonime fossero clienti occasionali sarebbero tutte
       &laquo;uno e basta&raquo;. <strong>Il tasso vero sta fra il 29% e il 72%</strong>, e
       con questi dati non si stringe. Quindi la frase corretta e&#39; &laquo;tre clienti
       <em>identificati</em> su quattro tornano&raquo;, mai &laquo;tre clienti su
       quattro&raquo;.</p>
-    <p>Il resto regge, e non e&#39; un salvataggio: sono confronti <em>interni</em>
+      <p>Il resto regge, e non e&#39; un salvataggio: sono confronti <em>interni</em>
       &mdash; chi torna contro chi non torna, novembre contro gennaio, gradino contro
       gradino. Gli anonimi non stanno su nessuno dei due lati, quindi non li inclinano.</p>
-
-    <h3>E il limite che nessuno puo&#39; togliere</h3>
-    <p>Chi torna magari aveva un bisogno ricorrente fin dall&#39;inizio, e sarebbe tornato
+      <h3>E il limite che nessuno puo&#39; togliere</h3>
+      <p>Chi torna magari aveva un bisogno ricorrente fin dall&#39;inizio, e sarebbe tornato
       comunque. L&#39;appaiamento toglie il divario dovuto a chi partiva gia&#39; piu&#39;
       grosso, non quello che non si e&#39; misurato. Perche&#39; questa pagina scrive
       sempre <strong>&laquo;i clienti che tornano valgono N volte&raquo;</strong> e mai
@@ -379,6 +411,10 @@ footer a{color:var(--tenue)}
       esperimento con la riattivazione assegnata a caso, e la differenza fra le due frasi
       e&#39; la differenza fra un&#39;analisi che si puo&#39; usare e una che fa perdere
       soldi.</p>
+    </div>
+    <div class="visivo">
+
+    </div>
   </div>
 </section>
 
