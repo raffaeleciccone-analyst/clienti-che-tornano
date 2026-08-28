@@ -74,17 +74,29 @@ section{padding:clamp(56px,8vw,92px) 0 0}
 @media (min-width:1080px){
   .due{max-width:1500px;display:grid;padding:0 40px;align-items:start;
        grid-template-columns:minmax(300px,380px) minmax(0,1fr);
-       grid-template-areas:"intro visivo" "dopo visivo";
+       grid-template-areas:"intro visivo" "dopo dopo";
        column-gap:clamp(32px,3.4vw,64px)}
   .intro{grid-area:intro}
-  .dopo{grid-area:dopo}
+  /* Il testo che viene dopo il grafico non ha piu' niente accanto: sta largo quanto
+     tutto il resto, non incolonnato a sinistra con mezzo schermo vuoto di fianco. */
+  .dopo{grid-area:dopo;margin-top:34px;max-width:82ch}
   /* la visuale resta ferma mentre si legge la colonna accanto */
   .visivo{grid-area:visivo;position:sticky;top:28px}
+
+  /* Sezione a grafico intero: quando il grafico guadagna a essere largo si prende
+     tutta la riga e il testo gli sta sopra e sotto, non di fianco. */
+  .ampio .due{grid-template-columns:minmax(0,1fr);
+              grid-template-areas:"intro" "visivo" "dopo"}
+  .ampio .intro{max-width:82ch;margin-bottom:26px}
+  .ampio .visivo{position:static}
+  /* Le celle crescono fin dove ha senso; quello che avanza si divide equamente ai
+     due lati, invece di lasciare un vuoto tutto a destra. */
+  .ampio .griglia{--max-c:34px;--h:26px;width:fit-content;margin-inline:auto}
 }
 /* Il passo delle colonne si misura sullo spazio che la matrice ha davvero — la sua
    colonna — non sulla finestra: da quando ci sono due colonne non coincidono piu'. */
 .scorre{overflow-x:auto;overflow-y:hidden;padding-bottom:6px;container-type:inline-size}
-.griglia{--n:23;--c:min(26px,calc((100cqw - var(--etichetta) - 10px) / var(--n)));--h:22px;--etichetta:104px;font-family:"IBM Plex Mono",monospace;font-size:.68rem}
+.griglia{--n:23;--max-c:26px;--c:min(var(--max-c),calc((100cqw - var(--etichetta) - 10px) / var(--n)));--h:22px;--etichetta:104px;font-family:"IBM Plex Mono",monospace;font-size:.68rem}
 .intestazioni{display:flex;height:20px;margin-left:var(--etichetta);position:relative}
 .intestazioni span{position:absolute;width:var(--c);text-align:center;color:var(--tenue);
   transition:transform .62s cubic-bezier(.4,0,.2,1);white-space:nowrap;font-size:.64rem}
@@ -166,7 +178,7 @@ footer a{color:var(--tenue)}
    resta il colore, che e' quello che porta il senso. Il numero esatto sta nel
    titolo di ogni cella, dove chi lo vuole lo trova. */
 @media (max-width:720px){
-  .griglia{--c:min(14px,calc((100cqw - var(--etichetta) - 10px) / var(--n)));--h:13px;--etichetta:50px}
+  .griglia{--max-c:14px;--h:13px;--etichetta:50px}
   .cella{font-size:0;border-radius:2px}
   .cella.zero{display:none}
   .intestazioni span,.etichetta{font-size:.56rem}
@@ -196,7 +208,10 @@ footer a{color:var(--tenue)}
 </header>
 
 <!-- ═══ 1. la matrice ═══════════════════════════════════════════════ -->
-<section>
+<!-- «ampio»: la matrice e' l'unica figura che guadagna davvero a essere larga —
+     ventitre colonne per ventitre righe. Si prende la riga intera e le celle
+     crescono da 26 a 34 px; il testo le sta sopra e sotto. -->
+<section class="ampio">
   <div class="due">
     <div class="intro">
       <p class="eti">01 &middot; La matrice</p>
