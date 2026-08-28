@@ -162,7 +162,10 @@ footer a{color:var(--tenue)}
   <div class="col">
     <p class="eti">01 &middot; La matrice</p>
     <h2>Di cento clienti nuovi, quanti tornano</h2>
-    <p>Ogni riga e&#39; un mese di clienti nuovi. Ogni cella dice quanti di loro hanno
+    <p>Ogni riga e&#39; una <strong>coorte</strong>: i clienti che hanno comprato per la
+      prima volta nello stesso mese. La riga <span id="coorte-esempio"></span> sono
+      <span class="num" id="coorte-esempio-n"></span> clienti entrati in quel mese, e da
+      li&#39; in poi li seguiamo come gruppo. Ogni cella dice quanti di loro hanno
       ordinato a distanza di uno, due, tre mesi. E&#39; il grafico che chiunque produce per
       primo, e si legge da sinistra a destra: una discesa.</p>
     <p><strong>Guardala, e poi premi il secondo pulsante.</strong> Le celle sono le
@@ -497,6 +500,8 @@ document.getElementById("funnel").innerHTML = D.funnel.map(g =>
   + D.funnel.slice(1).map(g => '<span style="display:inline-block;margin-right:16px">'
   + g.gradino + 'º <b class="num" style="color:var(--ottone)">' + g.sopravvive
   + '%</b></span>').join("") + '</div>';
+document.getElementById("coorte-esempio").textContent = inizio.coorte;
+document.getElementById("coorte-esempio-n").textContent = n0(inizio.entrati);
 document.getElementById("n-campione").textContent = n0(D.campione.clienti);
 document.getElementById("p-medio").textContent = D.sopravvivenza_media + "%";
 
