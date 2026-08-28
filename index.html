@@ -29,7 +29,11 @@
 body{margin:0;background:var(--carta);color:var(--inchiostro);
   font-family:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
-.col{max-width:720px;margin:0 auto;padding:0 24px}
+/* Testata e chiusura: stesso contenitore delle sezioni, se no partono da un bordo
+   diverso e la pagina sembra due documenti incollati. Dentro, il testo si ferma dove
+   si legge. */
+.col{max-width:768px;margin:0 auto;padding:0 24px}
+.col > *{max-width:82ch}
 .largo{max-width:1140px;margin:0 auto;padding:0 24px}
 
 h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.015em;line-height:1.15}
@@ -88,6 +92,11 @@ section{padding:clamp(56px,8vw,92px) 0 0}
   .ampio .due{grid-template-columns:minmax(0,1fr);
               grid-template-areas:"intro" "visivo" "dopo"}
   .ampio .intro{max-width:82ch;margin-bottom:26px}
+  /* Sezione senza grafico: niente da affiancare, quindi niente due colonne. Una
+     colonna sola, larga quanto le altre sezioni e ferma dove il testo si legge. */
+  .piano .due{grid-template-columns:minmax(0,1fr);grid-template-areas:"intero"}
+  .intero{grid-area:intero;max-width:82ch}
+  .col{max-width:1500px;padding:0 40px}
   .ampio .visivo{position:static}
   /* Le celle crescono fin dove ha senso; quello che avanza si divide equamente ai
      due lati, invece di lasciare un vuoto tutto a destra. */
@@ -335,27 +344,23 @@ footer a{color:var(--tenue)}
 </section>
 
 <!-- ═══ 4. il valore ════════════════════════════════════════════════ -->
-<section>
+<section class="piano">
   <div class="due">
-    <div class="intro">
+    <div class="intero">
       <p class="eti">04 &middot; Il valore</p>
       <h2>Quanto vale, davvero, chi torna</h2>
       <p>Nel suo primo anno &mdash; finestra uguale per tutti, se no si misura quanto tempo
       ha avuto il cliente, non il cliente:</p>
       <table class="tab" id="tab-valore"></table>
-    </div>
-    <div class="visivo">
       <p class="didascalia">Media e mediana sono lontane: la distribuzione ha una coda
       lunga. Si mostrano tutte e due, non si sceglie la piu&#39; comoda.</p>
-      <p class="didascalia" id="quanto-resta"></p>
-    </div>
-    <div class="dopo">
       <h3>Ma chi torna era gia&#39; diverso il primo giorno</h3>
       <p>Se aveva speso di piu&#39; al primo acquisto spendera&#39; di piu&#39; anche in
       totale, e quella parte del divario non dipende dal ritorno. Allora si confrontano
       solo clienti <strong>appaiati per dimensione del primo ordine e per mese di
       ingresso</strong>, e si guarda quanto della differenza sopravvive.</p>
       <table class="tab" id="tab-appaiata"></table>
+      <p class="didascalia" id="quanto-resta"></p>
       <div class="nota">
         <p><strong>E i soldi non stanno nel secondo ordine.</strong> Per cliente che torna,
           il secondo ordine porta <span class="num" id="v-secondo"></span>&nbsp;&pound; e
@@ -400,9 +405,9 @@ footer a{color:var(--tenue)}
 </section>
 
 <!-- ═══ 6. i limiti ═════════════════════════════════════════════════ -->
-<section>
+<section class="piano">
   <div class="due">
-    <div class="intro">
+    <div class="intero">
       <p class="eti">06 &middot; Quello che questi numeri non dicono</p>
       <h2>Il limite piu&#39; grosso non era fra quelli previsti</h2>
       <p>Il <strong>22,8% delle righe non ha un identificativo cliente</strong> &mdash;
@@ -426,9 +431,6 @@ footer a{color:var(--tenue)}
       esperimento con la riattivazione assegnata a caso, e la differenza fra le due frasi
       e&#39; la differenza fra un&#39;analisi che si puo&#39; usare e una che fa perdere
       soldi.</p>
-    </div>
-    <div class="visivo">
-
     </div>
   </div>
 </section>
