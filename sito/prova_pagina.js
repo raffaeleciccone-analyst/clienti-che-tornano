@@ -72,6 +72,17 @@ for (const id of attesi){
   console.log(`  [${ok ? "ok" : "NO"}] ${id.padEnd(16)} ${String(n).padStart(7)} caratteri`);
 }
 
+// L'esempio che definisce la parola «coorte»: due caselle corte, sotto la soglia
+// dei 60 caratteri di sopra, ma se restano vuote la definizione non definisce niente.
+console.log("");
+console.log("l'esempio nella definizione di coorte:");
+for (const id of ["coorte-esempio", "coorte-esempio-n"]){
+  const v = (scritture[id] || "").trim();
+  const ok = v.length > 0;
+  if (!ok) uscita = 1;
+  console.log(`  [${ok ? "ok" : "NO"}] ${id.padEnd(16)} ${v || "VUOTO"}`);
+}
+
 const clic = Object.keys(ascoltatori);
 console.log(`\ncomandi collegati: ${clic.join(", ") || "NESSUNO"}`);
 for (const id of ["b-eta", "b-cal", "margine"]){

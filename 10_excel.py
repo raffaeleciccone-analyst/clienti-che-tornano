@@ -405,7 +405,7 @@ def foglio_pareggio(wb, d):
 def foglio_dati(wb, d):
     """La matrice in formato lungo: una riga per cella. E' il foglio da cui si
     fa una tabella pivot senza dover disfare una matrice larga."""
-    ws = wb.create_sheet("Dati coorti")
+    ws = wb.create_sheet("Coorti (mese d'ingresso)")
     intestazioni = ["coorte", "anno coorte", "mese coorte", "clienti entrati",
                     "mese relativo", "mese calendario", "anno calendario", "quota attivi"]
     for i, t in enumerate(intestazioni):
@@ -441,7 +441,7 @@ def verifica(d) -> list[str]:
     wb = load_workbook(USCITA)
 
     attesi = ["Leggimi", "Matrice per età", "Matrice per calendario",
-              "Riacquisto", "Valore e pareggio", "Dati coorti"]
+              "Riacquisto", "Valore e pareggio", "Coorti (mese d'ingresso)"]
     for nome in attesi:
         if nome not in wb.sheetnames:
             guai.append(f"manca il foglio «{nome}»")
