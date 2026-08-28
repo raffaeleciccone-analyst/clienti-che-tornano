@@ -87,7 +87,7 @@ section{padding:clamp(56px,8vw,92px) 0 0}
   border-top:1px solid var(--riga);padding-top:8px}
 .striscia .etichetta{align-self:flex-end;padding-bottom:2px;line-height:1.15}
 .striscia .corsia{height:50px}
-.barra{position:absolute;bottom:0;width:calc(var(--c) - 4px);border-radius:2px 2px 0 0;
+.colonnina{position:absolute;bottom:0;width:calc(var(--c) - 4px);border-radius:2px 2px 0 0;
   transition:height .62s cubic-bezier(.4,0,.2,1),transform .62s cubic-bezier(.4,0,.2,1)}
 .legenda{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--tenue);
   margin:16px 0 0;flex-wrap:wrap}
@@ -264,8 +264,8 @@ footer a{color:var(--tenue)}
       <div id="curva"></div>
     </div>
     <p class="didascalia">Di chi torna entro l&#39;anno, quanti sono gia&#39; tornati
-      dopo N giorni. La curva cala in modo regolare e non ha nessun punto in cui
-      precipita.</p>
+      dopo N giorni. La curva sale in modo regolare e non ha nessun gradino: non
+      esiste il giorno in cui i ritorni si fermano di colpo.</p>
     <div class="nota">
       <p><strong>Non c&#39;e&#39; nessun burrone.</strong> Chi cercava una soglia netta
         qui non la trova, e dichiararne una vorrebbe dire inventarla. Quello che si
@@ -413,6 +413,10 @@ function misc(a, b, t){
 const griglia = document.getElementById("griglia");
 const didascalia = document.getElementById("didascalia");
 let vista = "eta";
+// Larghezza della colonna delle etichette. Ci deve stare «2010-01 · 368» per intero:
+// a 78px il testo finiva sotto la prima cella e il numero dei clienti entrati non si
+// leggeva su nessuna riga.
+const GRONDA = 104;
 
 const tutte = D.coorti.flatMap(c => c.celle.slice(1).filter(v => v !== null));
 const media = tutte.reduce((s,v) => s+v, 0) / tutte.length;
@@ -458,20 +462,20 @@ function disegnaStriscia(){
     const o = s[j];
     // Le colonne che poggiano su poche coorti sono piu' pallide: ci sono, ma non
     // pesano quanto le altre.
-    h += '<div class="barra" data-i="' + j + '" title="' + etColonna(j, vista) + ': '
+    h += '<div class="colonnina" data-i="' + j + '" title="' + etColonna(j, vista) + ': '
        + un(o.m) + ' in media, su ' + o.n + (o.n === 1 ? ' coorte' : ' coorti') + '"'
        + ' style="height:' + Math.max(2, Math.round(o.m / altMax * 46)) + 'px;background:'
        + tinta(o.m, media, min, max) + ';opacity:' + (o.n < 4 ? ".45" : "1") + '"></div>';
   }
   corsia.innerHTML = h;
-  corsia.querySelectorAll(".barra").forEach(el => {
+  corsia.querySelectorAll(".colonnina").forEach(el => {
     el.style.transform = "translateX(" + (+el.dataset.i * 26) + "px)";
   });
 }
 
 function disegna(){
   const nCol = vista === "eta" ? larghezzaEta : larghezzaCal;
-  griglia.style.setProperty("--etichetta", "78px");
+  griglia.style.setProperty("--etichetta", GRONDA + "px");
   let h = '<div class="intestazioni" id="teste"></div>';
   for (const c of D.coorti){
     h += '<div class="rigam"><div class="etichetta"><b>' + c.coorte + '</b> &middot; '
@@ -480,7 +484,7 @@ function disegna(){
   h += '<div class="rigam striscia"><div class="etichetta">media di<br>ogni colonna</div>'
      + '<div class="corsia" id="corsia-media"></div></div>';
   griglia.innerHTML = h;
-  griglia.style.minWidth = (78 + nCol * 26 + 8) + "px";
+  griglia.style.minWidth = (GRONDA + nCol * 26 + 8) + "px";
 
   const teste = document.getElementById("teste");
   let th = "";
@@ -559,7 +563,7 @@ function cambia(v){
   document.getElementById("b-eta").setAttribute("aria-pressed", v === "eta");
   document.getElementById("b-cal").setAttribute("aria-pressed", v === "cal");
   const nCol = v === "eta" ? larghezzaEta : larghezzaCal;
-  griglia.style.minWidth = (78 + nCol * 26 + 8) + "px";
+  griglia.style.minWidth = (GRONDA + nCol * 26 + 8) + "px";
   posiziona();
 }
 disegna();
@@ -593,26 +597,37 @@ document.getElementById("p-medio").textContent = D.sopravvivenza_media + "%";
   const pt = D.tempo_secondo.cumulata;
   const linea = pt.map((p,i) => (i ? "L" : "M") + px(p.giorni).toFixed(1) + " "
     + py(p.quota).toFixed(1)).join(" ");
+  const a = pt[0], z = pt[pt.length - 1];
   let s = '<svg class="grafico" viewBox="0 0 ' + W + ' ' + H + '" role="img" '
-    + 'aria-label="Curva dei ritorni: sale in modo regolare dal 10% a 10 giorni fino al '
-    + '100% a 365, senza nessun gradino o crollo">';
+    + 'aria-label="Curva dei ritorni: sale in modo regolare dal ' + a.quota + '% a '
+    + a.giorni + ' giorni fino al ' + z.quota + '% a ' + z.giorni
+    + ', senza nessun gradino o crollo">';
   s += '<title>Quanti sono gia’ tornati, giorno per giorno</title>';
   [0,25,50,75,100].forEach(q => {
     s += '<line class="guidaX" x1="' + ml + '" y1="' + py(q) + '" x2="' + (W-mr)
        + '" y2="' + py(q) + '"/><text x="' + (ml-8) + '" y="' + (py(q)+3.5)
        + '" text-anchor="end">' + q + '%</text>';
   });
-  s += '<path class="area" d="' + linea + ' L' + px(365) + ' ' + py(0) + ' L'
-     + px(10) + ' ' + py(0) + ' Z"/>';
+  // L'area si chiude sull'ultimo punto che esiste davvero, non a 365: chiudendola
+  // dove i dati non arrivano il bordo destro diventava una diagonale finta.
+  const ultimo = pt[pt.length - 1], primo = pt[0];
+  s += '<path class="area" d="' + linea + ' L' + px(ultimo.giorni) + ' ' + py(0) + ' L'
+     + px(primo.giorni) + ' ' + py(0) + ' Z"/>';
   s += '<path class="linea" d="' + linea + '"/>';
-  [30,90,180,365].forEach(g => {
-    s += '<text x="' + px(g) + '" y="' + (H-8) + '" text-anchor="middle">' + g + 'gg</text>';
+  // L'ultima tacca si ancora a destra invece che al centro: centrata sul suo x finiva
+  // meta' fuori dal riquadro e si leggeva «365g».
+  const tacche = [30,90,180,365];
+  tacche.forEach(g => {
+    const ancora = g === tacche[tacche.length - 1] ? "end" : "middle";
+    s += '<text x="' + px(g) + '" y="' + (H-8) + '" text-anchor="' + ancora + '">'
+       + g + 'gg</text>';
   });
   const med = D.tempo_secondo.percentili["50"];
   s += '<line x1="' + px(med) + '" y1="' + py(0) + '" x2="' + px(med) + '" y2="' + py(50)
      + '" stroke="var(--ottone)" stroke-width="1.5" stroke-dasharray="3 3"/>';
   s += '<circle cx="' + px(med) + '" cy="' + py(50) + '" r="4" fill="var(--ottone)"/>';
-  s += '<text x="' + (px(med)+9) + '" y="' + (py(50)-8) + '" fill="var(--ottone)">meta’ a '
+  // Sotto il punto, non sopra: la linea sale ripida proprio li' e il testo ci finiva addosso.
+  s += '<text x="' + (px(med)+9) + '" y="' + (py(50)+18) + '" fill="var(--ottone)">meta’ a '
      + med + ' giorni</text>';
   s += '<line class="assi" x1="' + ml + '" y1="' + py(0) + '" x2="' + (W-mr) + '" y2="' + py(0) + '"/>';
   s += '</svg>';
