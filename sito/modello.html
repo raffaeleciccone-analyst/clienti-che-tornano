@@ -83,6 +83,12 @@ section{padding:clamp(56px,8vw,92px) 0 0}
   display:flex;align-items:center;justify-content:center;font-size:.62rem;
   transition:transform .62s cubic-bezier(.4,0,.2,1);cursor:default}
 .cella.zero{background:transparent;border:1px dashed var(--riga);color:var(--tenue)}
+.striscia{height:60px;align-items:flex-end;margin-top:10px;
+  border-top:1px solid var(--riga);padding-top:8px}
+.striscia .etichetta{align-self:flex-end;padding-bottom:2px;line-height:1.15}
+.striscia .corsia{height:50px}
+.barra{position:absolute;bottom:0;width:calc(var(--c) - 4px);border-radius:2px 2px 0 0;
+  transition:height .62s cubic-bezier(.4,0,.2,1),transform .62s cubic-bezier(.4,0,.2,1)}
 .legenda{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--tenue);
   margin:16px 0 0;flex-wrap:wrap}
 .scala{height:9px;width:150px;border-radius:5px;
@@ -375,6 +381,8 @@ footer a{color:var(--tenue)}
 <script>
 const D = /*DATI*/;
 const MESI = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+const MESI_LUNGHI = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio",
+                     "agosto","settembre","ottobre","novembre","dicembre"];
 /* useGrouping:"always" e' voluto. In italiano il raggruppamento predefinito
    parte da cinque cifre, quindi 1374 uscirebbe "1374" mentre i documenti del
    progetto scrivono "1.374": due modi di scrivere lo stesso numero nella stessa
@@ -414,6 +422,53 @@ const offset = (c) => (c.anno - inizio.anno) * 12 + (c.mese - inizio.mese);
 const larghezzaCal = Math.max(...D.coorti.map(c => offset(c) + c.celle.length));
 const larghezzaEta = Math.max(...D.coorti.map(c => c.celle.length));
 
+/* La media di ogni colonna. E' questa la riga che fa vedere la cosa: cinquecento
+   celle colorate non si confrontano a occhio, ventidue barre si'. La scala e' la
+   stessa nelle due viste, altrimenti il confronto sarebbe truccato. */
+function medieColonna(v){
+  const acc = {};
+  D.coorti.forEach(c => {
+    const off = v === "cal" ? offset(c) : 0;
+    c.celle.forEach((val, i) => {
+      if (i === 0 || val === null) return;
+      (acc[i + off] = acc[i + off] || []).push(val);
+    });
+  });
+  const out = {};
+  for (const j in acc)
+    out[j] = { m: acc[j].reduce((s,x) => s+x, 0) / acc[j].length, n: acc[j].length };
+  return out;
+}
+const STRISCE = { eta: medieColonna("eta"), cal: medieColonna("cal") };
+const altMax = Math.max(...Object.values(STRISCE.eta).concat(Object.values(STRISCE.cal))
+                          .map(o => o.m));
+const un = (x) => x.toFixed(1).replace(".", ",") + "%";
+function etColonna(j, v){
+  j = +j;
+  if (v === "eta") return "+" + j;
+  const k = inizio.mese - 1 + j;
+  return MESI[k % 12] + " " + (inizio.anno + Math.floor(k / 12));
+}
+
+function disegnaStriscia(){
+  const s = STRISCE[vista];
+  const corsia = document.getElementById("corsia-media");
+  let h = "";
+  for (const j in s){
+    const o = s[j];
+    // Le colonne che poggiano su poche coorti sono piu' pallide: ci sono, ma non
+    // pesano quanto le altre.
+    h += '<div class="barra" data-i="' + j + '" title="' + etColonna(j, vista) + ': '
+       + un(o.m) + ' in media, su ' + o.n + (o.n === 1 ? ' coorte' : ' coorti') + '"'
+       + ' style="height:' + Math.max(2, Math.round(o.m / altMax * 46)) + 'px;background:'
+       + tinta(o.m, media, min, max) + ';opacity:' + (o.n < 4 ? ".45" : "1") + '"></div>';
+  }
+  corsia.innerHTML = h;
+  corsia.querySelectorAll(".barra").forEach(el => {
+    el.style.transform = "translateX(" + (+el.dataset.i * 26) + "px)";
+  });
+}
+
 function disegna(){
   const nCol = vista === "eta" ? larghezzaEta : larghezzaCal;
   griglia.style.setProperty("--etichetta", "78px");
@@ -422,6 +477,8 @@ function disegna(){
     h += '<div class="rigam"><div class="etichetta"><b>' + c.coorte + '</b> &middot; '
        + n0(c.entrati) + '</div><div class="corsia" data-c="' + c.coorte + '"></div></div>';
   }
+  h += '<div class="rigam striscia"><div class="etichetta">media di<br>ogni colonna</div>'
+     + '<div class="corsia" id="corsia-media"></div></div>';
   griglia.innerHTML = h;
   griglia.style.minWidth = (78 + nCol * 26 + 8) + "px";
 
@@ -466,9 +523,32 @@ function posiziona(){
   document.querySelectorAll("#teste span").forEach(el => {
     el.style.transform = "translateX(" + (+el.dataset.i * 26) + "px)";
   });
-  didascalia.textContent = vista === "eta"
-    ? "Allineata per eta’: la colonna +1 e’ il primo mese di vita di ogni coorte, quale che sia il mese dell’anno. Si legge da sinistra a destra, e sembra una discesa."
-    : "Allineata per calendario: ogni riga parte dal suo mese vero. Le stesse celle, spostate. Ora si legge dall’alto in basso — e le colonne si accendono tutte insieme.";
+  disegnaStriscia();
+  // Le colonne tenute in piedi da meno di quattro coorti non entrano nel confronto:
+  // sono le prime e le ultime, e una media su due righe non e' un massimo.
+  const solide = (s) => Object.entries(s).filter(([,o]) => o.n >= 4);
+  const estremo = (s, segno) => solide(s).reduce((a,b) => segno * b[1].m > segno * a[1].m ? b : a);
+  if (vista === "eta"){
+    const primo = STRISCE.eta[1], bassa = estremo(STRISCE.eta, -1);
+    didascalia.innerHTML = "Allineata per eta’: la colonna +1 e’ il primo mese di vita di "
+      + "ogni coorte, quale che sia il mese dell’anno. <b>Guarda le barre in fondo</b>, non le "
+      + "celle: partono da " + un(primo.m) + " e scendono fino a " + un(bassa[1].m) + " al mese "
+      + etColonna(bassa[0], "eta") + ". Letta cosi’, la storia e’ che i clienti si stancano "
+      + "invecchiando.";
+  } else {
+    // Gli estremi si prendono dai mesi dell’anno messi insieme, non dalla singola
+    // colonna: ott e nov 2010 distano quattro centesimi di punto, e nominare il primo
+    // farebbe leggere una contraddizione con il resto della pagina, che dice novembre.
+    const perMese = D.per_mese_calendario;
+    const su = perMese.reduce((a,b) => b.quota > a.quota ? b : a);
+    const giu = perMese.reduce((a,b) => b.quota < a.quota ? b : a);
+    didascalia.innerHTML = "Le stesse identiche celle, ognuna spostata al suo mese vero. "
+      + "<b>Le barre adesso non scendono: salgono e crollano.</b> Sommando i mesi "
+      + "dell’anno, " + MESI_LUNGHI[su.mese - 1] + " vale " + un(su.quota) + " e "
+      + MESI_LUNGHI[giu.mese - 1] + " " + un(giu.quota) + ": piu’ del doppio, con dentro "
+      + "le stesse persone di prima. Non e’ l’eta’ del cliente a muovere il numero, "
+      + "e’ il mese dell’anno.";
+  }
 }
 
 document.getElementById("b-eta").onclick = () => cambia("eta");
