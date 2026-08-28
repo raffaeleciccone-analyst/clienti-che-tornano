@@ -62,9 +62,31 @@ python 06_ricontrollo.py    63 controlli sulle cifre di RISULTATI.md
 python 07_audit.py          cerca errori e bias nelle DECISIONI, non nelle cifre
 python 08_dati_pagina.py    quello che serve alla pagina -> sito/dati.json
 python 09_pagina.py         cuce dati e modello -> index.html
+python 10_excel.py          la cartella di lavoro -> clienti-che-tornano.xlsx
 node   sito/prova_pagina.js fa girare lo script della pagina con un DOM finto
 python anteprima_dati.py    una pagina per guardare il file grezzo senza Excel
 ```
+
+### La cartella di lavoro
+
+`clienti-che-tornano.xlsx` e la pagina web sono due consegne della stessa analisi, e
+leggono lo stesso `sito/dati.json`: se una cifra non torna fra le due, il colpevole e'
+uno solo.
+
+Sei fogli: il **Leggimi** con la domanda, la risposta e i limiti; **due matrici** con le
+stesse celle nei due allineamenti, da confrontare; il **riacquisto** col funnel e il
+tempo al secondo ordine; **valore e pareggio**; e i **dati in formato lungo**, una riga
+per cella, da cui si fa una tabella pivot senza dover disfare una matrice larga.
+
+Il foglio del pareggio contiene **formule vere**, non valori incollati: si cambia il
+margine nella cella gialla e la soglia si ricalcola. Era la richiesta di `DOMANDA.md` —
+il margine resta un parametro dichiarato, non un risultato — e in un foglio di calcolo
+si mantiene meglio che altrove, perche' chi legge puo' cliccare sulla cella e vedere da
+dove viene il numero.
+
+Lo script riapre il file dopo averlo scritto e lo confronta con i dati di partenza:
+openpyxl scrive senza lamentarsi anche quando il risultato e' sbagliato — una cella
+spostata di una riga, una formula diventata testo, una matrice allineata male.
 
 ### La pagina
 
