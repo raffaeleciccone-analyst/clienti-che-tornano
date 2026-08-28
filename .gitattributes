@@ -3,6 +3,7 @@
 # rovinato una volta, riscrivendolo in UTF-8 e portandolo da 45 a 84 MB.
 *.xlsx binary
 *.xls  binary
+*.ods  binary
 
 # Testo, normalizzato a LF nel repo.
 *.py   text eol=lf
