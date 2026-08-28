@@ -1,8 +1,13 @@
-"""Applica le pulizie di DATI-SPORCHI.md e carica il modello in MySQL.
+"""Applica le pulizie di DATI-SPORCHI.md e carica lo schema a stella.
 
-Ogni passaggio ha lo stesso nome che ha nel documento, e stampa quante righe
-toglie: se un giorno i due numeri non coincidono piu', se ne accorge chi lancia
-lo script, non chi legge i risultati sei mesi dopo.
+Ogni passaggio di pulizia ha lo stesso nome che ha nel documento, e stampa
+quante righe toglie: se un giorno i due numeri non coincidono piu', se ne
+accorge chi lancia lo script, non chi legge i risultati sei mesi dopo.
+
+L'ordine di caricamento e' quello che impongono le chiavi esterne: prima le
+dimensioni, poi i fatti. Le chiavi surrogate si prendono rileggendo le
+dimensioni dal database, non indovinandole: se MySQL assegna un AUTO_INCREMENT
+diverso da quello che ci aspettiamo, i fatti puntano comunque alla riga giusta.
 
 Il file grezzo non viene mai modificato.
 
@@ -37,6 +42,10 @@ NON_PRODOTTI = {"POST", "DOT", "M", "m", "C2", "C3", "D", "S", "BANK CHARGES",
                 "SP1002", "B", "CRUK", "gift_0001_10", "gift_0001_20",
                 "gift_0001_30", "gift_0001_40", "gift_0001_50"}
 
+MESI = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio",
+        "agosto", "settembre", "ottobre", "novembre", "dicembre"]
+GIORNI = ["lunedi", "martedi", "mercoledi", "giovedi", "venerdi", "sabato", "domenica"]
+
 
 def url() -> str:
     pwd = os.environ.get("DB_PASSWORD", "")
@@ -70,7 +79,7 @@ def main() -> None:
     df["Invoice"] = df["Invoice"].astype(str)
     df["StockCode"] = df["StockCode"].astype(str)
 
-    print(f"\nPulizia — i nomi sono quelli di DATI-SPORCHI.md")
+    print("\nPulizia — i nomi sono quelli di DATI-SPORCHI.md")
     print(f"  {'il file com e':<38} {len(df):>9,}")
     df = passo(df, "Togli le righe duplicate", ~df.duplicated(subset=CHIAVE))
     df = passo(df, "Tieni solo le righe con cliente", df["Customer ID"].notna())
@@ -81,46 +90,62 @@ def main() -> None:
 
     df["cliente_id"] = df["Customer ID"].astype(int)
     df["valore"] = (df["Quantity"] * df["Price"]).round(2)
-    df["data"] = df["InvoiceDate"].dt.date
-
-    # ── ordini ───────────────────────────────────────────────────────────
-    ordini = (df.groupby("Invoice")
-                .agg(cliente_id=("cliente_id", "first"),
-                     data_ora=("InvoiceDate", "min"),
-                     n_righe=("Invoice", "size"),
-                     n_pezzi=("Quantity", "sum"),
-                     valore=("valore", "sum"),
-                     paese=("Country", "first"))
-                .reset_index()
-                .rename(columns={"Invoice": "fattura"}))
-    ordini["data"] = ordini["data_ora"].dt.date
-    ordini["valore"] = ordini["valore"].round(2)
+    df["data"] = df["InvoiceDate"].dt.normalize()
 
     # Una fattura con due clienti diversi sarebbe un difetto del modello, non
     # dei dati: si controlla invece di sperare.
-    per_fattura = df.groupby("Invoice")["cliente_id"].nunique()
-    if int((per_fattura > 1).sum()):
-        print(f"\n  ATTENZIONE: {int((per_fattura > 1).sum())} fatture con piu' di un cliente")
+    doppie = int((df.groupby("Invoice")["cliente_id"].nunique() > 1).sum())
+    if doppie:
+        print(f"\n  ATTENZIONE: {doppie} fatture con piu' di un cliente")
 
-    # ── clienti ──────────────────────────────────────────────────────────
-    clienti = (ordini.groupby("cliente_id")
-                     .agg(paese=("paese", "first"),
-                          primo_ordine=("data", "min"),
-                          ultimo_ordine=("data", "max"),
-                          n_ordini=("fattura", "nunique"),
-                          ricavo_totale=("valore", "sum"))
-                     .reset_index())
-    clienti["ricavo_totale"] = clienti["ricavo_totale"].round(2)
+    # ══ le dimensioni ════════════════════════════════════════════════════
+    print("\nCostruzione delle dimensioni")
 
-    # ── righe ────────────────────────────────────────────────────────────
-    righe = df[["Invoice", "cliente_id", "StockCode", "Description",
-                "Quantity", "Price", "valore", "InvoiceDate"]].copy()
-    righe.columns = ["fattura", "cliente_id", "articolo", "descrizione",
-                     "quantita", "prezzo", "valore", "data_ora"]
-    righe["descrizione"] = righe["descrizione"].astype(str).str[:120]
+    # ── dim_data: un giorno per riga, buchi compresi ──────────────────────
+    giorni = pd.date_range(df["data"].min(), df["data"].max(), freq="D")
+    dim_data = pd.DataFrame({"data": giorni})
+    dim_data["data_key"] = dim_data["data"].dt.strftime("%Y%m%d").astype(int)
+    dim_data["anno"] = dim_data["data"].dt.year
+    dim_data["mese"] = dim_data["data"].dt.month
+    dim_data["nome_mese"] = dim_data["mese"].map(lambda m: MESI[m - 1])
+    dim_data["trimestre"] = dim_data["data"].dt.quarter
+    dim_data["anno_mese"] = dim_data["data"].dt.strftime("%Y-%m")
+    dim_data["giorno_settimana"] = dim_data["data"].dt.dayofweek + 1
+    dim_data["nome_giorno"] = dim_data["data"].dt.dayofweek.map(lambda g: GIORNI[g])
+    dim_data["fine_settimana"] = (dim_data["data"].dt.dayofweek >= 5).astype(int)
+    dim_data["data"] = dim_data["data"].dt.date
+    con_vendite = df["data"].nunique()
+    print(f"  dim_data      {len(dim_data):>9,} giorni  "
+          f"({con_vendite:,} con vendite, {len(dim_data) - con_vendite:,} senza)")
 
-    print(f"\nDa caricare: {len(clienti):,} clienti, {len(ordini):,} ordini, {len(righe):,} righe")
+    # ── dim_cliente ───────────────────────────────────────────────────────
+    per_cliente = (df.sort_values(["cliente_id", "InvoiceDate"])
+                     .groupby("cliente_id")
+                     .agg(paese=("Country", "first"), primo_ordine=("data", "min")))
+    dim_cliente = per_cliente.reset_index()
+    dim_cliente["coorte"] = pd.to_datetime(dim_cliente["primo_ordine"]).dt.strftime("%Y-%m")
+    dim_cliente["primo_ordine"] = pd.to_datetime(dim_cliente["primo_ordine"]).dt.date
+    print(f"  dim_cliente   {len(dim_cliente):>9,} clienti")
 
+    # ── dim_articolo ──────────────────────────────────────────────────────
+    # 621 codici hanno piu' di una descrizione: si tiene la piu' frequente e si
+    # scrive quante ne sono state viste, perche' chi legge sappia che c'era una
+    # scelta invece di crederla un dato.
+    desc = (df.dropna(subset=["Description"])
+              .groupby(["StockCode", "Description"]).size()
+              .rename("n").reset_index()
+              .sort_values(["StockCode", "n"], ascending=[True, False]))
+    scelta = desc.groupby("StockCode").first()["Description"]
+    quante = desc.groupby("StockCode").size()
+    dim_articolo = pd.DataFrame({"codice": sorted(df["StockCode"].unique())})
+    dim_articolo["descrizione"] = (dim_articolo["codice"].map(scelta)
+                                   .astype("object").str.slice(0, 120))
+    dim_articolo["n_descrizioni"] = dim_articolo["codice"].map(quante).fillna(0).astype(int)
+    ambigui = int((dim_articolo["n_descrizioni"] > 1).sum())
+    print(f"  dim_articolo  {len(dim_articolo):>9,} codici   "
+          f"({ambigui:,} con piu' di una descrizione: tenuta la piu' frequente)")
+
+    # ══ il caricamento ═══════════════════════════════════════════════════
     eng = create_engine(url(), pool_pre_ping=True)
     print("\nCreazione dello schema...")
     ddl = SCHEMA.read_text(encoding="utf-8")
@@ -131,32 +156,99 @@ def main() -> None:
             cx.execute(text(istruzione))
         cx.execute(text("SET FOREIGN_KEY_CHECKS=1"))
 
-    print("Caricamento...")
-    for nome, tab in (("clienti", clienti), ("ordini", ordini), ("righe", righe)):
+    print("Caricamento delle dimensioni...")
+    for nome, tab in (("dim_data", dim_data), ("dim_cliente", dim_cliente),
+                      ("dim_articolo", dim_articolo)):
         tab.to_sql(nome, eng, if_exists="append", index=False, chunksize=20_000)
-        print(f"  {nome:<10} {len(tab):>9,}")
+        print(f"  {nome:<14} {len(tab):>9,}")
 
-    # ── controlli dopo il caricamento ────────────────────────────────────
+    # Le chiavi surrogate si rileggono dal database invece di indovinarle: se
+    # MySQL assegnasse un AUTO_INCREMENT diverso da quello atteso, i fatti
+    # punterebbero comunque alla riga giusta.
+    chiavi_cliente = pd.read_sql(text("SELECT cliente_key, cliente_id FROM dim_cliente"),
+                                 eng).set_index("cliente_id")["cliente_key"]
+    chiavi_articolo = pd.read_sql(text("SELECT articolo_key, codice FROM dim_articolo"),
+                                  eng).set_index("codice")["articolo_key"]
+
+    # ── fatto_riga ────────────────────────────────────────────────────────
+    fatto_riga = pd.DataFrame({
+        "fattura": df["Invoice"].values,
+        "cliente_key": df["cliente_id"].map(chiavi_cliente).values,
+        "articolo_key": df["StockCode"].map(chiavi_articolo).values,
+        "data_key": df["data"].dt.strftime("%Y%m%d").astype(int).values,
+        "data_ora": df["InvoiceDate"].values,
+        "quantita": df["Quantity"].values,
+        "prezzo": df["Price"].values,
+        "valore": df["valore"].values,
+    })
+    if fatto_riga[["cliente_key", "articolo_key"]].isna().any().any():
+        raise SystemExit("Una riga non trova la sua dimensione: caricamento interrotto.")
+
+    # ── fatto_ordine: l'aggregato, costruito da fatto_riga ────────────────
+    fatto_ordine = (fatto_riga.groupby("fattura")
+                    .agg(cliente_key=("cliente_key", "first"),
+                         data_key=("data_key", "min"),
+                         data_ora=("data_ora", "min"),
+                         n_righe=("fattura", "size"),
+                         n_pezzi=("quantita", "sum"),
+                         valore=("valore", "sum"))
+                    .reset_index())
+    fatto_ordine["valore"] = fatto_ordine["valore"].round(2)
+
+    print("Caricamento dei fatti...")
+    for nome, tab in (("fatto_riga", fatto_riga), ("fatto_ordine", fatto_ordine)):
+        tab.to_sql(nome, eng, if_exists="append", index=False, chunksize=20_000)
+        print(f"  {nome:<14} {len(tab):>9,}")
+
+    # ══ i controlli ══════════════════════════════════════════════════════
     print("\nControlli:")
+    esiti = []
     with eng.connect() as cx:
-        prove = {
-            "clienti": ("SELECT COUNT(*) FROM clienti", len(clienti)),
-            "ordini": ("SELECT COUNT(*) FROM ordini", len(ordini)),
-            "righe": ("SELECT COUNT(*) FROM righe", len(righe)),
-            "ordini orfani": ("SELECT COUNT(*) FROM ordini o LEFT JOIN clienti c "
-                              "ON c.cliente_id=o.cliente_id WHERE c.cliente_id IS NULL", 0),
-            "righe orfane": ("SELECT COUNT(*) FROM righe r LEFT JOIN ordini o "
-                             "ON o.fattura=r.fattura WHERE o.fattura IS NULL", 0),
-        }
-        for nome, (q, atteso) in prove.items():
-            got = cx.execute(text(q)).scalar()
-            print(f"  [{'ok ' if got == atteso else 'NO '}] {nome:<16} {got:>9,}  (atteso {atteso:,})")
+        def prova(nome, query, atteso, tolleranza=0):
+            got = cx.execute(text(query)).scalar()
+            ok = abs(float(got) - float(atteso)) <= tolleranza
+            esiti.append(ok)
+            print(f"  [{'ok ' if ok else 'NO '}] {nome:<34} {got:>12,}  (atteso {atteso:,})")
 
-        # la somma dei valori d'ordine deve tornare con la somma delle righe
-        a = cx.execute(text("SELECT ROUND(SUM(valore),2) FROM ordini")).scalar()
-        b = cx.execute(text("SELECT ROUND(SUM(valore),2) FROM righe")).scalar()
-        print(f"  [{'ok ' if abs(float(a) - float(b)) < 1 else 'NO '}] "
-              f"{'quadratura ordini/righe':<16} {a:,} vs {b:,}")
+        prova("dim_data", "SELECT COUNT(*) FROM dim_data", len(dim_data))
+        prova("dim_cliente", "SELECT COUNT(*) FROM dim_cliente", len(dim_cliente))
+        prova("dim_articolo", "SELECT COUNT(*) FROM dim_articolo", len(dim_articolo))
+        prova("fatto_riga", "SELECT COUNT(*) FROM fatto_riga", len(fatto_riga))
+        prova("fatto_ordine", "SELECT COUNT(*) FROM fatto_ordine", len(fatto_ordine))
+
+        # nessun fatto senza la sua dimensione
+        for nome, tabella, dim, chiave in (
+                ("righe senza cliente", "fatto_riga", "dim_cliente", "cliente_key"),
+                ("righe senza articolo", "fatto_riga", "dim_articolo", "articolo_key"),
+                ("righe senza data", "fatto_riga", "dim_data", "data_key"),
+                ("ordini senza cliente", "fatto_ordine", "dim_cliente", "cliente_key")):
+            prova(nome, f"SELECT COUNT(*) FROM {tabella} f LEFT JOIN {dim} d "
+                        f"ON d.{chiave}=f.{chiave} WHERE d.{chiave} IS NULL", 0)
+
+        # L'AGGREGATO DEVE QUADRARE CON LA TABELLA ATOMICA. E' il controllo che
+        # giustifica l'esistenza di fatto_ordine: senza, sarebbe una copia che
+        # invecchia da sola, cioe' il difetto che questo schema doveva togliere.
+        a = float(cx.execute(text("SELECT ROUND(SUM(valore),2) FROM fatto_riga")).scalar())
+        b = float(cx.execute(text("SELECT ROUND(SUM(valore),2) FROM fatto_ordine")).scalar())
+        ok = abs(a - b) < 1
+        esiti.append(ok)
+        print(f"  [{'ok ' if ok else 'NO '}] {'aggregato = atomica':<34} "
+              f"{a:>12,.2f}  (righe {b:,.2f})")
+
+        sballate = cx.execute(text("""
+            SELECT COUNT(*) FROM fatto_ordine o
+            JOIN (SELECT fattura, COUNT(*) n, SUM(quantita) q, ROUND(SUM(valore),2) v
+                  FROM fatto_riga GROUP BY fattura) r ON r.fattura = o.fattura
+            WHERE r.n <> o.n_righe OR r.q <> o.n_pezzi OR ABS(r.v - o.valore) > 0.01
+        """)).scalar()
+        ok = sballate == 0
+        esiti.append(ok)
+        print(f"  [{'ok ' if ok else 'NO '}] {'fatture con totali diversi':<34} {sballate:>12,}"
+              f"  (atteso 0)")
+
+    if not all(esiti):
+        print("\nIl caricamento non e' coerente: mi fermo qui.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

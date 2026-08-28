@@ -61,7 +61,8 @@ def main() -> None:
     rng = np.random.default_rng(SEME)
 
     # tutto ricostruito da zero dalle tabelle di base
-    o = pd.read_sql(text("SELECT fattura, cliente_id, data, data_ora, valore FROM ordini"),
+    o = pd.read_sql(text(
+        "SELECT o.fattura, c.cliente_id, d.data, o.data_ora, o.valore FROM fatto_ordine o JOIN dim_cliente c ON c.cliente_key = o.cliente_key JOIN dim_data    d ON d.data_key    = o.data_key"),
                     eng, parse_dates=["data", "data_ora"])
     o = o.sort_values(["cliente_id", "data_ora", "fattura"])
     o["n"] = o.groupby("cliente_id").cumcount() + 1

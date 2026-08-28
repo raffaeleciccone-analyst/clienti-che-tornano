@@ -69,8 +69,12 @@ def esito(ok, messaggio):
 
 # ═════════════════════════════════════════════════════════════════════════
 def dati(eng):
-    o = pd.read_sql(text("SELECT fattura, cliente_id, data, data_ora, valore, n_righe, n_pezzi "
-                         "FROM ordini"), eng, parse_dates=["data", "data_ora"])
+    o = pd.read_sql(text(
+        "SELECT o.fattura, c.cliente_id, d.data, o.data_ora, o.valore, o.n_righe, o.n_pezzi "
+        "FROM fatto_ordine o "
+        "JOIN dim_cliente c ON c.cliente_key = o.cliente_key "
+        "JOIN dim_data    d ON d.data_key    = o.data_key"),
+        eng, parse_dates=["data", "data_ora"])
     o = o.sort_values(["cliente_id", "data_ora", "fattura"])
     o["k"] = o.groupby("cliente_id").cumcount() + 1
     o["primo"] = o.groupby("cliente_id")["data"].transform("min")
