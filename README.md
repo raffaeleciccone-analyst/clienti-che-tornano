@@ -42,7 +42,7 @@ silenzio **non c'e'**.
 |---|---|
 | `DOMANDA.md` | la domanda e le cinque sotto-domande, scritte prima di guardare i dati |
 | `DATI-SPORCHI.md` | otto difetti contati sul file vero, con quante righe toglie ogni pulizia |
-| `MODELLO.md` | lo schema, e le quattro trappole della finestra di osservazione |
+| `MODELLO.md` | lo schema a stella, perché non era così all'inizio, e le quattro trappole della finestra di osservazione |
 | `RISULTATI.md` | le risposte, con gli intervalli e cio' che i numeri non dicono |
 
 I documenti non sono stati riscritti quando una verifica li ha smentiti: la correzione

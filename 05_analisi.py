@@ -174,7 +174,7 @@ def valore(eng, rng):
                giorni_dal_precedente, data_primo_ordine, coorte
         FROM v_ordini_sequenza
     """), eng, parse_dates=["data", "data_primo_ordine", "coorte"])
-    ultimo = pd.Timestamp(pd.read_sql(text("SELECT MAX(data) d FROM ordini"), eng)["d"].iloc[0])
+    ultimo = pd.Timestamp(pd.read_sql(text("SELECT MAX(data) d FROM dim_data d JOIN fatto_ordine o ON o.data_key = d.data_key"), eng)["d"].iloc[0])
 
     titolo(4, "La finestra di osservazione, per la domanda sul valore")
     print(f"""  ultimo giorno nei dati: {ultimo:%Y-%m-%d}

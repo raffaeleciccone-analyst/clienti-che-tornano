@@ -9,9 +9,48 @@ Costruito il 27 agosto 2026. Lo schema sta in `03_schema.sql`, il caricamento in
 
 | tabella | una riga e' | righe |
 |---|---|---:|
-| `righe` | una riga di fattura (fattura × articolo) | 776.575 |
-| `ordini` | una fattura | 36.594 |
-| `clienti` | un cliente | 5.852 |
+| `fatto_riga` | una riga di fattura (fattura × articolo) | 776.575 |
+| `fatto_ordine` | una fattura | 36.594 |
+| `dim_cliente` | un cliente | 5.852 |
+| `dim_articolo` | un codice articolo | 4.619 |
+| `dim_data` | un giorno del periodo, buchi compresi | 739 |
+
+### Perche' uno schema a stella, e cosa c'era prima
+
+La prima versione era un modello transazionale che ricalcava la sorgente: `clienti`,
+`ordini`, `righe`. Funzionava — tutti i numeri di `RISULTATI.md` sono usciti da li' — e
+aveva **tre difetti che si vedono solo provando a chiamarlo con il suo nome**:
+
+1. **`clienti` conteneva `n_ordini` e `ricavo_totale`.** Sono misure dentro una tabella
+   di dimensione: derivate dai fatti, e libere di andare fuori sincrono senza che
+   nessuno se ne accorga. Al momento del cambio coincidevano ancora, ma niente lo
+   garantiva.
+2. **La descrizione dell'articolo stava ripetuta su 776.575 righe** — 19,8 MB di testo
+   per 5.254 valori diversi. E **622 codici avevano piu' di una descrizione**, una cosa
+   che nessuno era mai stato costretto a decidere finche' non e' esistita una
+   dimensione a cui serviva una riga sola per codice.
+3. **Anno, mese e trimestre venivano ricalcolati con funzioni in ogni query** invece di
+   stare scritti una volta sola.
+
+Il modello nuovo separa i fatti dalle dimensioni, e tiene la fattura come **dimensione
+degenere** — resta una colonna dentro i fatti, perche' non ha attributi propri e una
+`dim_fattura` fatta di una chiave e nient'altro non servirebbe a niente.
+
+`fatto_ordine` e' un **aggregato dichiarato** alla grana della fattura, e non e' lo
+stesso difetto del punto 1: e' un oggetto con un nome, una grana scritta e un momento
+in cui viene ricostruito. `04_carica.py` lo riscrive da `fatto_riga` e poi controlla che
+le due quadrino, uscendo con errore se non lo fanno. Delle misure nascoste dentro una
+dimensione non se ne accorge nessuno.
+
+`dim_cliente` tiene `primo_ordine` e `coorte`, che sono pur sempre derivati dai fatti.
+La differenza con `n_ordini` non e' un cavillo: **la coorte e' un attributo su cui si
+raggruppa, non una quantita' che si somma**, e non cambia mai piu' una volta che il
+cliente e' entrato.
+
+> **La prova che il cambio e' corretto: nessun numero si e' mosso.** Dopo la
+> ristrutturazione `06_ricontrollo.py` passa gli stessi 63 controlli con gli stessi
+> valori, e `07_audit.py` resta a zero allarmi. Un modello si puo' rifare; i risultati
+> no, se non c'era un errore — e qui non c'era.
 
 **«Ordine» e «fattura» qui sono la stessa cosa.** Il dataset non ha un concetto di
 ordine separato dalla fattura, e inventarne uno — per esempio unendo due fatture dello
