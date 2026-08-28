@@ -70,7 +70,7 @@ section{padding:clamp(56px,8vw,92px) 0 0}
 .interruttore button:focus-visible{outline:2px solid var(--ottone);outline-offset:2px}
 
 .scorre{overflow-x:auto;overflow-y:hidden;padding-bottom:6px}
-.griglia{--c:26px;--h:22px;font-family:"IBM Plex Mono",monospace;font-size:.68rem}
+.griglia{--n:23;--c:min(26px,calc((100vw - 200px) / var(--n)));--h:22px;--etichetta:104px;font-family:"IBM Plex Mono",monospace;font-size:.68rem}
 .intestazioni{display:flex;height:20px;margin-left:var(--etichetta);position:relative}
 .intestazioni span{position:absolute;width:var(--c);text-align:center;color:var(--tenue);
   transition:transform .62s cubic-bezier(.4,0,.2,1);white-space:nowrap;font-size:.64rem}
@@ -87,6 +87,7 @@ section{padding:clamp(56px,8vw,92px) 0 0}
   border-top:1px solid var(--riga);padding-top:8px}
 .striscia .etichetta{align-self:flex-end;padding-bottom:2px;line-height:1.15}
 .striscia .corsia{height:50px}
+.misura{position:absolute;visibility:hidden;width:var(--c);height:1px;pointer-events:none}
 .colonnina{position:absolute;bottom:0;width:calc(var(--c) - 4px);border-radius:2px 2px 0 0;
   transition:height .62s cubic-bezier(.4,0,.2,1),transform .62s cubic-bezier(.4,0,.2,1)}
 .legenda{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--tenue);
@@ -146,6 +147,23 @@ footer{margin-top:clamp(64px,9vw,110px);padding:34px 0 70px;
   border-top:1px solid var(--riga);color:var(--tenue);font-size:.88rem}
 footer a{color:var(--tenue)}
 
+/* Sotto i 720px le ventitre colonne non ci stanno, e una matrice che scorre di
+   lato si legge per un terzo. Allora le celle si stringono e perdono le cifre:
+   resta il colore, che e' quello che porta il senso. Il numero esatto sta nel
+   titolo di ogni cella, dove chi lo vuole lo trova. */
+@media (max-width:720px){
+  .griglia{--c:min(14px,calc((100vw - 110px) / var(--n)));--h:13px;--etichetta:50px}
+  .cella{font-size:0;border-radius:2px}
+  .cella.zero{display:none}
+  .intestazioni span,.etichetta{font-size:.56rem}
+  .etichetta .conta{display:none}
+  /* una tacca ogni quattro: a undici pixel di passo le altre si toccherebbero */
+  .intestazioni span:not(:nth-child(4n+1)){visibility:hidden}
+  /* i margini del pannello restituiscono alla griglia i pixel che le mancano */
+  .largo{padding:0 12px}
+  .pannello{padding:12px}
+  .striscia .etichetta{font-size:.52rem}
+}
 @media (prefers-reduced-motion:reduce){
   *{transition-duration:.01ms !important;animation-duration:.01ms !important}
 }
@@ -413,10 +431,22 @@ function misc(a, b, t){
 const griglia = document.getElementById("griglia");
 const didascalia = document.getElementById("didascalia");
 let vista = "eta";
-// Larghezza della colonna delle etichette. Ci deve stare «2010-01 · 368» per intero:
-// a 78px il testo finiva sotto la prima cella e il numero dei clienti entrati non si
-// leggeva su nessuna riga.
-const GRONDA = 104;
+// Il passo delle colonne e la larghezza delle etichette stanno nel CSS, non qui: cosi'
+// una media query puo' stringerli su schermo piccolo e questo codice la segue da solo.
+// Erano scritti a mano — «26» in tre punti — ed e' il motivo per cui la matrice
+// esisteva a una larghezza sola.
+function misure(){
+  // Il passo NON si legge da getPropertyValue("--c"): una proprieta' personalizzata
+  // torna come testo della formula — «min(14px,calc(...))» — e parseFloat da' NaN.
+  // Si misura invece un elemento che quella larghezza ce l'ha davvero.
+  const m = griglia.querySelector(".misura");
+  const cs = getComputedStyle(griglia);
+  const passo = m ? m.getBoundingClientRect().width : 0;
+  return {
+    passo: passo > 0 ? passo : 26,
+    gronda: parseFloat(cs.getPropertyValue("--etichetta")) || 104
+  };
+}
 
 const tutte = D.coorti.flatMap(c => c.celle.slice(1).filter(v => v !== null));
 const media = tutte.reduce((s,v) => s+v, 0) / tutte.length;
@@ -468,23 +498,27 @@ function disegnaStriscia(){
        + tinta(o.m, media, min, max) + ';opacity:' + (o.n < 4 ? ".45" : "1") + '"></div>';
   }
   corsia.innerHTML = h;
+  const passo = misure().passo;
   corsia.querySelectorAll(".colonnina").forEach(el => {
-    el.style.transform = "translateX(" + (+el.dataset.i * 26) + "px)";
+    el.style.transform = "translateX(" + (+el.dataset.i * passo) + "px)";
   });
 }
 
 function disegna(){
   const nCol = vista === "eta" ? larghezzaEta : larghezzaCal;
-  griglia.style.setProperty("--etichetta", GRONDA + "px");
-  let h = '<div class="intestazioni" id="teste"></div>';
+  griglia.style.setProperty("--n", nCol);
+  let h = '<i class="misura" aria-hidden="true"></i>'
+        + '<div class="intestazioni" id="teste"></div>';
   for (const c of D.coorti){
-    h += '<div class="rigam"><div class="etichetta"><b>' + c.coorte + '</b> &middot; '
-       + n0(c.entrati) + '</div><div class="corsia" data-c="' + c.coorte + '"></div></div>';
+    h += '<div class="rigam"><div class="etichetta"><b>' + c.coorte + '</b>'
+       + '<span class="conta"> &middot; ' + n0(c.entrati) + '</span></div>'
+       + '<div class="corsia" data-c="' + c.coorte + '"></div></div>';
   }
   h += '<div class="rigam striscia"><div class="etichetta">media di<br>ogni colonna</div>'
      + '<div class="corsia" id="corsia-media"></div></div>';
   griglia.innerHTML = h;
-  griglia.style.minWidth = (GRONDA + nCol * 26 + 8) + "px";
+  const { passo, gronda } = misure();
+  griglia.style.minWidth = (gronda + nCol * passo + 8) + "px";
 
   const teste = document.getElementById("teste");
   let th = "";
@@ -518,14 +552,15 @@ function disegna(){
 }
 
 function posiziona(){
+  const { passo } = misure();
   D.coorti.forEach(c => {
     const off = vista === "cal" ? offset(c) : 0;
     griglia.querySelectorAll('[data-c="' + c.coorte + '"] .cella').forEach(el => {
-      el.style.transform = "translateX(" + ((+el.dataset.i + off) * 26) + "px)";
+      el.style.transform = "translateX(" + ((+el.dataset.i + off) * passo) + "px)";
     });
   });
   document.querySelectorAll("#teste span").forEach(el => {
-    el.style.transform = "translateX(" + (+el.dataset.i * 26) + "px)";
+    el.style.transform = "translateX(" + (+el.dataset.i * passo) + "px)";
   });
   disegnaStriscia();
   // Le colonne tenute in piedi da meno di quattro coorti non entrano nel confronto:
@@ -563,10 +598,20 @@ function cambia(v){
   document.getElementById("b-eta").setAttribute("aria-pressed", v === "eta");
   document.getElementById("b-cal").setAttribute("aria-pressed", v === "cal");
   const nCol = v === "eta" ? larghezzaEta : larghezzaCal;
-  griglia.style.minWidth = (GRONDA + nCol * 26 + 8) + "px";
+  griglia.style.setProperty("--n", nCol);
+  const m = misure();
+  griglia.style.minWidth = (m.gronda + nCol * m.passo + 8) + "px";
   posiziona();
 }
 disegna();
+
+// Il passo dipende dalla larghezza della finestra: se cambia, le celle vanno rimesse
+// dove le vuole la nuova misura.
+let attesa;
+window.addEventListener("resize", () => {
+  clearTimeout(attesa);
+  attesa = setTimeout(posiziona, 120);
+});
 
 document.getElementById("quanto-spiega").innerHTML =
   "Messo in numero: il mese del calendario spiega il <b>" + D.spiegata.calendario
