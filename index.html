@@ -557,6 +557,25 @@ function disegnaStriscia(){
   });
 }
 
+// Le intestazioni dipendono dalla vista: +0..+22 sono le eta' del cliente, i
+// mesi sono il calendario. Stavano dentro disegna(), che al cambio di vista non
+// viene richiamata: le celle si spostavano e le teste restavano quelle di prima,
+// cosi' la vista calendario mostrava colonne numerate come eta' — e ventitre
+// intestazioni per trentaquattro colonne.
+function disegnaTeste(){
+  const nCol = vista === "eta" ? larghezzaEta : larghezzaCal;
+  const teste = document.getElementById("teste");
+  let th = "";
+  for (let i = 0; i < nCol; i++){
+    const et = vista === "eta"
+      ? (i === 0 ? "0" : "+" + i)
+      : MESI[(inizio.mese - 1 + i) % 12] + ((inizio.mese - 1 + i) % 12 === 0 || i === 0
+          ? " " + String(inizio.anno + Math.floor((inizio.mese - 1 + i)/12)).slice(2) : "");
+    th += '<span data-i="' + i + '">' + et + '</span>';
+  }
+  teste.innerHTML = th;
+}
+
 function disegna(){
   const nCol = vista === "eta" ? larghezzaEta : larghezzaCal;
   griglia.style.setProperty("--n", nCol);
@@ -573,16 +592,7 @@ function disegna(){
   const { passo, gronda } = misure();
   griglia.style.minWidth = (gronda + nCol * passo + 8) + "px";
 
-  const teste = document.getElementById("teste");
-  let th = "";
-  for (let i = 0; i < nCol; i++){
-    const et = vista === "eta"
-      ? (i === 0 ? "0" : "+" + i)
-      : MESI[(inizio.mese - 1 + i) % 12] + ((inizio.mese - 1 + i) % 12 === 0 || i === 0
-          ? " " + String(inizio.anno + Math.floor((inizio.mese - 1 + i)/12)).slice(2) : "");
-    th += '<span data-i="' + i + '">' + et + '</span>';
-  }
-  teste.innerHTML = th;
+  disegnaTeste();
 
   D.coorti.forEach(c => {
     const corsia = griglia.querySelector('[data-c="' + c.coorte + '"]');
@@ -654,6 +664,7 @@ function cambia(v){
   griglia.style.setProperty("--n", nCol);
   const m = misure();
   griglia.style.minWidth = (m.gronda + nCol * m.passo + 8) + "px";
+  disegnaTeste();
   posiziona();
 }
 disegna();
