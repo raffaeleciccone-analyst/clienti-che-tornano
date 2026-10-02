@@ -15,8 +15,11 @@ La domanda e' una sola, ed e' stata scritta prima di aprire SQL:
 **Fra i clienti entrati nel 2010**, chi arriva al secondo ordine spende nel primo anno
 **£1.990 contro £337**. Confrontando solo clienti che al primo acquisto erano uguali —
 appaiati per decile di primo ordine e coorte — il divario resta **£1.374**
-(£1.125–£1.658): ne sopravvive l'83%. Riattivare conviene finche' costa meno di
-**margine × £1.125**, cioe' £225 con un margine del 20%.
+(£1.125–£1.658): ne sopravvive l'83%. E' un'associazione, non un effetto: dice quanto
+valgono i clienti che tornano, non quanto renderebbe farli tornare. **Se** un cliente
+riattivato si comportasse come chi torna da solo, riattivarlo converrebbe finche' costa
+meno di **margine × £1.125**, cioe' £225 con un margine del 20%. Quel «se» lo verifica
+solo un test con la riattivazione assegnata a caso (`RISULTATI.md`, sezione 8).
 
 **La retention di questo negozio non e' una curva di abbandono: e' un calendario.** Il
 mese dell'anno spiega il doppio dell'eta' del cliente (34,8% contro 16,6%). Novembre
