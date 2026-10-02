@@ -70,7 +70,8 @@ try {
 
 // Un errore silenzioso peggiore del crash: lo script gira, ma non scrive niente.
 const attesi = ["griglia", "funnel", "curva", "tab-valore", "tab-appaiata",
-                "tab-anonimi", "esito-pareggio", "quanto-spiega", "quanto-resta"];
+                "tab-anonimi", "esito-pareggio", "quanto-spiega", "quanto-resta",
+                "tab-futuro", "futuro-lettura"];
 console.log("contenuto prodotto da ogni blocco:");
 for (const id of attesi){
   const n = (scritture[id] || "").length;
@@ -116,6 +117,9 @@ for (const [nome, atteso] of [
   ["media di chi non torna", "337"],
   ["soglia al 20%", "225"],
   ["spiegata dal calendario", String(dati.spiegata.calendario)],
+  // il confronto corretto il 2/10/2026
+  ["a pari partenza (91-365)", String(dati.valore_futuro.pari_partenza.stima)],
+  ["a pari spesa a 90 giorni", String(dati.valore_futuro.pari_spesa_90.stima)],
 ]){
   const ok = tutto.includes(atteso);
   if (!ok) uscita = 1;

@@ -17,6 +17,8 @@ import numpy as np
 import pandas as pd
 from sqlalchemy import create_engine, text
 
+import valore_futuro
+
 try:
     sys.stdout.reconfigure(encoding="utf-8")
 except Exception:
@@ -36,7 +38,10 @@ MESI = "gen feb mar apr mag giu lug ago set ott nov dic".split()
 def url() -> str:
     pwd = os.environ.get("DB_PASSWORD", "")
     if not pwd:
-        env = QUI.parent / "serie-a-index-engine" / ".env"
+        # la cartella si chiamava serie-a-index-engine: il nome nuovo e' football-index-engine
+        env = next((p for p in (QUI.parent / "football-index-engine" / ".env",
+                                QUI.parent / "serie-a-index-engine" / ".env") if p.is_file()),
+                   QUI.parent / "football-index-engine" / ".env")
         if env.is_file():
             for r in env.read_text(encoding="utf-8").splitlines():
                 if r.startswith("DB_PASSWORD="):
@@ -364,6 +369,33 @@ def valore(eng, rng):
   a tornare poi si comporta come i clienti che tornano da soli — ed e'
   un'ipotesi, non un risultato. Con dati osservativi non si dimostra:
   servirebbe un test in cui la riattivazione viene assegnata a caso.""")
+
+    # ── 2/10/2026: la stessa domanda senza girare in tondo ──────────────
+    titolo(10, "Corretto: il gruppo nei primi 90 giorni, la spesa dopo")
+    v = valore_futuro.misura(dentro, tenuti.set_index("cliente_id")["coorte"], rng)
+    pp, ps = v["pari_partenza"], v["pari_spesa_90"]
+    print(f"""  Le sezioni 7-9 misuravano la spesa dello stesso anno che definiva chi
+  torna: la differenza conteneva per costruzione gli ordini del ritorno.
+  Qui i primi {valore_futuro.TAGLIO} giorni decidono il gruppo, e la spesa si conta dopo.
+
+  clienti                              {v['clienti']:>7,}
+  tornati entro {valore_futuro.TAGLIO} giorni                {v['tornati']:>7,}   ({v['quota_tornati']}%)
+
+  spesa dal giorno 91 al 365     media   mediana   compra ancora
+    tornati entro 90 giorni     {v['tornati_media']:>6,}    {v['tornati_mediana']:>6,}        {v['tornati_ancora']}%
+    non tornati                 {v['altri_media']:>6,}    {v['altri_mediana']:>6,}        {v['altri_ancora']}%
+
+  differenza grezza                    {v['grezza']:>6,}   IC [{v['grezza_ic'][0]:,}, {v['grezza_ic'][1]:,}]
+  a parita' di primo ordine e coorte   {pp['stima']:>6,}   IC [{pp['ic'][0]:,}, {pp['ic'][1]:,}]
+  a parita' di spesa nei 90 giorni     {ps['stima']:>6,}   IC [{ps['ic'][0]:,}, {ps['ic'][1]:,}]
+
+  La seconda riga dice che chi torna presto spende di piu' anche dopo, a parita'
+  di partenza. La terza dice perche': a parita' di quanto ha gia' comprato nei
+  primi tre mesi, il fatto di essere tornato non aggiunge quasi niente, e
+  l'intervallo comprende lo zero. Conta il volume, non il ritorno in se'.
+
+  Cade quindi la soglia della sezione 9: riportare indietro un cliente piccolo
+  non lo trasforma in uno grande, e quel conto assumeva proprio questo.""")
 
 
 def main():

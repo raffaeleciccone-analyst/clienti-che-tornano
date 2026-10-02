@@ -370,6 +370,13 @@ footer a{color:var(--tenue)}
           passo ha la stessa probabilita&#39; di averne un altro dietro. Quello che si
           compra riattivandolo e&#39; la coda che gli si apre dietro.</p>
       </div>
+      <h3>Corretto il 2 ottobre 2026: il confronto sopra girava in tondo</h3>
+      <p>&laquo;Chi torna&raquo; era definito dagli ordini del primo anno, e la spesa
+      confrontata era quella dello stesso anno: la differenza conteneva, per costruzione,
+      gli ordini del ritorno. Rifatto tagliando il tempo in due: <strong>i primi 90 giorni
+      decidono il gruppo, la spesa si conta dal giorno 91 al 365</strong>.</p>
+      <table class="tab" id="tab-futuro"></table>
+      <p class="didascalia" id="futuro-lettura"></p>
     </div>
   </div>
 </section>
@@ -384,6 +391,11 @@ footer a{color:var(--tenue)}
       non possono dirlo</strong>: non contengono il costo di acquisizione, e nemmeno il
       costo del venduto. Ma il buco non si tappa dichiarandolo &mdash; si chiude cambiando
       cosa si consegna. Invece del verdetto, la soglia:</p>
+      <p class="nota"><strong>Ritirata il 2 ottobre 2026.</strong> Questa soglia moltiplica
+      il margine per la differenza della sezione 4, e quella differenza girava in tondo.
+      Rifatto il conto senza il cerchio, a parita&#39; di quanto il cliente aveva gia&#39;
+      comprato il ritorno non aggiunge quasi niente: riportare indietro un cliente piccolo
+      non lo rende grande. La manopola resta qui perche&#39; si veda cosa diceva.</p>
     </div>
     <div class="visivo">
       <div class="pannello">
@@ -557,6 +569,27 @@ function disegnaStriscia(){
   });
 }
 
+// Le intestazioni dipendono dalla vista: +0..+22 sono le eta' del cliente, i
+// mesi sono il calendario. Stavano dentro disegna(), che al cambio di vista non
+// viene richiamata: le celle si spostavano e le teste restavano quelle di prima,
+// cosi' la vista calendario mostrava colonne numerate come eta' — e ventitre
+// intestazioni per trentaquattro colonne.
+// (Portata qui il 2/10/2026: era stata corretta solo in index.html, e la
+// rigenerazione della pagina la cancellava.)
+function disegnaTeste(){
+  const nCol = vista === "eta" ? larghezzaEta : larghezzaCal;
+  const teste = document.getElementById("teste");
+  let th = "";
+  for (let i = 0; i < nCol; i++){
+    const et = vista === "eta"
+      ? (i === 0 ? "0" : "+" + i)
+      : MESI[(inizio.mese - 1 + i) % 12] + ((inizio.mese - 1 + i) % 12 === 0 || i === 0
+          ? " " + String(inizio.anno + Math.floor((inizio.mese - 1 + i)/12)).slice(2) : "");
+    th += '<span data-i="' + i + '">' + et + '</span>';
+  }
+  teste.innerHTML = th;
+}
+
 function disegna(){
   const nCol = vista === "eta" ? larghezzaEta : larghezzaCal;
   griglia.style.setProperty("--n", nCol);
@@ -573,16 +606,7 @@ function disegna(){
   const { passo, gronda } = misure();
   griglia.style.minWidth = (gronda + nCol * passo + 8) + "px";
 
-  const teste = document.getElementById("teste");
-  let th = "";
-  for (let i = 0; i < nCol; i++){
-    const et = vista === "eta"
-      ? (i === 0 ? "0" : "+" + i)
-      : MESI[(inizio.mese - 1 + i) % 12] + ((inizio.mese - 1 + i) % 12 === 0 || i === 0
-          ? " " + String(inizio.anno + Math.floor((inizio.mese - 1 + i)/12)).slice(2) : "");
-    th += '<span data-i="' + i + '">' + et + '</span>';
-  }
-  teste.innerHTML = th;
+  disegnaTeste();
 
   D.coorti.forEach(c => {
     const corsia = griglia.querySelector('[data-c="' + c.coorte + '"]');
@@ -654,6 +678,7 @@ function cambia(v){
   griglia.style.setProperty("--n", nCol);
   const m = misure();
   griglia.style.minWidth = (m.gronda + nCol * m.passo + 8) + "px";
+  disegnaTeste();
   posiziona();
 }
 disegna();
@@ -762,6 +787,26 @@ document.getElementById("quanto-resta").innerHTML =
   + v.strati + " strati, che coprono il " + v.coperti + "% dei clienti.";
 document.getElementById("v-secondo").textContent = n0(v.secondo_ordine);
 document.getElementById("v-terzo").textContent = n0(v.dal_terzo);
+
+/* ── il confronto corretto (2/10/2026) ──────────────────────────── */
+const f = D.valore_futuro;
+document.getElementById("tab-futuro").innerHTML =
+  '<thead><tr><th>spesa dal giorno 91 al 365</th><th class="n">differenza</th>'
+  + '<th class="n">intervallo 95%</th></tr></thead><tbody>'
+  + '<tr><td>grezzo: tornati entro 90 giorni contro gli altri</td><td class="n">'
+  + n0(f.grezza) + ' £</td><td class="n">' + n0(f.grezza_ic[0]) + ' – ' + n0(f.grezza_ic[1]) + '</td></tr>'
+  + '<tr><td>a parita&#39; di primo ordine e coorte</td><td class="n">'
+  + n0(f.pari_partenza.stima) + ' £</td><td class="n">' + n0(f.pari_partenza.ic[0]) + ' – '
+  + n0(f.pari_partenza.ic[1]) + '</td></tr>'
+  + '<tr class="forte"><td>a parita&#39; di spesa nei primi 90 giorni e coorte</td><td class="n">'
+  + n0(f.pari_spesa_90.stima) + ' £</td><td class="n">' + n0(f.pari_spesa_90.ic[0]) + ' – '
+  + n0(f.pari_spesa_90.ic[1]) + '</td></tr></tbody>';
+document.getElementById("futuro-lettura").innerHTML =
+  "Chi e’ tornato entro tre mesi spende di piu’ anche dopo, a parita’ di partenza. "
+  + "Ma a parita’ di quanto aveva gia’ comprato nei primi tre mesi, il vantaggio scende a "
+  + "<b>" + n0(f.pari_spesa_90.stima) + " £</b> e l’intervallo comprende lo zero: "
+  + "<b>conta il volume, non il ritorno in se’</b>. " + n0(f.clienti) + " clienti, "
+  + f.quota_tornati + "% tornati entro 90 giorni.";
 
 /* ── il pareggio ─────────────────────────────────────────────────── */
 const slider = document.getElementById("margine");

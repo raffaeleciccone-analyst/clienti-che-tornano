@@ -885,6 +885,40 @@
   "secondo_ordine": 348,
   "dal_terzo": 1202
  },
+ "valore_futuro": {
+  "clienti": 3334,
+  "tornati": 1446,
+  "quota_tornati": 43.4,
+  "tornati_media": 1355,
+  "tornati_mediana": 554,
+  "altri_media": 432,
+  "altri_mediana": 0,
+  "tornati_ancora": 77.2,
+  "altri_ancora": 49.1,
+  "grezza": 922,
+  "grezza_ic": [
+   674,
+   1257
+  ],
+  "pari_partenza": {
+   "stima": 756,
+   "ic": [
+    512,
+    1042
+   ],
+   "clienti": 3288,
+   "strati": 110
+  },
+  "pari_spesa_90": {
+   "stima": 150,
+   "ic": [
+    -34,
+    372
+   ],
+   "clienti": 2811,
+   "strati": 89
+  }
+ },
  "anonimi": {
   "fatture": 8752,
   "clienti_noti": 5852,

@@ -10,6 +10,18 @@ avuto una risposta diversa da quella che si aspettava, e stanno scritte cosi'.
 
 ## In una frase
 
+> **Corretto il 2 ottobre 2026.** Il confronto qui sotto girava in tondo: «chi torna»
+> era definito dagli ordini del primo anno, e la spesa confrontata era quella dello
+> stesso anno, quindi conteneva gli ordini del ritorno. Rifatto tagliando il tempo in
+> due (sezione 9): i primi 90 giorni decidono il gruppo, la spesa si conta dal giorno 91
+> al 365. **A parita' di primo ordine chi e' tornato presto spende £756 in piu' nei nove
+> mesi dopo; a parita' di quanto aveva gia' comprato nei primi tre mesi, solo £150, con
+> un intervallo che comprende lo zero. Conta il volume, non il ritorno in se'.** Cade la
+> soglia di £225: riportare indietro un cliente piccolo non lo rende grande.
+>
+> Il testo che segue e' quello del 27 agosto, lasciato com'era.
+
+
 > Fra i clienti entrati nel 2010, chi arriva al secondo ordine spende nel suo primo
 > anno **£1.990 contro £337** — sei volte tanto. Confrontando solo clienti che al primo
 > acquisto erano uguali, il divario resta **£1.374** (intervallo £1.125–£1.658): **ne
@@ -380,6 +392,49 @@ dimostra: servirebbe un test in cui la riattivazione viene assegnata a caso.
 Per questo la pagina scrive sempre **«i clienti che tornano valgono N volte»** e mai
 «farli tornare li fa valere N volte». Sono due frasi diverse, e la differenza fra loro
 e' la differenza fra un'analisi che si puo' usare e una che fa perdere soldi.
+
+---
+
+## 9. Corretto il 2 ottobre 2026: il gruppo nei primi 90 giorni, la spesa dopo
+
+Una revisione esterna ha notato che le sezioni 6 e 8 misuravano la propria definizione.
+«Chi torna» voleva dire «piu' di un ordine nei primi 365 giorni», e la spesa confrontata
+era quella degli stessi 365 giorni: la differenza conteneva, per costruzione, i soldi
+degli ordini che facevano contare il cliente come uno che torna. L'appaiamento per primo
+ordine non toglieva il cerchio.
+
+Rifatto in `valore_futuro.py`, ricontato a parte in `06_ricontrollo.py`:
+
+- i **primi 90 giorni** dal primo ordine decidono il gruppo (tornato o no);
+- la spesa si misura **dal giorno 91 al 365**, e non contiene piu' gli ordini che
+  definiscono il gruppo.
+
+Stessi 3.334 clienti entrati nel 2010. Tornati entro 90 giorni: 1.446 (43,4%).
+
+| spesa dal giorno 91 al 365 | media | mediana | compra ancora |
+|---|---:|---:|---:|
+| tornati entro 90 giorni | £1.355 | £554 | 77,2% |
+| non tornati | £432 | £0 | 49,1% |
+
+| confronto | differenza | intervallo 95% |
+|---|---:|---:|
+| grezzo | £922 | £674 – £1.257 |
+| a parita' di primo ordine e coorte | £756 | £512 – £1.042 |
+| **a parita' di spesa nei primi 90 giorni e coorte** | **£150** | **−£34 – £372** |
+
+**Cosa dice.** Chi torna presto spende di piu' anche dopo, a parita' di partenza: questo
+regge. Ma a parita' di quanto il cliente aveva gia' comprato nei primi tre mesi, il fatto
+di essere tornato aggiunge £150, e l'intervallo comprende lo zero. Il segnale e' il
+volume d'acquisto, non il ritorno.
+
+**Cosa cade.** La soglia della sezione 8 assumeva che un cliente riportato al secondo
+ordine si comportasse come chi torna da solo. Questi numeri dicono che chi torna da solo
+e' soprattutto chi compra tanto: riportare indietro un cliente piccolo non lo rende
+grande. La soglia di £225 e' ritirata; la sezione 8 resta per mostrare cosa diceva.
+
+**Cosa resta da fare, se ci fosse un committente.** La domanda giusta per la
+riattivazione e' «quanto rende riattivare un cliente di questo volume», e si risponde
+solo con un test: riattivazione assegnata a caso, a parita' di volume.
 
 ---
 

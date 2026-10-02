@@ -12,6 +12,13 @@ La domanda e' una sola, ed e' stata scritta prima di aprire SQL:
 
 ## Cos'e' venuto fuori
 
+**Corretto il 2 ottobre 2026.** La prima versione diceva che chi torna vale £1.374 in piu'
+nel primo anno. Quel confronto girava in tondo: misurava la spesa dello stesso anno in cui
+si decideva chi torna. Rifatto con il gruppo deciso nei primi 90 giorni e la spesa contata
+dopo: **a parita' di quanto il cliente aveva gia' comprato nei primi tre mesi, essere
+tornato aggiunge solo £150 (intervallo da −£34 a £372). Conta il volume, non il ritorno.**
+Dettagli in `RISULTATI.md`, sezione 9. Il paragrafo qui sotto e' quello originale.
+
 **Fra i clienti entrati nel 2010**, chi arriva al secondo ordine spende nel primo anno
 **£1.990 contro £337**. Confrontando solo clienti che al primo acquisto erano uguali —
 appaiati per decile di primo ordine e coorte — il divario resta **£1.374**
@@ -61,7 +68,7 @@ python 01_censimento.py     conta lo sporco sul file grezzo, senza modificarlo
 python 02_ricontrollo.py    riverifica le affermazioni di DATI-SPORCHI.md
 python 04_carica.py         pulisce, carica MySQL, controlla dopo il caricamento
 python 05_analisi.py        le misure -> risultati/misure.txt
-python 06_ricontrollo.py    63 controlli sulle cifre di RISULTATI.md
+python 06_ricontrollo.py    68 controlli sulle cifre di RISULTATI.md
 python 07_audit.py          cerca errori e bias nelle DECISIONI, non nelle cifre
 python 08_dati_pagina.py    quello che serve alla pagina -> sito/dati.json
 python 09_pagina.py         cuce dati e modello -> index.html

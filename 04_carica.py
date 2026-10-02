@@ -51,7 +51,7 @@ def url() -> str:
     pwd = os.environ.get("DB_PASSWORD", "")
     if not pwd:
         # la stessa .env del motore Serie A, se c'e': una password sola sul portatile
-        env = QUI.parent / "serie-a-index-engine" / ".env"
+        env = QUI.parent / "football-index-engine" / ".env"  # prima: serie-a-index-engine
         if env.is_file():
             for r in env.read_text(encoding="utf-8").splitlines():
                 if r.startswith("DB_PASSWORD="):

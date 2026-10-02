@@ -16,6 +16,8 @@ import numpy as np
 import pandas as pd
 from sqlalchemy import create_engine, text
 
+import valore_futuro
+
 try:
     sys.stdout.reconfigure(encoding="utf-8")
 except Exception:
@@ -31,7 +33,7 @@ COORTI_FUORI = ("2009-12", "2011-12")
 def url() -> str:
     pwd = os.environ.get("DB_PASSWORD", "")
     if not pwd:
-        env = QUI.parent / "serie-a-index-engine" / ".env"
+        env = QUI.parent / "football-index-engine" / ".env"  # prima: serie-a-index-engine
         if env.is_file():
             for r in env.read_text(encoding="utf-8").splitlines():
                 if r.startswith("DB_PASSWORD="):
@@ -171,6 +173,9 @@ def main() -> None:
         "strati": int(len(pezzi)), "coperti": round(float(pesi.sum() / n * 100)),
         "secondo_ordine": round(float(t[t["n_ordine"] == 2]["valore"].sum() / len(a))),
         "dal_terzo": round(float(t[t["n_ordine"] > 2]["valore"].sum() / len(a)))}
+
+    # 2/10/2026: lo stesso confronto senza girare in tondo (vedi valore_futuro.py)
+    d["valore_futuro"] = valore_futuro.misura(dd, tenuti["coorte"], rng)
 
     # il limite: quanto e' largo il tasso di ritorno vero
     d["anonimi"] = {"fatture": 8752, "clienti_noti": 5852, "tornano": 4234,
