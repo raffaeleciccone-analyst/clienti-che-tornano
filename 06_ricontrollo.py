@@ -35,7 +35,7 @@ esiti: list[bool] = []
 def url() -> str:
     pwd = os.environ.get("DB_PASSWORD", "")
     if not pwd:
-        env = QUI.parent / "serie-a-index-engine" / ".env"
+        env = QUI.parent / "football-index-engine" / ".env"  # prima: serie-a-index-engine
         if env.is_file():
             for r in env.read_text(encoding="utf-8").splitlines():
                 if r.startswith("DB_PASSWORD="):
@@ -235,6 +235,37 @@ def main() -> None:
 
     sezione("la soglia di pareggio")
     prova("margine 20%, soglia prudente", 0.20 * lo_a, 225, 4)
+
+    # ══ 2/10/2026: il confronto senza il cerchio, ricalcolato a parte ═════
+    # Non usa valore_futuro.py: un ricontrollo che importa il codice che
+    # controlla non controlla niente.
+    sezione("10. gruppo nei primi 90 giorni, spesa dal 91 al 365")
+    gg = (d["data"] - d["primo"]).dt.days
+    d90 = d[gg <= 90]
+    dopo = d[(gg > 90) & (gg <= 365)].groupby("cliente_id")["valore"].sum()
+    f = d90.groupby("cliente_id").agg(o90=("fattura", "nunique"), s90=("valore", "sum"))
+    f["dopo"] = dopo.reindex(f.index).fillna(0.0)
+    f["coorte"] = tenuti.loc[f.index, "coorte"]
+    f["primo_valore"] = pc["primo_valore"]
+    f["tornato"] = f["o90"] > 1
+    prova("tornati entro 90 giorni", int(f["tornato"].sum()), 1446, 0)
+    ta, tb = f.loc[f["tornato"], "dopo"], f.loc[~f["tornato"], "dopo"]
+    prova("spesa 91-365 dei tornati, media", ta.mean(), 1355, 1)
+    prova("spesa 91-365 degli altri, media", tb.mean(), 432, 1)
+
+    def appaiata(col):
+        pz, ps = [], []
+        for _, g in f.groupby([col, "coorte"], observed=True):
+            ga, gb = g.loc[g["tornato"], "dopo"], g.loc[~g["tornato"], "dopo"]
+            if len(ga) >= 3 and len(gb) >= 3:
+                pz.append(ga.mean() - gb.mean())
+                ps.append(len(g))
+        return float(np.average(pz, weights=ps))
+
+    f["dec_primo"] = pd.qcut(f["primo_valore"], 10, labels=False, duplicates="drop")
+    f["dec_90"] = pd.qcut(f["s90"], 10, labels=False, duplicates="drop")
+    prova("a parita' di primo ordine", appaiata("dec_primo"), 756, 1)
+    prova("a parita' di spesa nei 90 giorni", appaiata("dec_90"), 150, 1)
 
     print(f"\n{'=' * 76}")
     print(f"controlli: {sum(esiti)} su {len(esiti)} passati")

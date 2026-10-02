@@ -115,6 +115,22 @@ def foglio_leggimi(wb, d):
         "",
     ])
 
+    # 2/10/2026: il confronto sopra girava in tondo (vedi valore_futuro.py)
+    f = d["valore_futuro"]
+    scrivi(ws, f"B{r}", "CORRETTO IL 2 OTTOBRE 2026", T_H2); r += 1
+    r = testo(ws, r, [
+        "Il confronto qui sopra definiva «chi torna» con gli ordini del primo anno e "
+        "misurava la spesa dello stesso anno: la differenza conteneva gli ordini del ritorno.",
+        f"Rifatto con i primi 90 giorni che decidono il gruppo e la spesa dal giorno 91 al "
+        f"365: a parita' di primo ordine chi e' tornato spende {f['pari_partenza']['stima']:,} £ "
+        f"in piu'; a parita' di spesa nei primi 90 giorni solo {f['pari_spesa_90']['stima']:,} £ "
+        f"(intervallo {f['pari_spesa_90']['ic'][0]:,}–{f['pari_spesa_90']['ic'][1]:,}, "
+        f"comprende lo zero).".replace(",", "."),
+        "Conta il volume, non il ritorno in se'. La soglia del foglio «Valore e pareggio» "
+        "e' ritirata: resta per mostrare cosa diceva.",
+        "",
+    ])
+
     scrivi(ws, f"B{r}", "E LA COSA CHE NON ERA IN PROGRAMMA", T_H2); r += 1
     r = testo(ws, r, [
         "La retention di questo negozio non e' una curva di abbandono: e' un calendario.",

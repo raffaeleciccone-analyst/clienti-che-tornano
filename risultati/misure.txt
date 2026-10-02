@@ -277,5 +277,31 @@
   servirebbe un test in cui la riattivazione viene assegnata a caso.
 
 ============================================================================
+10. Corretto: il gruppo nei primi 90 giorni, la spesa dopo
+============================================================================
+  Le sezioni 7-9 misuravano la spesa dello stesso anno che definiva chi
+  torna: la differenza conteneva per costruzione gli ordini del ritorno.
+  Qui i primi 90 giorni decidono il gruppo, e la spesa si conta dopo.
+
+  clienti                                3,334
+  tornati entro 90 giorni                  1,446   (43.4%)
+
+  spesa dal giorno 91 al 365     media   mediana   compra ancora
+    tornati entro 90 giorni      1,355       554        77.2%
+    non tornati                    432         0        49.1%
+
+  differenza grezza                       922   IC [674, 1,257]
+  a parita' di primo ordine e coorte      756   IC [512, 1,042]
+  a parita' di spesa nei 90 giorni        150   IC [-34, 372]
+
+  La seconda riga dice che chi torna presto spende di piu' anche dopo, a parita'
+  di partenza. La terza dice perche': a parita' di quanto ha gia' comprato nei
+  primi tre mesi, il fatto di essere tornato non aggiunge quasi niente, e
+  l'intervallo comprende lo zero. Conta il volume, non il ritorno in se'.
+
+  Cade quindi la soglia della sezione 9: riportare indietro un cliente piccolo
+  non lo trasforma in uno grande, e quel conto assumeva proprio questo.
+
+============================================================================
 matrice salvata in risultati/matrice_retention.csv
 ============================================================================
