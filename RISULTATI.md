@@ -10,39 +10,23 @@ avuto una risposta diversa da quella che si aspettava, e stanno scritte cosi'.
 
 ## In una frase
 
-> **Corretto il 2 ottobre 2026.** Il confronto qui sotto girava in tondo: «chi torna»
-> era definito dagli ordini del primo anno, e la spesa confrontata era quella dello
-> stesso anno, quindi conteneva gli ordini del ritorno. Rifatto tagliando il tempo in
-> due (sezione 9): i primi 90 giorni decidono il gruppo, la spesa si conta dal giorno 91
-> al 365. **A parita' di primo ordine chi e' tornato presto spende £756 in piu' nei nove
-> mesi dopo; a parita' di quanto aveva gia' comprato nei primi tre mesi, solo £150, con
-> un intervallo che comprende lo zero. Conta il volume, non il ritorno in se'.** Cade la
-> soglia di £225: riportare indietro un cliente piccolo non lo rende grande.
->
-> Il testo che segue e' quello del 27 agosto, lasciato com'era.
-
-
-> Fra i clienti entrati nel 2010, chi arriva al secondo ordine spende nel suo primo
-> anno **£1.990 contro £337** — sei volte tanto. Confrontando solo clienti che al primo
-> acquisto erano uguali, il divario resta **£1.374** (intervallo £1.125–£1.658): **ne
-> sopravvive l'83%.** Se un cliente riattivato si comportasse come chi torna da solo,
-> riattivarlo converrebbe finche' costa meno di **margine × £1.125**, cioe' £225 con un
-> margine del 20%. E' un'ipotesi, non un risultato: vedi la sezione 8.
->
-> **La soglia di silenzio oltre la quale il cliente e' perso non esiste**: la
-> probabilita' di ritorno cala piano, senza mai crollare. Chi torna lo fa a meta' entro
-> due mesi, ma il 17% arriva dopo il sesto.
->
-> **Su chi:** clienti **identificati**. Il 22,8% delle righe non ha un `Customer ID`, e
-> quelle fatture restano fuori da ogni conteggio — vedi la sezione 7, che dice cosa
-> questo cambia e cosa no.
-
-E il risultato che non era in programma:
-
 > **La retention di questo negozio non e' una curva di abbandono, e' un calendario.**
 > Il mese dell'anno spiega il doppio dell'eta' del cliente (34,8% contro 16,6%).
-> Novembre 25%, gennaio 11%. Leggere la matrice come una discesa vuol dire leggere il
-> Natale e chiamarlo fedelta'.
+> Novembre 25%, febbraio 12%.
+>
+> **Chi torna presto spende di piu' anche dopo, ma lo prevede gia' quanto ha speso.**
+> A parita' di primo ordine, chi e' tornato entro 90 giorni spende £756 in piu' nei
+> nove mesi dopo; a parita' di spesa nei primi 90 giorni, £150 (da −£67 a £374).
+> Lettura predittiva, non causale: sezione 9.
+>
+> **La soglia di silenzio oltre la quale il cliente e' perso non esiste**, e
+> arrivare al secondo ordine non mette al sicuro.
+>
+> **Su chi:** clienti **identificati**. Il 22,8% delle righe non ha un `Customer ID`
+> (sezione 7).
+
+Le sezioni 6 e 8 sono la versione del 27 agosto, superata dalla sezione 9: restano
+perche' si veda il ragionamento. Le correzioni stanno in `CHANGELOG.md`.
 
 ---
 
@@ -235,7 +219,7 @@ Letto come leva operativa — di **chi torna entro l'anno**, quanti sono gia' to
 
 ---
 
-## 6. Quanto vale chi torna
+## 6. Quanto vale chi torna (versione del 27 agosto, superata dalla sezione 9)
 
 ### La finestra, prima del numero
 
@@ -361,7 +345,7 @@ di coorte sarebbe stata una tabella di zeri, qui no.
 
 ---
 
-## 8. Il punto di pareggio
+## 8. Il punto di pareggio (ritirato il 2 ottobre, vedi sezione 9)
 
 Riattivare conviene finche' costa meno di **margine × £1.374**.
 
@@ -419,18 +403,25 @@ Stessi 3.334 clienti entrati nel 2010. Tornati entro 90 giorni: 1.446 (43,4%).
 | confronto | differenza | intervallo 95% |
 |---|---:|---:|
 | grezzo | £922 | £674 – £1.257 |
-| a parita' di primo ordine e coorte | £756 | £512 – £1.042 |
-| **a parita' di spesa nei primi 90 giorni e coorte** | **£150** | **−£34 – £372** |
+| a parita' di primo ordine e coorte | £756 | £548 – £1.025 |
+| **a parita' di spesa nei primi 90 giorni e coorte** | **£150** | **−£67 – £374** |
 
 **Cosa dice.** Chi torna presto spende di piu' anche dopo, a parita' di partenza: questo
-regge. Ma a parita' di quanto il cliente aveva gia' comprato nei primi tre mesi, il fatto
-di essere tornato aggiunge £150, e l'intervallo comprende lo zero. Il segnale e' il
-volume d'acquisto, non il ritorno.
+regge. Ma a parita' di quanto il cliente aveva gia' speso nei primi tre mesi, sapere che
+ha fatto piu' di un ordine aggiunge £150 alla previsione, e l'intervallo comprende lo
+zero. Per prevedere la spesa futura basta la spesa iniziale.
+
+**Cosa non dice.** La spesa dei primi 90 giorni contiene gia' il secondo ordine:
+appaiare su di lei toglie anche una parte del ritorno. Quindi e' una lettura
+predittiva, non causale. Non dimostra che il ritorno «non conti»: dice che, come
+segnale per chi deve scegliere su quali clienti investire, la spesa iniziale basta.
+
+Gli intervalli ricampionano i clienti dentro ogni strato, 2.000 volte.
 
 **Cosa cade.** La soglia della sezione 8 assumeva che un cliente riportato al secondo
 ordine si comportasse come chi torna da solo. Questi numeri dicono che chi torna da solo
-e' soprattutto chi compra tanto: riportare indietro un cliente piccolo non lo rende
-grande. La soglia di £225 e' ritirata; la sezione 8 resta per mostrare cosa diceva.
+e' soprattutto chi spende gia' di piu', quindi quell'ipotesi non ha appoggio. La soglia
+di £225 e' ritirata; la sezione 8 resta per mostrare cosa diceva.
 
 **Cosa resta da fare, se ci fosse un committente.** La domanda giusta per la
 riattivazione e' «quanto rende riattivare un cliente di questo volume», e si risponde

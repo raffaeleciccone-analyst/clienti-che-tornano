@@ -393,9 +393,9 @@ footer a{color:var(--tenue)}
       cosa si consegna. Invece del verdetto, la soglia:</p>
       <p class="nota"><strong>Ritirata il 2 ottobre 2026.</strong> Questa soglia moltiplica
       il margine per la differenza della sezione 4, e quella differenza girava in tondo.
-      Rifatto il conto senza il cerchio, a parita&#39; di quanto il cliente aveva gia&#39;
-      comprato il ritorno non aggiunge quasi niente: riportare indietro un cliente piccolo
-      non lo rende grande. La manopola resta qui perche&#39; si veda cosa diceva.</p>
+      Rifatto il conto senza il cerchio, chi torna da solo e&#39; soprattutto chi spende gia&#39;
+      di piu&#39;: l&#39;ipotesi su cui poggiava la soglia non ha appoggio. La manopola resta
+      qui perche&#39; si veda cosa diceva.</p>
     </div>
     <div class="visivo">
       <div class="pannello">
@@ -803,10 +803,11 @@ document.getElementById("tab-futuro").innerHTML =
   + n0(f.pari_spesa_90.ic[1]) + '</td></tr></tbody>';
 document.getElementById("futuro-lettura").innerHTML =
   "Chi e’ tornato entro tre mesi spende di piu’ anche dopo, a parita’ di partenza. "
-  + "Ma a parita’ di quanto aveva gia’ comprato nei primi tre mesi, il vantaggio scende a "
+  + "Ma a parita’ di quanto aveva gia’ speso nei primi tre mesi, il vantaggio scende a "
   + "<b>" + n0(f.pari_spesa_90.stima) + " £</b> e l’intervallo comprende lo zero: "
-  + "<b>conta il volume, non il ritorno in se’</b>. " + n0(f.clienti) + " clienti, "
-  + f.quota_tornati + "% tornati entro 90 giorni.";
+  + "<b>per prevedere la spesa futura basta la spesa iniziale</b>. E’ una lettura "
+  + "predittiva, non causale: la spesa dei primi 90 giorni contiene gia’ il secondo ordine. "
+  + n0(f.clienti) + " clienti, " + f.quota_tornati + "% tornati entro 90 giorni.";
 
 /* ── il pareggio ─────────────────────────────────────────────────── */
 const slider = document.getElementById("margine");
