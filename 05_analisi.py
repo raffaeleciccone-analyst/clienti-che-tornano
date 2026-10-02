@@ -390,12 +390,19 @@ def valore(eng, rng):
   a parita' di spesa nei 90 giorni     {ps['stima']:>6,}   IC [{ps['ic'][0]:,}, {ps['ic'][1]:,}]
 
   La seconda riga dice che chi torna presto spende di piu' anche dopo, a parita'
-  di partenza. La terza dice perche': a parita' di quanto ha gia' comprato nei
-  primi tre mesi, il fatto di essere tornato non aggiunge quasi niente, e
-  l'intervallo comprende lo zero. Conta il volume, non il ritorno in se'.
+  di partenza. La terza dice che, a parita' di quanto ha gia' speso nei primi
+  tre mesi, sapere che ha fatto piu' di un ordine non aggiunge quasi niente alla
+  previsione: l'intervallo comprende lo zero. Per prevedere la spesa futura basta
+  la spesa iniziale; il numero di ordini non dice di piu'.
 
-  Cade quindi la soglia della sezione 9: riportare indietro un cliente piccolo
-  non lo trasforma in uno grande, e quel conto assumeva proprio questo.""")
+  Attenzione a cosa NON dice. La spesa dei primi 90 giorni contiene gia' il
+  secondo ordine: appaiare su di lei toglie anche una parte del ritorno stesso.
+  E' una lettura predittiva, non causale. «Conta il volume» descrive cosa
+  prevede la spesa futura, non dimostra che il ritorno non abbia effetto.
+
+  Cade comunque la soglia della sezione 9, che assumeva che un cliente riportato
+  al secondo ordine si comporti come chi torna da solo: questi numeri dicono che
+  chi torna da solo e' soprattutto chi spende gia' di piu'.""")
 
 
 def main():

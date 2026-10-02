@@ -30,22 +30,26 @@ RIPETIZIONI = 2000
 
 
 def _appaiata(pc: pd.DataFrame, strato: list[str], rng) -> dict:
-    pezzi, pesi = [], []
+    gruppi, pesi = [], []
     for _, g in pc.groupby(strato, observed=True):
-        ga = g.loc[g["tornato"], "speso_dopo"]
-        gb = g.loc[~g["tornato"], "speso_dopo"]
+        ga = g.loc[g["tornato"], "speso_dopo"].to_numpy(float)
+        gb = g.loc[~g["tornato"], "speso_dopo"].to_numpy(float)
         if len(ga) >= MIN_PER_PARTE and len(gb) >= MIN_PER_PARTE:
-            pezzi.append(ga.mean() - gb.mean())
+            gruppi.append((ga, gb))
             pesi.append(len(g))
-    pezzi, pesi = np.array(pezzi), np.array(pesi, dtype=float)
-    stima = float(np.average(pezzi, weights=pesi))
+    pesi = np.array(pesi, dtype=float)
+    stima = float(np.average([a.mean() - b.mean() for a, b in gruppi], weights=pesi))
+    # L'intervallo ricampiona i CLIENTI dentro ogni strato, non le differenze fra
+    # strati: l'incertezza sta nei clienti, e gli strati restano quelli. (Fino al
+    # 2/10/2026 ricampionava gli strati, e una revisione l'ha fatto notare.)
     boot = np.empty(RIPETIZIONI)
     for i in range(RIPETIZIONI):
-        k = rng.integers(0, len(pezzi), len(pezzi))
-        boot[i] = np.average(pezzi[k], weights=pesi[k])
+        diff = [a[rng.integers(0, len(a), len(a))].mean()
+                - b[rng.integers(0, len(b), len(b))].mean() for a, b in gruppi]
+        boot[i] = np.average(diff, weights=pesi)
     lo, hi = np.percentile(boot, [2.5, 97.5])
     return {"stima": round(stima), "ic": [round(float(lo)), round(float(hi))],
-            "clienti": int(pesi.sum()), "strati": int(len(pezzi))}
+            "clienti": int(pesi.sum()), "strati": int(len(gruppi))}
 
 
 def misura(ordini: pd.DataFrame, coorte: pd.Series, rng) -> dict:

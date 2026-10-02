@@ -12,26 +12,18 @@ La domanda e' una sola, ed e' stata scritta prima di aprire SQL:
 
 ## Cos'e' venuto fuori
 
-**Corretto il 2 ottobre 2026.** La prima versione diceva che chi torna vale £1.374 in piu'
-nel primo anno. Quel confronto girava in tondo: misurava la spesa dello stesso anno in cui
-si decideva chi torna. Rifatto con il gruppo deciso nei primi 90 giorni e la spesa contata
-dopo: **a parita' di quanto il cliente aveva gia' comprato nei primi tre mesi, essere
-tornato aggiunge solo £150 (intervallo da −£34 a £372). Conta il volume, non il ritorno.**
-Dettagli in `RISULTATI.md`, sezione 9. Il paragrafo qui sotto e' quello originale.
-
-**Fra i clienti entrati nel 2010**, chi arriva al secondo ordine spende nel primo anno
-**£1.990 contro £337**. Confrontando solo clienti che al primo acquisto erano uguali —
-appaiati per decile di primo ordine e coorte — il divario resta **£1.374**
-(£1.125–£1.658): ne sopravvive l'83%. E' un'associazione, non un effetto: dice quanto
-valgono i clienti che tornano, non quanto renderebbe farli tornare. **Se** un cliente
-riattivato si comportasse come chi torna da solo, riattivarlo converrebbe finche' costa
-meno di **margine × £1.125**, cioe' £225 con un margine del 20%. Quel «se» lo verifica
-solo un test con la riattivazione assegnata a caso (`RISULTATI.md`, sezione 8).
-
 **La retention di questo negozio non e' una curva di abbandono: e' un calendario.** Il
-mese dell'anno spiega il doppio dell'eta' del cliente (34,8% contro 16,6%). Novembre
-25%, gennaio 11%. Una classifica delle coorti per retention misurerebbe il mese di
-ingresso, non la qualita' dei clienti.
+mese dell'anno spiega il doppio dell'eta' del cliente (34,8% contro 16,6% della
+variazione). A novembre torna il 25% dei clienti, a febbraio il 12%. Una classifica
+delle coorti per retention misurerebbe il mese di ingresso, non la qualita' dei clienti.
+
+**Chi torna presto spende di piu' anche dopo, ma lo prevede gia' quanto ha speso.** Fra i
+3.334 clienti entrati nel 2010, il gruppo si decide nei primi 90 giorni e la spesa si
+conta dal giorno 91 al 365. A parita' di primo ordine chi e' tornato spende **£756** in
+piu' (£548–£1.025). A parita' di spesa nei primi 90 giorni il vantaggio scende a **£150**
+(da −£67 a £374): sapere che ha fatto piu' di un ordine non aggiunge quasi niente a
+quanto ha speso. E' una lettura predittiva, non causale: la spesa dei primi 90 giorni
+contiene gia' il secondo ordine (`RISULTATI.md`, sezione 9).
 
 **La sopravvivenza da un ordine al successivo e' costante: 72,3% a ogni gradino.**
 Arrivare al secondo ordine non mette al sicuro — «portali al secondo acquisto e sono
@@ -54,6 +46,7 @@ silenzio **non c'e'**.
 | `DATI-SPORCHI.md` | otto difetti contati sul file vero, con quante righe toglie ogni pulizia |
 | `MODELLO.md` | lo schema a stella, perché non era così all'inizio, e le quattro trappole della finestra di osservazione |
 | `RISULTATI.md` | le risposte, con gli intervalli e cio' che i numeri non dicono |
+| `CHANGELOG.md` | le correzioni dopo la pubblicazione: cosa diceva prima, perche' era sbagliato, cosa dice adesso |
 
 I documenti non sono stati riscritti quando una verifica li ha smentiti: la correzione
 sta accanto a quello che diceva prima. `MODELLO.md` registrava «il salto piu' grande e'

@@ -903,8 +903,8 @@
   "pari_partenza": {
    "stima": 756,
    "ic": [
-    512,
-    1042
+    548,
+    1025
    ],
    "clienti": 3288,
    "strati": 110
@@ -912,8 +912,8 @@
   "pari_spesa_90": {
    "stima": 150,
    "ic": [
-    -34,
-    372
+    -67,
+    374
    ],
    "clienti": 2811,
    "strati": 89

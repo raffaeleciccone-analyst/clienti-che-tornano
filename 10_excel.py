@@ -126,8 +126,9 @@ def foglio_leggimi(wb, d):
         f"in piu'; a parita' di spesa nei primi 90 giorni solo {f['pari_spesa_90']['stima']:,} £ "
         f"(intervallo {f['pari_spesa_90']['ic'][0]:,}–{f['pari_spesa_90']['ic'][1]:,}, "
         f"comprende lo zero).".replace(",", "."),
-        "Conta il volume, non il ritorno in se'. La soglia del foglio «Valore e pareggio» "
-        "e' ritirata: resta per mostrare cosa diceva.",
+        "Per prevedere la spesa futura basta la spesa iniziale (lettura predittiva, non "
+        "causale). La soglia del foglio «Valore e pareggio» e' ritirata: resta per mostrare "
+        "cosa diceva.",
         "",
     ])
 
