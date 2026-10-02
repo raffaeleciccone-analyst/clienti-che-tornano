@@ -13,8 +13,9 @@ avuto una risposta diversa da quella che si aspettava, e stanno scritte cosi'.
 > Fra i clienti entrati nel 2010, chi arriva al secondo ordine spende nel suo primo
 > anno **£1.990 contro £337** — sei volte tanto. Confrontando solo clienti che al primo
 > acquisto erano uguali, il divario resta **£1.374** (intervallo £1.125–£1.658): **ne
-> sopravvive l'83%.** Riattivare conviene finche' costa meno di **margine × £1.125**,
-> cioe' £225 con un margine del 20%.
+> sopravvive l'83%.** Se un cliente riattivato si comportasse come chi torna da solo,
+> riattivarlo converrebbe finche' costa meno di **margine × £1.125**, cioe' £225 con un
+> margine del 20%. E' un'ipotesi, non un risultato: vedi la sezione 8.
 >
 > **La soglia di silenzio oltre la quale il cliente e' perso non esiste**: la
 > probabilita' di ritorno cala piano, senza mai crollare. Chi torna lo fa a meta' entro
