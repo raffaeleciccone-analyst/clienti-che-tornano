@@ -38,6 +38,12 @@ silenzio **non c'è**.
 
 ---
 
+## Cosa ho deciso io
+
+La domanda è quella di base di ogni e-commerce: quanto vale un cliente che torna. Il legame tra ritorni e calendario è emerso dall'analisi. Il primo confronto, £1.374, l'ha messo in dubbio una revisione fatta con l'IA: ho rifatto il conto con il gruppo deciso nei primi 90 giorni. Le query SQL e il codice Python li ha scritti l'IA: io l'ho guidata e ho controllato i risultati.
+
+---
+
 ## I documenti, nell'ordine in cui sono stati scritti
 
 | file | cos'è |
