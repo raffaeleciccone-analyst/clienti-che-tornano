@@ -1,7 +1,7 @@
 """Estrae quello che serve alla pagina, e nient'altro.
 
-La pagina non rifa' i conti: legge questo file. Cosi' se un numero sulla pagina
-non torna con RISULTATI.md, il colpevole e' uno solo e sta qui.
+La pagina non rifà i conti: legge questo file. Così se un numero sulla pagina
+non torna con RISULTATI.md, il colpevole è uno solo e sta qui.
 
 Uso:  python 08_dati_pagina.py   ->  sito/dati.json
 """
@@ -177,7 +177,7 @@ def main() -> None:
     # 2/10/2026: lo stesso confronto senza girare in tondo (vedi valore_futuro.py)
     d["valore_futuro"] = valore_futuro.misura(dd, tenuti["coorte"], rng)
 
-    # il limite: quanto e' largo il tasso di ritorno vero
+    # il limite: quanto è largo il tasso di ritorno vero
     d["anonimi"] = {"fatture": 8752, "clienti_noti": 5852, "tornano": 4234,
                     "quota_alta": 72.3,
                     "quota_bassa": round(4234 / (5852 + 8752) * 100, 1)}

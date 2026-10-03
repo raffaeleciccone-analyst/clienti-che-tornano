@@ -4,19 +4,19 @@ Aggiunto il 2 ottobre 2026, dopo una revisione esterna.
 
 Il confronto della sezione 7-8 di RISULTATI.md definiva «chi torna» con gli ordini
 del primo anno (ordini > 1) e poi misurava la spesa dello STESSO anno. La spesa
-in piu' di chi torna era quindi, per costruzione, il valore degli ordini che lo
+in più di chi torna era quindi, per costruzione, il valore degli ordini che lo
 facevano contare come «uno che torna»: il confronto misurava la propria
 definizione.
 
 Qui il tempo si taglia in due:
   - i primi 90 giorni dal primo ordine decidono il gruppo (tornato o no);
   - la spesa si misura dopo, dal giorno 91 al 365.
-Cosi' l'esito non contiene gli ordini che definiscono il gruppo.
+Così l'esito non contiene gli ordini che definiscono il gruppo.
 
-E si appaia in due modi, perche' rispondono a due domande diverse:
-  - per decile del primo ordine e coorte: a parita' di partenza;
-  - per decile della spesa nei primi 90 giorni e coorte: a parita' di quanto il
-    cliente ha gia' comprato quando si decide se riattivarlo.
+E si appaia in due modi, perché rispondono a due domande diverse:
+  - per decile del primo ordine e coorte: a parità di partenza;
+  - per decile della spesa nei primi 90 giorni e coorte: a parità di quanto il
+    cliente ha già comprato quando si decide se riattivarlo.
 """
 from __future__ import annotations
 

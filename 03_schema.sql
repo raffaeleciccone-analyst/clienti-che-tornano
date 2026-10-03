@@ -10,7 +10,7 @@
 --       tabella di DIMENSIONE: derivate dai fatti, e libere di andare fuori
 --       sincrono senza che nessuno se ne accorga.
 --    2. La descrizione dell'articolo stava ripetuta su 776.575 righe — 19,8 MB
---       di testo per 5.254 valori diversi. E 622 codici avevano piu' di una
+--       di testo per 5.254 valori diversi. E 622 codici avevano più di una
 --       descrizione, cosa che nessuno era mai stato costretto a decidere.
 --    3. Anno, mese e trimestre venivano ricalcolati con funzioni in ogni query
 --       invece di stare scritti una volta sola.
@@ -29,38 +29,38 @@
 --  di ordine separato dalla fattura, e inventarne uno vorrebbe dire decidere a
 --  tavolino che due fatture dello stesso giorno sono un ordine solo.
 --
---  ── PERCHE' DUE TABELLE DEI FATTI ──────────────────────────────────────────
+--  ── PERCHÉ DUE TABELLE DEI FATTI ──────────────────────────────────────────
 --
---  `fatto_riga` e' la tabella atomica: piu' in basso di cosi' i dati non vanno.
---  `fatto_ordine` e' un AGGREGATO dichiarato, alla grana della fattura.
+--  `fatto_riga` è la tabella atomica: più in basso di così i dati non vanno.
+--  `fatto_ordine` è un AGGREGATO dichiarato, alla grana della fattura.
 --
---  Non e' lo stesso difetto del punto 1, ed e' bene dire perche'. Una tabella
---  aggregata e' un oggetto con un nome, una grana scritta e un momento in cui
+--  Non è lo stesso difetto del punto 1, ed è bene dire perché. Una tabella
+--  aggregata è un oggetto con un nome, una grana scritta e un momento in cui
 --  viene ricostruita: 04_carica.py la riscrive da fatto_riga e poi controlla
 --  che le due quadrino, uscendo con errore se non lo fanno. Delle misure
 --  nascoste dentro una dimensione, invece, non si accorge nessuno.
 --
---  Esiste perche' la domanda di questo progetto e' sulla sequenza degli ordini
---  di un cliente, e ogni vista qui sotto parte da li'. Ricostruirla ogni volta
+--  Esiste perché la domanda di questo progetto è sulla sequenza degli ordini
+--  di un cliente, e ogni vista qui sotto parte da lì. Ricostruirla ogni volta
 --  con una GROUP BY su 776.575 righe funzionerebbe, ma nasconderebbe la grana
 --  vera dell'analisi dentro una sottoquery.
 --
---  ── LA FATTURA E' UNA DIMENSIONE DEGENERE ──────────────────────────────────
+--  ── LA FATTURA È UNA DIMENSIONE DEGENERE ──────────────────────────────────
 --
 --  Il numero di fattura non ha attributi propri: tutto quello che si sa di una
---  fattura e' il suo cliente, la sua data e i suoi importi, e stanno gia'
+--  fattura è il suo cliente, la sua data e i suoi importi, e stanno già
 --  altrove. Quindi resta come colonna dentro i fatti, senza una dim_fattura
 --  fatta di una chiave e nient'altro.
 --
 --  ── COSA STA IN UNA DIMENSIONE E COSA NO ───────────────────────────────────
 --
 --  `dim_cliente` tiene primo_ordine e coorte, che sono pur sempre derivati dai
---  fatti. La differenza con n_ordini non e' un cavillo: la coorte e' un
---  attributo su cui si RAGGRUPPA e si filtra, non una quantita' che si somma,
---  e non cambia mai piu' una volta che il cliente e' entrato. n_ordini invece
+--  fatti. La differenza con n_ordini non è un cavillo: la coorte è un
+--  attributo su cui si RAGGRUPPA e si filtra, non una quantità che si somma,
+--  e non cambia mai più una volta che il cliente è entrato. n_ordini invece
 --  cambia a ogni acquisto, e va contato dai fatti quando serve.
 --
---  Le righe che entrano qui sono gia' pulite secondo DATI-SPORCHI.md. Il file
+--  Le righe che entrano qui sono già pulite secondo DATI-SPORCHI.md. Il file
 --  grezzo non viene mai toccato: se una decisione di pulizia cambia, si
 --  ricarica, non si aggiusta il database a mano.
 -- ============================================================================
@@ -91,7 +91,7 @@ CREATE TABLE dim_data (
   nome_mese        VARCHAR(10)  NOT NULL,
   trimestre        TINYINT      NOT NULL,
   anno_mese        CHAR(7)      NOT NULL,               -- '2010-03'
-  giorno_settimana TINYINT      NOT NULL,               -- 1 = lunedi'
+  giorno_settimana TINYINT      NOT NULL,               -- 1 = lunedì
   nome_giorno      VARCHAR(10)  NOT NULL,
   fine_settimana   TINYINT      NOT NULL,
   UNIQUE KEY uq_dim_data (data),
@@ -104,9 +104,9 @@ CREATE TABLE dim_cliente (
   cliente_key     INT           NOT NULL AUTO_INCREMENT PRIMARY KEY,
   cliente_id      INT           NOT NULL,               -- chiave naturale
   paese           VARCHAR(40)   NOT NULL,
-  -- Il paese e' quello della prima fattura. Un cliente puo' comparire con
-  -- paesi diversi (spedizioni a indirizzi diversi): prendere il primo e' una
-  -- scelta, ed e' scritta qui perche' si veda.
+  -- Il paese è quello della prima fattura. Un cliente può comparire con
+  -- paesi diversi (spedizioni a indirizzi diversi): prendere il primo è una
+  -- scelta, ed è scritta qui perché si veda.
   primo_ordine    DATE          NOT NULL,
   coorte          CHAR(7)       NOT NULL,               -- '2010-03'
   UNIQUE KEY uq_dim_cliente (cliente_id),
@@ -117,8 +117,8 @@ CREATE TABLE dim_cliente (
 
 -- ── dim_articolo ────────────────────────────────────────────────────────────
 --  Costruirla ha costretto a decidere una cosa che prima nessuno decideva:
---  622 codici compaiono con piu' di una descrizione. Si tiene la piu'
---  frequente, e si scrive quante ne sono state viste — cosi' chi guarda la
+--  622 codici compaiono con più di una descrizione. Si tiene la più
+--  frequente, e si scrive quante ne sono state viste — così chi guarda la
 --  dimensione sa che c'era una scelta, invece di crederla un dato.
 CREATE TABLE dim_articolo (
   articolo_key    INT           NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -130,7 +130,7 @@ CREATE TABLE dim_articolo (
 
 
 -- ── fatto_riga ──────────────────────────────────────────────────────────────
---  La tabella atomica. `fattura` e' la dimensione degenere.
+--  La tabella atomica. `fattura` è la dimensione degenere.
 CREATE TABLE fatto_riga (
   riga_key        BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
   fattura         VARCHAR(20)   NOT NULL,
@@ -146,7 +146,7 @@ CREATE TABLE fatto_riga (
   CONSTRAINT fk_riga_data     FOREIGN KEY (data_key)     REFERENCES dim_data(data_key),
   KEY idx_riga_fattura (fattura),
   KEY idx_riga_cliente (cliente_key),
-  -- Le pulizie sono gia' state fatte a monte, ma un vincolo che le ripete
+  -- Le pulizie sono già state fatte a monte, ma un vincolo che le ripete
   -- costa niente e impedisce che una ricarica sbagliata rimetta dentro quello
   -- che DATI-SPORCHI.md dice di aver tolto.
   CONSTRAINT chk_riga_positiva CHECK (quantita > 0 AND prezzo > 0)
@@ -175,7 +175,7 @@ CREATE TABLE fatto_ordine (
 -- ============================================================================
 
 -- ── 1. Ogni ordine con il suo posto nella storia del cliente ────────────────
---  E' la vista su cui poggiano tutte le altre. Le funzioni finestra fanno il
+--  È la vista su cui poggiano tutte le altre. Le funzioni finestra fanno il
 --  lavoro che in pandas sarebbe un groupby con shift: qui restano dentro il
 --  database, e chi legge la query vede la definizione insieme al risultato.
 CREATE VIEW v_ordini_sequenza AS
@@ -190,7 +190,7 @@ SELECT
   DATEDIFF(d.data, LAG(d.data) OVER (PARTITION BY o.cliente_key ORDER BY o.data_ora, o.fattura))
     AS giorni_dal_precedente,
   c.primo_ordine AS data_primo_ordine,
-  -- La coorte arriva dalla dimensione, non si ricalcola qui: e' un attributo
+  -- La coorte arriva dalla dimensione, non si ricalcola qui: è un attributo
   -- del cliente, e deve dare lo stesso valore ovunque venga chiesto.
   CONCAT(c.coorte, '-01') AS coorte,
   -- Distanza fra caselle del calendario, non mesi interi passati.
@@ -215,14 +215,14 @@ GROUP BY coorte;
 
 -- ── 3. La matrice di retention ──────────────────────────────────────────────
 --  Di cento clienti entrati nel mese X, quanti hanno ordinato nel mese X+n.
---  «Attivo» qui vuol dire «ha fatto almeno un ordine in quel mese», non «e'
---  ancora cliente»: sono due cose diverse e la seconda non e' osservabile.
+--  «Attivo» qui vuol dire «ha fatto almeno un ordine in quel mese», non «è
+--  ancora cliente»: sono due cose diverse e la seconda non è osservabile.
 --
 --  ATTENZIONE alla lettura: le coorti recenti hanno pochi mesi di vita. Un
 --  valore basso a +12 per la coorte di novembre 2011 non vuol dire che quei
---  clienti sono peggiori, vuol dire che il dodicesimo mese non e' ancora
+--  clienti sono peggiori, vuol dire che il dodicesimo mese non è ancora
 --  arrivato. `mesi_osservabili` serve a non confondere le due cose, e conta
---  solo i mesi FINITI: dicembre 2011 e' lungo nove giorni e non vale.
+--  solo i mesi FINITI: dicembre 2011 è lungo nove giorni e non vale.
 CREATE VIEW v_retention_coorte AS
 SELECT
   s.coorte,
@@ -249,8 +249,8 @@ CROSS JOIN (
 GROUP BY s.coorte, s.mese_relativo, c.clienti_entrati, u.ultimo_mese_intero;
 
 -- ── 4. Il funnel di riacquisto ──────────────────────────────────────────────
---  Non e' un funnel di conversione: in dati transazionali non esistono
---  sessioni ne' carrelli abbandonati. E' la sopravvivenza da un ordine al
+--  Non è un funnel di conversione: in dati transazionali non esistono
+--  sessioni né carrelli abbandonati. È la sopravvivenza da un ordine al
 --  successivo — su cento clienti che ne fanno uno, quanti arrivano al secondo.
 CREATE VIEW v_funnel_riacquisto AS
 SELECT

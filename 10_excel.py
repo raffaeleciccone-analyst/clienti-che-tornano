@@ -1,8 +1,8 @@
 """Costruisce la cartella di lavoro: clienti-che-tornano.xlsx
 
 Legge sito/dati.json, gli stessi numeri della pagina e di RISULTATI.md. Non
-rifa' nessun conto: se una cifra qui non torna con i documenti, il colpevole e'
-uno solo ed e' 08_dati_pagina.py.
+rifà nessun conto: se una cifra qui non torna con i documenti, il colpevole è
+uno solo ed è 08_dati_pagina.py.
 
 Il foglio del pareggio contiene FORMULE VERE, non valori incollati: chi apre il
 file cambia il margine nella sua cella e la soglia si ricalcola. Era la
@@ -94,7 +94,7 @@ def foglio_leggimi(wb, d):
     r = 5
     scrivi(ws, f"B{r}", "LA DOMANDA", T_H2); r += 1
     r = testo(ws, r, [
-        "Quanto vale un cliente che torna, e conviene di piu' trattenerlo o acquisirne "
+        "Quanto vale un cliente che torna, e conviene di più trattenerlo o acquisirne "
         "uno nuovo?",
         "Scritta prima di aprire SQL. Il committente immaginabile: chi decide il budget "
         "marketing di un negozio online.",
@@ -110,7 +110,7 @@ def foglio_leggimi(wb, d):
         f"Confrontando solo clienti che al primo acquisto erano uguali, il divario resta "
         f"{v['appaiata']:,} £ (intervallo {v['appaiata_ic'][0]:,}–{v['appaiata_ic'][1]:,}): "
         f"ne sopravvive l'{round(v['appaiata']/v['grezza']*100)}%.".replace(",", "."),
-        "Riattivare conviene finche' costa meno di  margine × 1.125 £.  "
+        "Riattivare conviene finché costa meno di  margine × 1.125 £.  "
         "Il foglio «Valore e pareggio» lo calcola col tuo margine.",
         "",
     ])
@@ -122,49 +122,49 @@ def foglio_leggimi(wb, d):
         "Il confronto qui sopra definiva «chi torna» con gli ordini del primo anno e "
         "misurava la spesa dello stesso anno: la differenza conteneva gli ordini del ritorno.",
         f"Rifatto con i primi 90 giorni che decidono il gruppo e la spesa dal giorno 91 al "
-        f"365: a parita' di primo ordine chi e' tornato spende {f['pari_partenza']['stima']:,} £ "
-        f"in piu'; a parita' di spesa nei primi 90 giorni solo {f['pari_spesa_90']['stima']:,} £ "
+        f"365: a parità di primo ordine chi è tornato spende {f['pari_partenza']['stima']:,} £ "
+        f"in più; a parità di spesa nei primi 90 giorni solo {f['pari_spesa_90']['stima']:,} £ "
         f"(intervallo {f['pari_spesa_90']['ic'][0]:,}–{f['pari_spesa_90']['ic'][1]:,}, "
         f"comprende lo zero).".replace(",", "."),
         "Per prevedere la spesa futura basta la spesa iniziale (lettura predittiva, non "
-        "causale). La soglia del foglio «Valore e pareggio» e' ritirata: resta per mostrare "
+        "causale). La soglia del foglio «Valore e pareggio» è ritirata: resta per mostrare "
         "cosa diceva.",
         "",
     ])
 
     scrivi(ws, f"B{r}", "E LA COSA CHE NON ERA IN PROGRAMMA", T_H2); r += 1
     r = testo(ws, r, [
-        "La retention di questo negozio non e' una curva di abbandono: e' un calendario.",
+        "La retention di questo negozio non è una curva di abbandono: è un calendario.",
         f"Il mese dell'anno spiega il {d['spiegata']['calendario']}% della variazione fra "
         f"le celle, l'eta' del cliente solo il {d['spiegata']['eta']}%. Novembre 25%, "
         f"gennaio 11%.",
         "Leggere la matrice da sinistra a destra vuol dire leggere il Natale e chiamarlo "
-        "fedelta'. I due fogli «Matrice» mostrano le stesse celle nei due allineamenti: "
+        "fedeltà. I due fogli «Matrice» mostrano le stesse celle nei due allineamenti: "
         "confrontali.",
         "",
     ])
 
     scrivi(ws, f"B{r}", "COSA QUESTI NUMERI NON DICONO", T_H2); r += 1
     r = testo(ws, r, [
-        "• Non dicono se trattenere convenga piu' che acquisire: manca il costo di "
+        "• Non dicono se trattenere convenga più che acquisire: manca il costo di "
         "acquisizione. Dicono a che prezzo le due cose si equivalgono.",
-        "• Misurano ricavo, non profitto: manca il costo del venduto. Il margine e' un "
+        "• Misurano ricavo, non profitto: manca il costo del venduto. Il margine è un "
         "parametro dichiarato, non un risultato.",
         f"• Il 22,8% delle righe non ha un identificativo cliente. Il tasso di ritorno "
         f"vero sta fra il {d['anonimi']['quota_bassa']}% e il {d['anonimi']['quota_alta']}%: "
         f"si scrive «tre clienti IDENTIFICATI su quattro tornano».",
-        "• Non dimostrano una causa. «I clienti che tornano valgono N volte» e' vero; "
+        "• Non dimostrano una causa. «I clienti che tornano valgono N volte» è vero; "
         "«farli tornare li fa valere N volte» richiederebbe un esperimento.",
         "• I dati sono del 2009-2011. Il metodo si trasferisce, i numeri no.",
         "",
     ], font=T_TENUE)
 
-    scrivi(ws, f"B{r}", "COME E' STATO FATTO", T_H2); r += 1
+    scrivi(ws, f"B{r}", "COME È STATO FATTO", T_H2); r += 1
     testo(ws, r, [
         "Python e SQL (MySQL 8, funzioni finestra). Le pulizie, il modello, le verifiche e "
         "i limiti stanno nel repo, un documento per ognuno.",
         "Le cifre di questo file escono dallo stesso file di dati della pagina web, e sono "
-        "ricontrollate da uno script che rifa' 63 conti dalle tabelle di base.",
+        "ricontrollate da uno script che rifà 63 conti dalle tabelle di base.",
     ], font=T_TENUE)
 
 
@@ -222,7 +222,7 @@ def foglio_matrice(wb, d, per_calendario: bool):
     ultima = R0 + len(d["coorti"])
     zona = f"D{R0 + 1}:{get_column_letter(2 + n_col)}{ultima}"
     # La scala diverge intorno alla retention media: sotto la media le celle
-    # leggono fredde, sopra calde. Non e' decorazione, e' la differenza che
+    # leggono fredde, sopra calde. Non è decorazione, è la differenza che
     # questi due fogli devono far vedere.
     ws.conditional_formatting.add(zona, ColorScaleRule(
         start_type="num", start_value=0.05, start_color="FFA8C0D4",
@@ -420,7 +420,7 @@ def foglio_pareggio(wb, d):
 
 # ═════════════════════════════════════════════════════════════════════════
 def foglio_dati(wb, d):
-    """La matrice in formato lungo: una riga per cella. E' il foglio da cui si
+    """La matrice in formato lungo: una riga per cella. È il foglio da cui si
     fa una tabella pivot senza dover disfare una matrice larga."""
     ws = wb.create_sheet("Coorti (mese d'ingresso)")
     intestazioni = ["coorte", "anno coorte", "mese coorte", "clienti entrati",
@@ -449,7 +449,7 @@ def foglio_dati(wb, d):
 def verifica(d) -> list[str]:
     """Riapre il file appena scritto e lo confronta con i dati di partenza.
 
-    Serve perche' openpyxl scrive senza lamentarsi anche quando il risultato e'
+    Serve perché openpyxl scrive senza lamentarsi anche quando il risultato è
     sbagliato: una cella spostata di una riga, una formula diventata testo, una
     matrice allineata male. Qui si riapre e si guarda.
     """

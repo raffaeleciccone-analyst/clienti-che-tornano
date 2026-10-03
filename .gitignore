@@ -1,9 +1,9 @@
 __pycache__/
 *.pyc
 
-# dati_grezzi/ NON e' ignorato: l'xlsx originale sta nel repo (43,5 MB).
-# Il perche' e' scritto in README.md — in breve: senza i due fogli separati
-# il §1 di DATI-SPORCHI.md non e' riproducibile.
+# dati_grezzi/ NON è ignorato: l'xlsx originale sta nel repo (43,5 MB).
+# Il perché è scritto in README.md — in breve: senza i due fogli separati
+# il §1 di DATI-SPORCHI.md non è riproducibile.
 
 # I file di blocco di LibreOffice: contengono nome macchina e percorsi locali.
 .~lock.*#

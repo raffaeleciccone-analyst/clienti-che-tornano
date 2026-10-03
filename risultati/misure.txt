@@ -5,7 +5,7 @@
   Una cella dice: di cento clienti entrati nel mese X, quanti hanno ordinato
   al mese X+n. Le celle che il calendario non ha ancora raggiunto restano
   vuote, non a zero: `mesi_osservabili` conta solo i mesi FINITI, e dicembre
-  2011 e' lungo nove giorni.
+  2011 è lungo nove giorni.
 
   coorti utili                          23
   celle piene e osservate (n >= 1)     253
@@ -36,10 +36,10 @@
   2011-09   188    100   27   38    .    .    .    .    .    .    .    .    .    .
   2011-10   221    100   32    .    .    .    .    .    .    .    .    .    .    .
   2011-11   191    100    .    .    .    .    .    .    .    .    .    .    .    .
-     (valori in percentuale; il punto e' una cella non ancora osservabile)
+     (valori in percentuale; il punto è una cella non ancora osservabile)
 
 ============================================================================
-2. La retention non e' una discesa: e' un calendario
+2. La retention non è una discesa: è un calendario
 ============================================================================
   Prima di leggere la matrice come una curva di abbandono, conviene chiedersi
   se scende per il motivo che sembra. Ogni cella sta a un mese di vita del
@@ -49,7 +49,7 @@
   il mese del calendario (gennaio, febbraio...) spiega il  34.8%
   tutti e due insieme                           spiegano l'85.8%
 
-  Il calendario conta piu' del doppio dell'eta' del cliente.
+  Il calendario conta più del doppio dell'eta' del cliente.
 
   media della retention per mese del calendario:
     gen   11.3%  ###########   <- un anno solo (2011)
@@ -66,28 +66,28 @@
     dic   13.8%  ##############   <- un anno solo (2010)
 
   Novembre 25%, gennaio 11%, e il picco arriva PRIMA di Natale, non durante.
-  La lettura naturale e' che molti di questi clienti siano negozi che si
+  La lettura naturale è che molti di questi clienti siano negozi che si
   riforniscono in autunno: la stagione sarebbe del compratore, non del
   venditore. I dati la sostengono — ordine mediano 303, con 15 righe e 153
-  pezzi — ma non la dimostrano. Il picco e' un fatto, il perche' e' una
-  lettura, e quello che segue non dipende dal perche'.
+  pezzi — ma non la dimostrano. Il picco è un fatto, il perché è una
+  lettura, e quello che segue non dipende dal perché.
 
-  I due estremi sono anche i meno sostenuti: nella finestra dei dati c'e' un
+  I due estremi sono anche i meno sostenuti: nella finestra dei dati c'è un
   dicembre solo e un gennaio solo. La forma regge sui mesi centrali, che hanno
   due anni a testa; sui due estremi si dice la direzione, non la cifra.
 
-  Conseguenza pratica, ed e' la ragione per cui questa sezione viene prima
+  Conseguenza pratica, ed è la ragione per cui questa sezione viene prima
   delle altre: due coorti non si confrontano se non hanno vissuto gli stessi
   mesi. Chi entra a ottobre ha Natale davanti; chi entra a gennaio ha undici
   mesi di attesa. Una classifica delle coorti per retention misurerebbe il mese
-  di ingresso, non la qualita' dei clienti.
+  di ingresso, non la qualità dei clienti.
 
 ============================================================================
-3. Quanto scende davvero, a parita' di coorti
+3. Quanto scende davvero, a parità di coorti
 ============================================================================
-  Nella tabella per mese di vita, ogni riga e' fatta di coorti diverse: al
+  Nella tabella per mese di vita, ogni riga è fatta di coorti diverse: al
   mese +12 arrivano solo le coorti vecchie. Se quelle fossero migliori, la
-  curva sembrerebbe piatta senza esserlo. Si rifa' il conto sulle coorti che
+  curva sembrerebbe piatta senza esserlo. Si rifà il conto sulle coorti che
   hanno tutti i dodici mesi, sempre le stesse in ogni riga.
 
   coorti nel panel bilanciato: 11  (2010-01 -> 2010-11)
@@ -110,12 +110,12 @@
     +6   sbilanciato  17.3%   bilanciato  17.6%   scarto +0.2
     +12  sbilanciato  17.9%   bilanciato  17.9%   scarto +0.0
 
-  Lo scarto e' sotto il punto percentuale: il difetto c'era ma non mordeva. Si
-  usa comunque il panel bilanciato, perche' qui costa niente e altrove no.
+  Lo scarto è sotto il punto percentuale: il difetto c'era ma non mordeva. Si
+  usa comunque il panel bilanciato, perché qui costa niente e altrove no.
 
-  La curva scende dal 20% al 13% e poi RISALE al 18% al dodicesimo mese. Non e'
-  un ritorno di fiamma: per una coorte del 2010, il mese +12 e' lo stesso mese
-  del calendario un anno dopo. E' la stagionalita' della sezione 2 che rientra
+  La curva scende dal 20% al 13% e poi RISALE al 18% al dodicesimo mese. Non è
+  un ritorno di fiamma: per una coorte del 2010, il mese +12 è lo stesso mese
+  del calendario un anno dopo. È la stagionalità della sezione 2 che rientra
   dalla finestra.
 
 ============================================================================
@@ -139,9 +139,9 @@
   clienti nell'analisi del valore          3,334
   coorti coinvolte: 2010-01 -> 2010-12
 
-  Sono tutte coorti del 2010, e dopo la sezione 2 questo NON e' un dettaglio:
-  il gruppo non e' piu' un campione di tutti i clienti, e' un campione di chi
-  e' entrato nel 2010. Vale come confronto interno fra questi clienti, non come
+  Sono tutte coorti del 2010, e dopo la sezione 2 questo NON è un dettaglio:
+  il gruppo non è più un campione di tutti i clienti, è un campione di chi
+  è entrato nel 2010. Vale come confronto interno fra questi clienti, non come
   ritratto della base.
 
 ============================================================================
@@ -158,15 +158,15 @@
       8        371    11.1%      76.0%
 
   Sopravvivenza media sui primi sei gradini: 72.3%, e non si muove.
-  Questo contraddice il conto della Fase 2, dove il primo salto sembrava il piu'
+  Questo contraddice il conto della Fase 2, dove il primo salto sembrava il più
   duro (72% e poi 78%, 80%, 81%). Quel conto guardava tutta la vita di ogni
-  cliente: chi e' entrato nel 2010 aveva due anni per arrivare all'ottavo
-  ordine, chi e' entrato a settembre 2011 ne aveva tre mesi. La sopravvivenza
-  che saliva era il tempo in piu' di chi era arrivato in fondo, non una fedelta'
+  cliente: chi è entrato nel 2010 aveva due anni per arrivare all'ottavo
+  ordine, chi è entrato a settembre 2011 ne aveva tre mesi. La sopravvivenza
+  che saliva era il tempo in più di chi era arrivato in fondo, non una fedeltà
   che cresce. A tempo fissato la salita sparisce.
 
   Il processo non ha memoria: arrivare al secondo ordine non mette al sicuro.
-  «Portali al secondo acquisto e sono tuoi» qui non e' vero.
+  «Portali al secondo acquisto e sono tuoi» qui non è vero.
 
   Controllo: con una sopravvivenza costante il numero di ordini
   segue una geometrica. Confronto fra quello che quel modello
@@ -183,10 +183,10 @@
          6      5.5%       5.1%
          7      4.0%       3.5%
 
-  Fino al sesto ordine lo scarto sta sotto il mezzo punto. Piu' in la' la
-  sopravvivenza sale davvero (dal 74% al 77%): li' non e' piu' il tempo, sono i
-  clienti — chi ha gia' comprato otto volte e' un negozio che si rifornisce, e
-  non somiglia piu' agli altri.
+  Fino al sesto ordine lo scarto sta sotto il mezzo punto. Più in là la
+  sopravvivenza sale davvero (dal 74% al 77%): lì non è più il tempo, sono i
+  clienti — chi ha già comprato otto volte è un negozio che si rifornisce, e
+  non somiglia più agli altri.
 
 ============================================================================
 6. Quanto tempo passa fra il primo e il secondo ordine
@@ -199,15 +199,15 @@
     90o percentile:  231 giorni
 
   Letto come soglia operativa:
-    entro  30 giorni e' gia' tornato il  28.4% di chi torna entro l'anno
-    entro  60 giorni e' gia' tornato il  48.2% di chi torna entro l'anno
-    entro  90 giorni e' gia' tornato il  60.9% di chi torna entro l'anno
-    entro 120 giorni e' gia' tornato il  70.1% di chi torna entro l'anno
-    entro 180 giorni e' gia' tornato il  83.3% di chi torna entro l'anno
+    entro  30 giorni è già tornato il  28.4% di chi torna entro l'anno
+    entro  60 giorni è già tornato il  48.2% di chi torna entro l'anno
+    entro  90 giorni è già tornato il  60.9% di chi torna entro l'anno
+    entro 120 giorni è già tornato il  70.1% di chi torna entro l'anno
+    entro 180 giorni è già tornato il  83.3% di chi torna entro l'anno
 
-  Non c'e' un burrone: la curva non ha un punto in cui la probabilita' crolla.
-  A 90 giorni sono tornati sei su dieci, a 180 poco piu' di otto. Chi cercava
-  una soglia netta oltre la quale «il cliente e' perso» qui non la trova, e
+  Non c'è un burrone: la curva non ha un punto in cui la probabilità crolla.
+  A 90 giorni sono tornati sei su dieci, a 180 poco più di otto. Chi cercava
+  una soglia netta oltre la quale «il cliente è perso» qui non la trova, e
   dichiararne una sarebbe inventarla.
 
 ============================================================================
@@ -217,7 +217,7 @@
   chi non torna     961 clienti   media       337   mediana      229
 
   Media e mediana sono lontane: la distribuzione ha una coda lunga e la
-  media la sente. Si mostrano tutte e due, non si sceglie la piu' comoda.
+  media la sente. Si mostrano tutte e due, non si sceglie la più comoda.
 
   differenza grezza:   1,653   IC 95% [1,453, 1,915]   (5.9x)
   L'intervallo viene da 2.000 ricampionamenti dei CLIENTI, non degli ordini:
@@ -227,8 +227,8 @@
 ============================================================================
 8. La stessa differenza, fra clienti che partivano uguali
 ============================================================================
-  Chi torna era gia' diverso il primo giorno: se ha speso di piu' al primo
-  ordine spendera' di piu' anche in totale, e quella parte del divario non
+  Chi torna era già diverso il primo giorno: se ha speso di più al primo
+  ordine spenderà di più anche in totale, e quella parte del divario non
   dipende dal ritorno. Si confrontano allora clienti appaiati per decile di
   primo ordine e per coorte, e si guarda quanto della differenza sopravvive.
 
@@ -241,21 +241,21 @@
     dal terzo in poi            1,202
   Il secondo ordine porta solo il 22% del maggior ricavo.
 
-  E si incastra con la sezione 5. Se la sopravvivenza e' la stessa a ogni
+  E si incastra con la sezione 5. Se la sopravvivenza è la stessa a ogni
   gradino, un cliente portato al secondo ordine non ha comprato una volta in
-  piu': e' entrato in una fila in cui ogni passo ha la stessa probabilita' di
-  averne un altro dietro. Quello che si compra riattivandolo non e' il secondo
-  ordine, e' la coda che gli si apre dietro — ed e' li' che stanno i quattro
+  più: è entrato in una fila in cui ogni passo ha la stessa probabilità di
+  averne un altro dietro. Quello che si compra riattivandolo non è il secondo
+  ordine, è la coda che gli si apre dietro — ed è lì che stanno i quattro
   quinti dei soldi.
 
 ============================================================================
 9. Il punto di pareggio, e cosa non dice
 ============================================================================
-  La cifra su cui si decide e' quella appaiata: 1,374 in piu' in un anno,
+  La cifra su cui si decide è quella appaiata: 1,374 in più in un anno,
   con un intervallo fra 1,125 e 1,658.
 
-  Riattivare conviene finche' costa meno di   margine x differenza.
-  Il margine non sta nei dati — non c'e' il costo del venduto — quindi resta
+  Riattivare conviene finché costa meno di   margine x differenza.
+  Il margine non sta nei dati — non c'è il costo del venduto — quindi resta
   una manopola, e la tabella si legge per righe:
 
       margine    soglia sulla stima    soglia prudente
@@ -265,14 +265,14 @@
           40%                   550                450
           50%                   687                562
 
-  La colonna di destra usa il capo basso dell'intervallo: e' la soglia che
-  regge anche se la stima e' ottimista, ed e' quella da portare a una riunione.
+  La colonna di destra usa il capo basso dell'intervallo: è la soglia che
+  regge anche se la stima è ottimista, ed è quella da portare a una riunione.
 
   Cosa NON dice questo numero. L'appaiamento toglie il pezzo di divario dovuto
-  al fatto che certi clienti partivano gia' piu' grossi. Non toglie quello che
-  non si e' misurato: chi torna magari aveva un bisogno ricorrente fin
+  al fatto che certi clienti partivano già più grossi. Non toglie quello che
+  non si è misurato: chi torna magari aveva un bisogno ricorrente fin
   dall'inizio, e sarebbe tornato comunque. Il conto vale se un cliente convinto
-  a tornare poi si comporta come i clienti che tornano da soli — ed e'
+  a tornare poi si comporta come i clienti che tornano da soli — ed è
   un'ipotesi, non un risultato. Con dati osservativi non si dimostra:
   servirebbe un test in cui la riattivazione viene assegnata a caso.
 
@@ -291,13 +291,13 @@
     non tornati                    432         0        49.1%
 
   differenza grezza                       922   IC [674, 1,257]
-  a parita' di primo ordine e coorte      756   IC [548, 1,025]
-  a parita' di spesa nei 90 giorni        150   IC [-67, 374]
+  a parità di primo ordine e coorte      756   IC [548, 1,025]
+  a parità di spesa nei 90 giorni        150   IC [-67, 374]
 
-  La seconda riga dice che chi torna presto spende di piu' anche dopo, a parita'
-  di partenza. La terza dice perche': a parita' di quanto ha gia' comprato nei
+  La seconda riga dice che chi torna presto spende di più anche dopo, a parità
+  di partenza. La terza dice perché: a parità di quanto ha già comprato nei
   primi tre mesi, il fatto di essere tornato non aggiunge quasi niente, e
-  l'intervallo comprende lo zero. Conta il volume, non il ritorno in se'.
+  l'intervallo comprende lo zero. Conta il volume, non il ritorno in sé.
 
   Cade quindi la soglia della sezione 9: riportare indietro un cliente piccolo
   non lo trasforma in uno grande, e quel conto assumeva proprio questo.

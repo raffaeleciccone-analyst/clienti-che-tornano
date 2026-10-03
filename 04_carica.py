@@ -1,10 +1,10 @@
 """Applica le pulizie di DATI-SPORCHI.md e carica lo schema a stella.
 
 Ogni passaggio di pulizia ha lo stesso nome che ha nel documento, e stampa
-quante righe toglie: se un giorno i due numeri non coincidono piu', se ne
+quante righe toglie: se un giorno i due numeri non coincidono più, se ne
 accorge chi lancia lo script, non chi legge i risultati sei mesi dopo.
 
-L'ordine di caricamento e' quello che impongono le chiavi esterne: prima le
+L'ordine di caricamento è quello che impongono le chiavi esterne: prima le
 dimensioni, poi i fatti. Le chiavi surrogate si prendono rileggendo le
 dimensioni dal database, non indovinandole: se MySQL assegna un AUTO_INCREMENT
 diverso da quello che ci aspettiamo, i fatti puntano comunque alla riga giusta.
@@ -35,7 +35,7 @@ DB = "retail_clienti"
 CHIAVE = ["Invoice", "StockCode", "Quantity", "InvoiceDate", "Price", "Customer ID"]
 
 # Scritto a mano dopo aver guardato i codici, non dedotto da una regola: la
-# regola «non comincia con cinque cifre» prende anche DCGS0058, che e' un
+# regola «non comincia con cinque cifre» prende anche DCGS0058, che è un
 # prodotto vero. Vedi DATI-SPORCHI.md §5.
 NON_PRODOTTI = {"POST", "DOT", "M", "m", "C2", "C3", "D", "S", "BANK CHARGES",
                 "AMAZONFEE", "ADJUST", "ADJUST2", "TEST001", "TEST002", "PADS",
@@ -50,7 +50,7 @@ GIORNI = ["lunedi", "martedi", "mercoledi", "giovedi", "venerdi", "sabato", "dom
 def url() -> str:
     pwd = os.environ.get("DB_PASSWORD", "")
     if not pwd:
-        # la stessa .env del motore Serie A, se c'e': una password sola sul portatile
+        # la stessa .env del motore Serie A, se c'è: una password sola sul portatile
         env = QUI.parent / "football-index-engine" / ".env"  # prima: serie-a-index-engine
         if env.is_file():
             for r in env.read_text(encoding="utf-8").splitlines():
@@ -96,7 +96,7 @@ def main() -> None:
     # dei dati: si controlla invece di sperare.
     doppie = int((df.groupby("Invoice")["cliente_id"].nunique() > 1).sum())
     if doppie:
-        print(f"\n  ATTENZIONE: {doppie} fatture con piu' di un cliente")
+        print(f"\n  ATTENZIONE: {doppie} fatture con più di un cliente")
 
     # ══ le dimensioni ════════════════════════════════════════════════════
     print("\nCostruzione delle dimensioni")
@@ -128,8 +128,8 @@ def main() -> None:
     print(f"  dim_cliente   {len(dim_cliente):>9,} clienti")
 
     # ── dim_articolo ──────────────────────────────────────────────────────
-    # 621 codici hanno piu' di una descrizione: si tiene la piu' frequente e si
-    # scrive quante ne sono state viste, perche' chi legge sappia che c'era una
+    # 621 codici hanno più di una descrizione: si tiene la più frequente e si
+    # scrive quante ne sono state viste, perché chi legge sappia che c'era una
     # scelta invece di crederla un dato.
     desc = (df.dropna(subset=["Description"])
               .groupby(["StockCode", "Description"]).size()
@@ -143,7 +143,7 @@ def main() -> None:
     dim_articolo["n_descrizioni"] = dim_articolo["codice"].map(quante).fillna(0).astype(int)
     ambigui = int((dim_articolo["n_descrizioni"] > 1).sum())
     print(f"  dim_articolo  {len(dim_articolo):>9,} codici   "
-          f"({ambigui:,} con piu' di una descrizione: tenuta la piu' frequente)")
+          f"({ambigui:,} con più di una descrizione: tenuta la più frequente)")
 
     # ══ il caricamento ═══════════════════════════════════════════════════
     eng = create_engine(url(), pool_pre_ping=True)
@@ -225,9 +225,9 @@ def main() -> None:
             prova(nome, f"SELECT COUNT(*) FROM {tabella} f LEFT JOIN {dim} d "
                         f"ON d.{chiave}=f.{chiave} WHERE d.{chiave} IS NULL", 0)
 
-        # L'AGGREGATO DEVE QUADRARE CON LA TABELLA ATOMICA. E' il controllo che
+        # L'AGGREGATO DEVE QUADRARE CON LA TABELLA ATOMICA. È il controllo che
         # giustifica l'esistenza di fatto_ordine: senza, sarebbe una copia che
-        # invecchia da sola, cioe' il difetto che questo schema doveva togliere.
+        # invecchia da sola, cioè il difetto che questo schema doveva togliere.
         a = float(cx.execute(text("SELECT ROUND(SUM(valore),2) FROM fatto_riga")).scalar())
         b = float(cx.execute(text("SELECT ROUND(SUM(valore),2) FROM fatto_ordine")).scalar())
         ok = abs(a - b) < 1
@@ -247,7 +247,7 @@ def main() -> None:
               f"  (atteso 0)")
 
     if not all(esiti):
-        print("\nIl caricamento non e' coerente: mi fermo qui.")
+        print("\nIl caricamento non è coerente: mi fermo qui.")
         sys.exit(1)
 
 

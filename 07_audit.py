@@ -1,7 +1,7 @@
-"""Audit: cerca gli errori e i bias in quello che e' gia' scritto.
+"""Audit: cerca gli errori e i bias in quello che è già scritto.
 
-Non ricontrolla le cifre — lo fa gia' `06_ricontrollo.py`. Qui si attaccano le
-DECISIONI: le pulizie che potrebbero aver tolto piu' del dovuto, i confronti che
+Non ricontrolla le cifre — lo fa già `06_ricontrollo.py`. Qui si attaccano le
+DECISIONI: le pulizie che potrebbero aver tolto più del dovuto, i confronti che
 potrebbero essere ancora sbilanciati, le interpretazioni che potrebbero non
 reggere, gli intervalli che potrebbero essere troppo stretti.
 
@@ -10,7 +10,7 @@ Ogni controllo dichiara cosa cerca e cosa vorrebbe trovare. Quelli che escono
 da una scelta, e la scelta va scritta.
 
 Uso:  python 07_audit.py            (solo database, veloce)
-      python 07_audit.py --grezzo   (rilegge anche l'Excel: piu' lento)
+      python 07_audit.py --grezzo   (rilegge anche l'Excel: più lento)
 """
 from __future__ import annotations
 
@@ -102,11 +102,11 @@ def campione_valore(o):
 
 # ═════════════════════════════════════════════════════════════════════════
 def a_clienti_senza_nome(eng):
-    controllo("A", "Il 22,8% di righe senza cliente puo' ribaltare il tasso di ritorno?",
+    controllo("A", "Il 22,8% di righe senza cliente può ribaltare il tasso di ritorno?",
               "un limite dichiarato sul fatturato ma MAI applicato al 72% che torna")
     with eng.connect() as cx:
         pass
-    # i numeri del censimento, gia' verificati in DATI-SPORCHI.md
+    # i numeri del censimento, già verificati in DATI-SPORCHI.md
     fatture_senza = 8752
     clienti_noti = 5852
     tornano = 4234
@@ -115,29 +115,29 @@ def a_clienti_senza_nome(eng):
           f"{tornano / clienti_noti * 100:.1f}%")
     print(f"  fatture SENZA cliente (DATI-SPORCHI §2)   {fatture_senza:>7,}")
     print("""
-  Il 72,3% e' calcolato solo su chi ha un identificativo. Chi non ce l'ha e'
-  fuori dal conto — e non e' un pezzo neutro: se quelle fatture fossero clienti
+  Il 72,3% è calcolato solo su chi ha un identificativo. Chi non ce l'ha è
+  fuori dal conto — e non è un pezzo neutro: se quelle fatture fossero clienti
   occasionali, sarebbero tutti «uno e basta».
 
-  I due estremi, per capire quanto e' larga l'incertezza:""")
+  I due estremi, per capire quanto è larga l'incertezza:""")
     basso = tornano / (clienti_noti + fatture_senza) * 100
-    print(f"    se ogni fattura anonima fosse un cliente diverso e mai piu' tornato")
+    print(f"    se ogni fattura anonima fosse un cliente diverso e mai più tornato")
     print(f"      clienti = {clienti_noti + fatture_senza:,}   tornano = {basso:.1f}%")
-    print(f"    se le fatture anonime fossero degli stessi clienti gia' contati")
+    print(f"    se le fatture anonime fossero degli stessi clienti già contati")
     print(f"      clienti = {clienti_noti:,}   tornano = {tornano / clienti_noti * 100:.1f}%")
     testo = documento()
     scritto = "29,0%" in testo and "identificati" in testo.lower()
     esito(scritto,
           f"Il tasso di ritorno sta fra il {basso:.0f}% e il {tornano/clienti_noti*100:.0f}% "
           f"a seconda di chi sono gli anonimi.\n    "
-          + ("RISULTATI.md lo dice, e dice che il 72,3% e' sui clienti identificati."
+          + ("RISULTATI.md lo dice, e dice che il 72,3% è sui clienti identificati."
              if scritto else
              "RISULTATI.md NON lo dice: presenta il 72,3% come se fosse la clientela."))
 
 
 def b_squilibrio_residuo(pc, rng):
     controllo("B", "L'appaiamento lascia dentro uno squilibrio?",
-              "chi torna che, DENTRO il suo decile, aveva comunque il primo ordine piu' grosso")
+              "chi torna che, DENTRO il suo decile, aveva comunque il primo ordine più grosso")
     pc = pc.copy()
     pc["decile"] = pd.qcut(pc["primo_valore"], 10, labels=False, duplicates="drop")
     print("  decile   primo ordine medio: chi torna / chi non torna    scarto")
@@ -150,8 +150,8 @@ def b_squilibrio_residuo(pc, rng):
     medio = float(np.mean(scarti))
     print(f"\n  squilibrio medio residuo dentro i decili: {medio:+.1f}%")
     print("""
-  Dentro lo stesso decile chi torna parte comunque un po' piu' in alto. Il
-  decile e' una scatola larga, e l'appaiamento non la chiude del tutto.
+  Dentro lo stesso decile chi torna parte comunque un po' più in alto. Il
+  decile è una scatola larga, e l'appaiamento non la chiude del tutto.
 
   Prova diretta: la differenza calcolata sulla spesa DOPO il primo ordine, che
   toglie di mezzo il primo acquisto invece di controllarlo.""")
@@ -167,16 +167,16 @@ def b_squilibrio_residuo(pc, rng):
     dopo = float(np.average(pezzi2, weights=pesi))
     print(f"\n    differenza appaiata sulla spesa totale     {tot:>9,.0f}")
     print(f"    differenza appaiata sulla spesa dopo il 1o {dopo:>9,.0f}")
-    print(f"    quanto e' dovuto al primo ordine residuo   {tot - dopo:>9,.0f}"
+    print(f"    quanto è dovuto al primo ordine residuo   {tot - dopo:>9,.0f}"
           f"   ({(tot - dopo) / tot * 100:.1f}%)")
     esito(abs(tot - dopo) / tot < 0.05,
           f"Il primo ordine residuo pesa il {(tot-dopo)/tot*100:.1f}% della differenza appaiata.\n"
-          f"    Sotto il 5% e' rumore; sopra, la cifra da pubblicare e' quella\n"
+          f"    Sotto il 5% è rumore; sopra, la cifra da pubblicare è quella\n"
           f"    sulla spesa dopo il primo ordine ({dopo:,.0f}), non {tot:,.0f}.")
 
 
 def c_intervallo(pc, rng):
-    controllo("C", "L'intervallo della differenza appaiata e' onesto?",
+    controllo("C", "L'intervallo della differenza appaiata è onesto?",
               "un bootstrap che ricampiona gli strati invece dei clienti, e sbaglia la larghezza")
     pc = pc.copy()
     pc["decile"] = pd.qcut(pc["primo_valore"], 10, labels=False, duplicates="drop")
@@ -212,20 +212,20 @@ def c_intervallo(pc, rng):
     print("""
   Sono due domande diverse. (1) chiede quanto ballerebbe il risultato con un
   altro insieme di strati; (2) quanto ballerebbe con altri clienti dentro gli
-  stessi strati. La seconda e' quella giusta qui: gli strati non sono un
+  stessi strati. La seconda è quella giusta qui: gli strati non sono un
   campione di niente, sono una griglia decisa da noi.""")
     piu_largo = (hi1 - lo1) >= (hi2 - lo2)
     dichiarato = "due bootstrap possibili" in documento()
     esito(piu_largo and dichiarato,
-          f"L'intervallo pubblicato e' il (1), largo {hi1-lo1:,.0f}; il (2) e' largo "
+          f"L'intervallo pubblicato è il (1), largo {hi1-lo1:,.0f}; il (2) è largo "
           f"{hi2-lo2:,.0f}.\n    "
-          + ("Si pubblica il piu' largo, e RISULTATI.md dichiara quale dei due e'."
+          + ("Si pubblica il più largo, e RISULTATI.md dichiara quale dei due è."
              if piu_largo and dichiarato else
-             "Va pubblicato il piu' largo dei due, dicendo quale."))
+             "Va pubblicato il più largo dei due, dicendo quale."))
 
 
 def d_stagionalita_pesata(o, rng):
-    controllo("D", "La stagionalita' regge se le celle non contano tutte uguale?",
+    controllo("D", "La stagionalità regge se le celle non contano tutte uguale?",
               "un R^2 dominato da coorti piccole e rumorose")
     ultimo = o["data"].max()
     ultimo_intero = (ultimo.to_period("M") if ultimo == ultimo.to_period("M").end_time.normalize()
@@ -261,12 +261,12 @@ def d_stagionalita_pesata(o, rng):
     print(f"  mese di vita del cliente     {r2('m'):>7.1f}%   {r2('m','n'):>7.1f}%")
     print(f"  mese del calendario          {r2('cal'):>7.1f}%   {r2('cal','n'):>7.1f}%")
     print("""
-  Nota sui gradi di liberta': il 'mese di vita' ha PIU' livelli del calendario
-  (22 contro 12), quindi partiva avvantaggiato — piu' gruppi spiegano sempre
-  piu' varianza. Perde lo stesso. Se il confronto fosse stato al contrario
-  sarebbe stato un artefatto; cosi' la conclusione ne esce rafforzata.""")
+  Nota sui gradi di libertà: il 'mese di vita' ha PIÙ livelli del calendario
+  (22 contro 12), quindi partiva avvantaggiato — più gruppi spiegano sempre
+  più varianza. Perde lo stesso. Se il confronto fosse stato al contrario
+  sarebbe stato un artefatto; così la conclusione ne esce rafforzata.""")
 
-    # la prova che conta: il calo di dicembre e' dentro OGNI coorte?
+    # la prova che conta: il calo di dicembre è dentro OGNI coorte?
     print("\n  Prova dentro ogni coorte: il dicembre di quella coorte sta sotto")
     print("  la media dei suoi mesi vicini?")
     sotto = tot = 0
@@ -282,40 +282,40 @@ def d_stagionalita_pesata(o, rng):
                 sotto += int(r["quota"] < vicini["quota"].mean())
     print(f"    coorti in cui dicembre sta sotto i suoi vicini: {sotto} su {tot}")
     esito(sotto / max(tot, 1) >= 0.7,
-          f"Il calo di dicembre si vede in {sotto} coorti su {tot}: e' dentro le coorti,\n"
+          f"Il calo di dicembre si vede in {sotto} coorti su {tot}: è dentro le coorti,\n"
           f"    non un effetto di composizione fra coorti diverse.")
 
     print("""
-  Limite che resta e va scritto: eta' + coorte = calendario, per costruzione.
-  Con due anni di dati le tre cose non si separano davvero. Quello che si puo'
-  dire — e che si dice — e' che il calendario spiega piu' dell'eta'. Non che
+  Limite che resta e va scritto: età + coorte = calendario, per costruzione.
+  Con due anni di dati le tre cose non si separano davvero. Quello che si può
+  dire — e che si dice — è che il calendario spiega più dell'eta'. Non che
   l'eta' non conti.""")
 
 
 def e_troncamento(d):
     controllo("E", "I percentili del tempo al secondo ordine sono troncati?",
-              "una frase che dice 'di chi tornera'' quando i dati dicono 'entro l'anno'")
+              "una frase che dice 'di chi tornerà' quando i dati dicono 'entro l'anno'")
     sec = d[d["k"] == 2].copy()
     primo = d[d["k"] == 1].set_index("cliente_id")["data"]
     sec["gg"] = (sec["data"].values - primo.loc[sec["cliente_id"]].values)
     gg = pd.Series(sec["gg"]).dt.days
-    print(f"  massimo osservato: {gg.max()} giorni — e la finestra e' {FINESTRA}.")
+    print(f"  massimo osservato: {gg.max()} giorni — e la finestra è {FINESTRA}.")
     print(f"  clienti al 2o ordine fra 300 e 365 giorni: {int(((gg>300)&(gg<=365)).sum())}")
     print("""
-  La distribuzione e' tagliata a 365 per costruzione: chi ha fatto il secondo
-  ordine al giorno 400 qui risulta «non tornato». Quindi ogni percentuale e'
+  La distribuzione è tagliata a 365 per costruzione: chi ha fatto il secondo
+  ordine al giorno 400 qui risulta «non tornato». Quindi ogni percentuale è
   condizionata a «torna ENTRO L'ANNO», non a «torna».""")
     testo = documento()
     corretto = "chi torna entro l'anno" in testo and "Attenzione al denominatore" in testo
     esito(corretto,
           "Le percentuali sono condizionate a «torna entro l'anno».\n    "
-          + ("RISULTATI.md le introduce cosi', e spiega il denominatore."
+          + ("RISULTATI.md le introduce così, e spiega il denominatore."
              if corretto else
-             "RISULTATI.md le introduce con «di chi tornera'»: va corretto."))
+             "RISULTATI.md le introduce con «di chi tornerà»: va corretto."))
 
 
 def f_grossista(o):
-    controllo("F", "«Grossista di articoli da regalo» e' un fatto o un'impressione?",
+    controllo("F", "«Grossista di articoli da regalo» è un fatto o un'impressione?",
               "un'interpretazione comoda appoggiata alla scheda del dataset invece che ai dati")
     print(f"  valore mediano di un ordine      {o['valore'].median():>10,.0f}")
     print(f"  valore medio                     {o['valore'].mean():>10,.0f}")
@@ -324,7 +324,7 @@ def f_grossista(o):
     grandi = (o["valore"] > 500).mean() * 100
     print(f"  ordini sopra 500                 {grandi:>9.1f}%")
     print(f"  ordini sotto 50                  {(o['valore'] < 50).mean() * 100:>9.1f}%")
-    attenuato = "il perche' e' una lettura" in documento()
+    attenuato = "il perché è una lettura" in documento()
     esito(attenuato,
           f"Un ordine mediano ha {o['n_righe'].median():.0f} righe e "
           f"{o['n_pezzi'].median():.0f} pezzi: compatibile con l'ingrosso, non\n"
@@ -335,7 +335,7 @@ def f_grossista(o):
 
 
 def g_geometrica(pc):
-    controllo("G", "Il controllo con la geometrica e' una prova o un giro a vuoto?",
+    controllo("G", "Il controllo con la geometrica è una prova o un giro a vuoto?",
               "un modello tarato sugli stessi numeri che poi dice di prevedere")
     n = pc["ordini"]
     tot = len(n)
@@ -351,14 +351,14 @@ def g_geometrica(pc):
           f"{max(abs(np.array(sopr) - p)) * 100:.2f} punti")
     print("""
   Il parametro p viene dalle stesse sopravvivenze che il modello poi riproduce:
-  la tabella «attesa contro osservata» NON e' una verifica indipendente, e'
-  un'altra scrittura dello stesso fatto. Quello che aggiunge e' che un modello
+  la tabella «attesa contro osservata» NON è una verifica indipendente, è
+  un'altra scrittura dello stesso fatto. Quello che aggiunge è che un modello
   a UN parametro basta a ricostruire tutta la distribuzione — non che il
   modello sia stato messo alla prova.""")
-    onesto = "non e' una verifica indipendente" in documento()
+    onesto = "non è una verifica indipendente" in documento()
     esito(onesto,
-          "La geometrica e' tarata sugli stessi numeri che poi riproduce.\n    "
-          + ("RISULTATI.md la chiama per quello che e': una riscrittura, non una prova."
+          "La geometrica è tarata sugli stessi numeri che poi riproduce.\n    "
+          + ("RISULTATI.md la chiama per quello che è: una riscrittura, non una prova."
              if onesto else
              "RISULTATI.md la presenta come «il controllo»: va riscritto."))
 
@@ -392,9 +392,9 @@ def h_finestra_alternativa(o, rng):
         esiti.append(app)
         print(f"    {giorni:>3} gg   {len(pc):>7,}   {pc['torna'].mean()*100:>8.1f}%   {app:>17,.0f}")
     print("""
-  La cifra cresce con la finestra, e deve: piu' tempo, piu' ordini. Non e' un
-  difetto — e' il motivo per cui la finestra va SEMPRE citata insieme al
-  numero. «1.374» da solo non vuol dire niente; «1.374 nel primo anno» si'.""")
+  La cifra cresce con la finestra, e deve: più tempo, più ordini. Non è un
+  difetto — è il motivo per cui la finestra va SEMPRE citata insieme al
+  numero. «1.374» da solo non vuol dire niente; «1.374 nel primo anno» sì.""")
     esito(True, "Il segno e l'ordine di grandezza non dipendono dalla finestra scelta.")
 
 
@@ -419,21 +419,21 @@ def i_duplicati_interni():
     # quelle che restano dentro la stessa fattura e lo stesso foglio
     conteggi = dup.groupby(chiave, dropna=False).size()
     print(f"  gruppi di duplicati                        {len(conteggi):>9,}")
-    print(f"  gruppi con piu' di 2 copie                 {int((conteggi > 2).sum()):>9,}")
+    print(f"  gruppi con più di 2 copie                 {int((conteggi > 2).sum()):>9,}")
     print(f"  copie massime di una stessa riga           {int(conteggi.max()):>9,}")
     print("""
-  Il rischio: una fattura puo' elencare due volte lo stesso articolo per motivi
+  Il rischio: una fattura può elencare due volte lo stesso articolo per motivi
   veri (due confezioni registrate separatamente). Con la chiave usata, che
   include anche InvoiceDate al secondo, due voci vere sarebbero identiche solo
   se battute nello stesso identico istante.""")
     # controprova: stesso articolo nella stessa fattura ma con orari diversi
     vari = (df.groupby(["Invoice", "StockCode"])["InvoiceDate"].nunique() > 1).sum()
-    print(f"  fatture+articolo con PIU' orari diversi    {int(vari):>9,}")
+    print(f"  fatture+articolo con PIÙ orari diversi    {int(vari):>9,}")
     print("    (quelle sopravvivono alla deduplica: non sono copie)")
     quota = (tolte["Quantity"] * tolte["Price"]).sum() / (df["Quantity"] * df["Price"]).sum() * 100
     esito(quota < 12,
-          f"La deduplica toglie il {quota:.1f}% del valore lordo. E' il difetto noto\n"
-          f"    della sovrapposizione fra i due fogli (DATI-SPORCHI §1), gia' documentato.")
+          f"La deduplica toglie il {quota:.1f}% del valore lordo. È il difetto noto\n"
+          f"    della sovrapposizione fra i due fogli (DATI-SPORCHI §1), già documentato.")
 
 
 def main() -> None:
@@ -463,9 +463,9 @@ def main() -> None:
     if not allarmi:
         print("Nessuno.\n")
         print("I controlli A, C, E, F e G non guardano solo i dati: leggono anche")
-        print("RISULTATI.md, e passano perche' il documento dice quello che i dati")
+        print("RISULTATI.md, e passano perché il documento dice quello che i dati")
         print("permettono di dire. Se un giorno quelle frasi vengono riscritte in modo")
-        print("piu' generoso, questo script torna rosso — e' il suo lavoro.")
+        print("più generoso, questo script torna rosso — è il suo lavoro.")
     sys.exit(1 if allarmi else 0)
 
 

@@ -1,5 +1,5 @@
 -- ============================================================================
---  Il mese relativo era contato con TIMESTAMPDIFF, e non e' il mese di coorte
+--  Il mese relativo era contato con TIMESTAMPDIFF, e non è il mese di coorte
 -- ============================================================================
 --
 --  TIMESTAMPDIFF(MONTH, a, b) conta i mesi INTERI passati, non la distanza fra
@@ -13,12 +13,12 @@
 --  su 36.594: il 28%.
 --
 --  L'effetto ha una direzione sola: gonfia la colonna 0 e svuota la colonna 1,
---  cioe' fa sembrare che i clienti tornino meno di quanto tornano. E la colonna
---  1 e' quella su cui poggia tutta l'analisi.
+--  cioè fa sembrare che i clienti tornino meno di quanto tornano. E la colonna
+--  1 è quella su cui poggia tutta l'analisi.
 --
 --  «Mese di coorte» vuol dire distanza fra caselle del calendario: chi entra a
---  gennaio e compra a febbraio e' al mese 1, il giorno del mese non c'entra.
---  Questa e' la definizione che usa la matrice, e ora e' anche quella scritta
+--  gennaio e compra a febbraio è al mese 1, il giorno del mese non c'entra.
+--  Questa è la definizione che usa la matrice, e ora è anche quella scritta
 --  nella vista.
 -- ============================================================================
 
@@ -51,9 +51,9 @@ FROM ordini o;
 
 -- ── la matrice ──────────────────────────────────────────────────────────────
 --  Cambia anche `mesi_osservabili`, per lo stesso motivo. Prima usava
---  MAX(data) = 2011-12-09, cioe' contava dicembre 2011 come un mese osservato:
---  ma dicembre 2011 e' lungo nove giorni. Un mese vale solo se e' finito, e
---  l'ultimo mese finito nei dati e' novembre 2011.
+--  MAX(data) = 2011-12-09, cioè contava dicembre 2011 come un mese osservato:
+--  ma dicembre 2011 è lungo nove giorni. Un mese vale solo se è finito, e
+--  l'ultimo mese finito nei dati è novembre 2011.
 CREATE VIEW v_retention_coorte AS
 SELECT
   s.coorte,
