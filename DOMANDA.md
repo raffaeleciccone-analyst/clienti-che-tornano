@@ -167,8 +167,10 @@ riattivazione mandata a uno solo. Si può però fare due cose, e si fanno:
 1. **Restringere il confronto a clienti simili.** Non «chi torna contro chi non
    torna», ma clienti appaiati per dimensione del primo ordine, mese di ingresso e
    paese. Quello che resta della differenza è più credibile di quella grezza.
-   `[verificato]` **Si riduce del 17%: da 1.653 a 1.374.** Non si dimezza. La
-   dimensione del primo ordine spiega una fetta del divario, e non la fetta grossa.
+   `[verificato, poi corretto il 2 ottobre]` Il primo conto dava **da 1.653 a 1.374**
+   (−17%), ma misurava la spesa degli stessi mesi che decidono chi torna: il confronto
+   girava in tondo (`CHANGELOG.md`). Rifatto con il gruppo deciso nei primi 90 giorni e
+   la spesa contata dopo: a parità di primo ordine il divario è **£756** (£548–£1.025).
    L'appaiamento è per decile di primo ordine e coorte (105 strati, il 95% dei
    clienti); il paese è rimasto fuori perché il 92% è Regno Unito e gli strati
    esteri sarebbero stati troppo piccoli per stare in piedi.
@@ -207,13 +209,17 @@ Due cose sono andate diversamente da come erano scritte qui, e una non era previ
 - **il valore a 24 mesi non si può misurare** — nessuna coorte utile ha 24 mesi;
 - **la soglia di silenzio non esiste** — la probabilità di ritorno non crolla mai;
 - **non previsto:** la retention di questo negozio è stagionale. Il mese del calendario
-  spiega il doppio dell'eta' del cliente (34,8% contro 16,6%), e leggere la matrice come
+  spiega il doppio dell'età del cliente (34,8% contro 16,6%), e leggere la matrice come
   una curva di abbandono vuol dire leggere il Natale e chiamarlo fedeltà.
 
 La frase che questo file chiedeva di poter scrivere alla fine, con numeri veri:
 
-> I clienti che arrivano al secondo ordine spendono nel primo anno **1.990 contro 337**.
-> Fra clienti che al primo acquisto erano uguali il divario resta **1.374**
-> (1.125–1.658). Il secondo ordine arriva a metà entro **64 giorni**, ma una soglia
-> oltre la quale il cliente è perso non c'è. Riattivare vale fino a **margine ×
-> 1.125**: 225 con un margine del 20%.
+> Fra i clienti entrati nel 2010, chi torna entro 90 giorni spende dal giorno 91 al 365
+> **£1.355 contro £432**. A parità di primo ordine il divario resta **£756**
+> (£548–£1.025); a parità di spesa nei primi 90 giorni scende a **£150** (da −£67 a
+> £374), e l'intervallo comprende lo zero: per prevedere la spesa futura basta quella
+> iniziale. Il secondo ordine arriva a metà entro **64 giorni**, ma una soglia oltre la
+> quale il cliente è perso non c'è. Quanto valga riattivarlo lo può dire solo un test
+> con la riattivazione assegnata a caso.
+>
+> *Corretto il 2 ottobre 2026: la prima versione diceva 1.374 e un pareggio a margine × 1.125, poi ritirati (`CHANGELOG.md`).*

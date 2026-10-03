@@ -288,8 +288,8 @@ def d_stagionalita_pesata(o, rng):
     print("""
   Limite che resta e va scritto: età + coorte = calendario, per costruzione.
   Con due anni di dati le tre cose non si separano davvero. Quello che si può
-  dire — e che si dice — è che il calendario spiega più dell'eta'. Non che
-  l'eta' non conti.""")
+  dire — e che si dice — è che il calendario spiega più dell'età. Non che
+  l'età non conti.""")
 
 
 def e_troncamento(d):

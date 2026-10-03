@@ -11,7 +11,7 @@ avuto una risposta diversa da quella che si aspettava, e stanno scritte così.
 ## In una frase
 
 > **La retention di questo negozio non è una curva di abbandono, è un calendario.**
-> Il mese dell'anno spiega il doppio dell'eta' del cliente (34,8% contro 16,6%).
+> Il mese dell'anno spiega il doppio dell'età del cliente (34,8% contro 16,6%).
 > Novembre 25%, febbraio 12%.
 >
 > **Chi torna presto spende di più anche dopo, ma lo prevede già quanto ha speso.**
@@ -436,9 +436,9 @@ solo con un test: riattivazione assegnata a caso, a parità di volume.
 | valore a 24 mesi | **impossibile**: nessuna coorte utile ha 24 mesi. Fatto a 12. |
 | «la soglia di silenzio oltre cui non torna più» | **non esiste**: nessun crollo. Si riporta la mediana, 64 giorni. |
 | mediana accanto alla media se la distribuzione è storta | **lo era**: £1.990 contro £1.091. Fatto. |
-| quanto si riduce il divario appaiando | **−17%**, non si dimezza |
+| quanto si riduce il divario appaiando | **−17%** nella prima versione; rifatto nella sezione 9 |
 | il primo salto è il più duro (Fase 2) | **falso**: era il tempo di osservazione. La sopravvivenza è costante al 72%. |
-| — | **non previsto**: la retention è stagionale, e il calendario spiega il doppio dell'eta' del cliente |
+| — | **non previsto**: la retention è stagionale, e il calendario spiega il doppio dell'età del cliente |
 
 ## E quello che ha trovato l'audit
 
@@ -474,4 +474,4 @@ E cinque controlli passati, che vale la pena elencare perché potevano andare ma
 
 Età del cliente + coorte = mese del calendario, **per costruzione**. Con due anni di
 dati le tre cose non si separano davvero. Quello che si può dire, e che si dice, è che
-**il calendario spiega più dell'eta'**. Non che l'eta' non conti.
+**il calendario spiega più dell'età**. Non che l'età non conti.

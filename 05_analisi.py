@@ -115,7 +115,7 @@ def stagionalita(d):
     print(f"\n  il mese di vita del cliente (+1, +2, +3...)  spiega il  {a*100:4.1f}%")
     print(f"  il mese del calendario (gennaio, febbraio...) spiega il  {b*100:4.1f}%")
     print(f"  tutti e due insieme                           spiegano l'{c*100:4.1f}%")
-    print("\n  Il calendario conta più del doppio dell'eta' del cliente.")
+    print("\n  Il calendario conta più del doppio dell'età del cliente.")
 
     print("\n  media della retention per mese del calendario:")
     quando = (d["coorte"].dt.to_period("M") + d["mese_relativo"])

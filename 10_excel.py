@@ -136,7 +136,7 @@ def foglio_leggimi(wb, d):
     r = testo(ws, r, [
         "La retention di questo negozio non è una curva di abbandono: è un calendario.",
         f"Il mese dell'anno spiega il {d['spiegata']['calendario']}% della variazione fra "
-        f"le celle, l'eta' del cliente solo il {d['spiegata']['eta']}%. Novembre 25%, "
+        f"le celle, l'età del cliente solo il {d['spiegata']['eta']}%. Novembre 25%, "
         f"gennaio 11%.",
         "Leggere la matrice da sinistra a destra vuol dire leggere il Natale e chiamarlo "
         "fedeltà. I due fogli «Matrice» mostrano le stesse celle nei due allineamenti: "

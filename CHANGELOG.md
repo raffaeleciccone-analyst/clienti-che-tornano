@@ -64,7 +64,7 @@ ordine: £756 (£548–£1.025). A parità di spesa nei primi 90 giorni: £150 (
 E il risultato che non era in programma:
 
 > **La retention di questo negozio non è una curva di abbandono, è un calendario.**
-> Il mese dell'anno spiega il doppio dell'eta' del cliente (34,8% contro 16,6%).
+> Il mese dell'anno spiega il doppio dell'età del cliente (34,8% contro 16,6%).
 > Novembre 25%, gennaio 11%. Leggere la matrice come una discesa vuol dire leggere il
 > Natale e chiamarlo fedeltà.
 
@@ -76,7 +76,7 @@ E il risultato che non era in programma:
 nel primo anno. Quel confronto girava in tondo: misurava la spesa dello stesso anno in cui
 si decideva chi torna. Rifatto con il gruppo deciso nei primi 90 giorni e la spesa contata
 dopo: **a parità di quanto il cliente aveva già comprato nei primi tre mesi, essere
-tornato aggiunge solo £150 (intervallo da −£34 a £372). Conta il volume, non il ritorno.**
+tornato aggiunge solo £150 (intervallo da −£67 a £374). Conta il volume, non il ritorno.**
 Dettagli in `RISULTATI.md`, sezione 9. Il paragrafo qui sotto è quello originale.
 
 **Fra i clienti entrati nel 2010**, chi arriva al secondo ordine spende nel primo anno
