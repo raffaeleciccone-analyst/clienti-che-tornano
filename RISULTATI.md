@@ -381,7 +381,7 @@ Per questo la pagina scrive sempre **«i clienti che tornano valgono N volte»**
 
 ## 9. Corretto il 2 ottobre 2026: il gruppo nei primi 90 giorni, la spesa dopo
 
-Una revisione esterna ha notato che le sezioni 6 e 8 misuravano la propria definizione.
+Una revisione fatta con l'IA ha notato che le sezioni 6 e 8 misuravano la propria definizione.
 «Chi torna» voleva dire «più di un ordine nei primi 365 giorni», e la spesa confrontata
 era quella degli stessi 365 giorni: la differenza conteneva, per costruzione, i soldi
 degli ordini che facevano contare il cliente come uno che torna. L'appaiamento per primo
