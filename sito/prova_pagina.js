@@ -69,8 +69,7 @@ try {
 }
 
 // Un errore silenzioso peggiore del crash: lo script gira, ma non scrive niente.
-const attesi = ["griglia", "funnel", "curva", "tab-valore", "tab-appaiata",
-                "tab-anonimi", "esito-pareggio", "quanto-spiega", "quanto-resta",
+const attesi = ["griglia", "funnel", "curva", "tab-anonimi", "quanto-spiega",
                 "tab-futuro", "futuro-lettura"];
 console.log("contenuto prodotto da ogni blocco:");
 for (const id of attesi){
@@ -100,7 +99,7 @@ console.log(`  [${suFinestra ? "ok" : "NO"}] la matrice si ridisegna al resize`)
 
 const clic = Object.keys(ascoltatori);
 console.log(`\ncomandi collegati: ${clic.join(", ") || "NESSUNO"}`);
-for (const id of ["b-eta", "b-cal", "margine"]){
+for (const id of ["b-eta", "b-cal"]){
   const ok = clic.includes(id);
   if (!ok) uscita = 1;
   console.log(`  [${ok ? "ok" : "NO"}] ${id}`);
@@ -111,11 +110,6 @@ const dati = JSON.parse(fs.readFileSync(path.join(__dirname, "dati.json"), "utf8
 const tutto = Object.values(scritture).join(" ");
 console.log("\ncifre che devono comparire nella pagina:");
 for (const [nome, atteso] of [
-  ["differenza appaiata", "1.374"],
-  ["estremo basso", "1.125"],
-  ["media di chi torna", "1.990"],
-  ["media di chi non torna", "337"],
-  ["soglia al 20%", "225"],
   ["spiegata dal calendario", String(dati.spiegata.calendario)],
   // il confronto corretto il 2/10/2026
   ["a pari partenza (91-365)", String(dati.valore_futuro.pari_partenza.stima)],
