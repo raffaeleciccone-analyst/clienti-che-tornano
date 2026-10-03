@@ -56,6 +56,7 @@ header{padding:clamp(64px,11vw,120px) 0 0}
 
 /* ── sezioni ─────────────────────────────────────────────────────── */
 section{padding:clamp(56px,8vw,92px) 0 0}
+
 .eti{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.1em;
   text-transform:uppercase;color:var(--ottone);margin:0 0 .9em;font-weight:500}
 
@@ -158,15 +159,7 @@ section{padding:clamp(56px,8vw,92px) 0 0}
 .gradino .s{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--ottone);
   text-align:right}
 
-/* ── il pareggio ─────────────────────────────────────────────────── */
-.manopola{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-end;margin:22px 0 0}
-.manopola label{display:block;font-size:.82rem;color:var(--tenue);margin:0 0 8px;
-  font-weight:500}
-input[type=range]{width:min(320px,100%);accent-color:var(--ottone)}
-.risposta{font-family:Fraunces,Georgia,serif;font-size:clamp(2rem,5vw,2.9rem);
-  font-weight:700;line-height:1;color:var(--ottone);letter-spacing:-.02em}
-.risposta small{display:block;font-family:"Instrument Sans",sans-serif;font-size:.82rem;
-  font-weight:400;color:var(--tenue);letter-spacing:0;margin-top:8px;line-height:1.4}
+
 
 /* ── grafico del tempo ───────────────────────────────────────────── */
 .grafico{width:100%;height:auto;display:block;margin:20px 0 0}
@@ -210,9 +203,9 @@ footer a{color:var(--tenue)}
     <h1>Clienti che tornano</h1>
     <p class="domanda">Quanto vale un cliente che torna, e conviene di più trattenerlo
       o acquisirne uno nuovo?</p>
-    <p class="guida">Questa domanda è stata scritta prima di aprire SQL, e ha una
-      risposta con una cifra dentro. Ma la prima cosa che i dati hanno detto è che la
-      domanda di solito viene letta male &mdash; e conviene partire da lì.</p>
+    <p class="guida">Questa domanda è stata scritta prima di aprire SQL. La prima cosa
+      che i dati hanno detto è che di solito viene letta male &mdash; e conviene partire
+      da lì.</p>
   </div>
 </header>
 
@@ -349,69 +342,33 @@ footer a{color:var(--tenue)}
     <div class="intero">
       <p class="eti">04 &middot; Il valore</p>
       <h2>Quanto vale, davvero, chi torna</h2>
-      <p>Nel suo primo anno &mdash; finestra uguale per tutti, se no si misura quanto tempo
-      ha avuto il cliente, non il cliente:</p>
-      <table class="tab" id="tab-valore"></table>
-      <p class="didascalia">Media e mediana sono lontane: la distribuzione ha una coda
-      lunga. Si mostrano tutte e due, non si sceglie la più comoda.</p>
-      <h3>Ma chi torna era già diverso il primo giorno</h3>
-      <p>Se aveva speso di più al primo acquisto spenderà di più anche in
-      totale, e quella parte del divario non dipende dal ritorno. Allora si confrontano
-      solo clienti <strong>appaiati per dimensione del primo ordine e per mese di
-      ingresso</strong>, e si guarda quanto della differenza sopravvive.</p>
-      <table class="tab" id="tab-appaiata"></table>
-      <p class="didascalia" id="quanto-resta"></p>
-      <div class="nota">
-        <p><strong>E i soldi non stanno nel secondo ordine.</strong> Per cliente che torna,
-          il secondo ordine porta <span class="num" id="v-secondo"></span>&nbsp;&pound; e
-          tutti gli ordini successivi <span class="num" id="v-terzo"></span>&nbsp;&pound;.
-          Se la sopravvivenza è uguale a ogni gradino, chi viene riportato al secondo
-          ordine non ha comprato una volta in più: è entrato in una fila dove ogni
-          passo ha la stessa probabilità di averne un altro dietro. Quello che si
-          compra riattivandolo è la coda che gli si apre dietro.</p>
-      </div>
-      <h3>Corretto il 2 ottobre 2026: il confronto sopra girava in tondo</h3>
-      <p>&laquo;Chi torna&raquo; era definito dagli ordini del primo anno, e la spesa
-      confrontata era quella dello stesso anno: la differenza conteneva, per costruzione,
-      gli ordini del ritorno. Rifatto tagliando il tempo in due: <strong>i primi 90 giorni
-      decidono il gruppo, la spesa si conta dal giorno 91 al 365</strong>.</p>
+      <p>Il tempo si taglia in due: <strong>i primi 90 giorni decidono il gruppo, la spesa
+      si conta dal giorno 91 al 365</strong>. Così la spesa confrontata non contiene gli
+      ordini che fanno contare un cliente come uno che torna, e il confronto non gira in
+      tondo.</p>
       <table class="tab" id="tab-futuro"></table>
       <p class="didascalia" id="futuro-lettura"></p>
+      <p class="didascalia">La prima versione di questa sezione, del 27 agosto, misurava la
+      spesa dello stesso anno che decideva chi torna. È stata ritirata il 2 ottobre 2026:
+      cosa diceva e perché era sbagliata sta nel <code>CHANGELOG.md</code> del repository.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══ 5. il pareggio ══════════════════════════════════════════════ -->
+<!-- ═══ 5. la risposta ════════════════════════════════════════════ -->
 <section>
   <div class="due">
-    <div class="intro">
+    <div class="intero">
       <p class="eti">05 &middot; La risposta</p>
-      <h2>Fino a quanto conviene spendere</h2>
+      <h2>Cosa si può decidere con questi numeri</h2>
       <p>La domanda di partenza era se convenga trattenere o acquisire. <strong>Questi dati
       non possono dirlo</strong>: non contengono il costo di acquisizione, e nemmeno il
-      costo del venduto. Ma il buco non si tappa dichiarandolo &mdash; si chiude cambiando
-      cosa si consegna. Invece del verdetto, la soglia:</p>
-      <p class="nota"><strong>Ritirata il 2 ottobre 2026.</strong> Questa soglia moltiplica
-      il margine per la differenza della sezione 4, e quella differenza girava in tondo.
-      Rifatto il conto senza il cerchio, chi torna da solo è soprattutto chi spende già
-      di più: l&#39;ipotesi su cui poggiava la soglia non ha appoggio. La manopola resta
-      qui perché si veda cosa diceva.</p>
-    </div>
-    <div class="visivo">
-      <div class="pannello">
-        <div class="manopola">
-          <div>
-            <label for="margine">Il tuo margine: <b id="v-margine" class="num">20%</b></label>
-            <input type="range" id="margine" min="5" max="60" step="1" value="20"
-              aria-describedby="esito-pareggio">
-          </div>
-          <div class="risposta" id="esito-pareggio"></div>
-        </div>
-      </div>
-      <p class="didascalia">Il margine è una manopola dichiarata, non un risultato: senza
-      il costo del venduto quello che si misura è ricavo, non profitto. La cifra usa
-      l&#39;estremo basso dell&#39;intervallo, cioè la soglia che regge anche se la
-      stima è ottimista.</p>
+      costo del venduto.</p>
+      <p>Quello che si può consegnare è più modesto e si usa subito: <strong>per scegliere
+      su quali clienti investire basta la spesa dei primi tre mesi</strong>, e le campagne
+      di riacquisto vanno pianificate sul calendario, non sull'anzianità del cliente.
+      Quanto renda riattivare un cliente lo dice solo un test: riattivazione assegnata a
+      caso, a parità di volume.</p>
     </div>
   </div>
 </section>
@@ -758,36 +715,6 @@ document.getElementById("p-medio").textContent = D.sopravvivenza_media + "%";
   document.getElementById("mediana-gg").textContent = med;
 })();
 
-/* ── le tabelle del valore ───────────────────────────────────────── */
-const v = D.valore;
-document.getElementById("tab-valore").innerHTML =
-  '<thead><tr><th></th><th class="n">clienti</th><th class="n">spesa media</th>'
-  + '<th class="n">mediana</th></tr></thead><tbody>'
-  + '<tr class="forte"><td>chi torna</td><td class="n">' + n0(v.torna.clienti)
-  + '</td><td class="n">' + n0(v.torna.media) + ' £</td><td class="n">'
-  + n0(v.torna.mediana) + ' £</td></tr>'
-  + '<tr><td>chi si ferma al primo ordine</td><td class="n">' + n0(v.non_torna.clienti)
-  + '</td><td class="n">' + n0(v.non_torna.media) + ' £</td><td class="n">'
-  + n0(v.non_torna.mediana) + ' £</td></tr></tbody>';
-
-document.getElementById("tab-appaiata").innerHTML =
-  '<thead><tr><th>confronto</th><th class="n">differenza</th>'
-  + '<th class="n">intervallo 95%</th></tr></thead><tbody>'
-  + '<tr><td>grezzo</td><td class="n">' + n0(v.grezza) + ' £</td><td class="n">'
-  + n0(v.grezza_ic[0]) + ' – ' + n0(v.grezza_ic[1]) + '</td></tr>'
-  + '<tr class="forte"><td>fra clienti appaiati</td><td class="n">' + n0(v.appaiata)
-  + ' £</td><td class="n">' + n0(v.appaiata_ic[0]) + ' – '
-  + n0(v.appaiata_ic[1]) + '</td></tr></tbody>';
-
-const resta = Math.round(v.appaiata / v.grezza * 100);
-document.getElementById("quanto-resta").innerHTML =
-  "Sopravvive l’<b>" + resta + "%</b> della differenza grezza: l’appaiamento ne "
-  + "toglie il " + (100 - resta) + "%. Non si dimezza — la dimensione del primo "
-  + "ordine spiega una fetta del divario, e non la fetta grossa. "
-  + v.strati + " strati, che coprono il " + v.coperti + "% dei clienti.";
-document.getElementById("v-secondo").textContent = n0(v.secondo_ordine);
-document.getElementById("v-terzo").textContent = n0(v.dal_terzo);
-
 /* ── il confronto corretto (2/10/2026) ──────────────────────────── */
 const f = D.valore_futuro;
 document.getElementById("tab-futuro").innerHTML =
@@ -808,19 +735,6 @@ document.getElementById("futuro-lettura").innerHTML =
   + "<b>per prevedere la spesa futura basta la spesa iniziale</b>. È una lettura "
   + "predittiva, non causale: la spesa dei primi 90 giorni contiene già il secondo ordine. "
   + n0(f.clienti) + " clienti, " + f.quota_tornati + "% tornati entro 90 giorni.";
-
-/* ── il pareggio ─────────────────────────────────────────────────── */
-const slider = document.getElementById("margine");
-function pareggio(){
-  const m = +slider.value;
-  document.getElementById("v-margine").textContent = m + "%";
-  document.getElementById("esito-pareggio").innerHTML =
-    n0(Math.round(v.appaiata_ic[0] * m / 100)) + " £"
-    + "<small>per cliente riportato al secondo ordine. Oltre questa cifra, "
-    + "riattivare costa più di quanto rende.</small>";
-}
-slider.addEventListener("input", pareggio);
-pareggio();
 
 /* ── i limiti ────────────────────────────────────────────────────── */
 const a = D.anonimi;
