@@ -2,7 +2,7 @@
 
 Non rilancia `05_analisi.py`: rifarebbe gli stessi passaggi e confermerebbe gli
 stessi errori. Qui i conti si rifanno dalle tabelle di base — `ordini` e
-`clienti` — senza passare dalle viste, cosi' se una vista e' sbagliata la
+`clienti` — senza passare dalle viste, così se una vista è sbagliata la
 differenza salta fuori.
 
 Ogni riga stampa [ok] o [NO] e il valore trovato accanto a quello scritto.
@@ -95,8 +95,8 @@ def main() -> None:
     mat = pd.DataFrame(righe)
     prova("celle osservate (m >= 1)", len(mat), 253, 0)
 
-    # ══ la stagionalita' ═════════════════════════════════════════════════
-    sezione("2. la stagionalita'")
+    # ══ la stagionalità ═════════════════════════════════════════════════
+    sezione("2. la stagionalità")
     mat["cal"] = [(c + m).month for c, m in zip(mat["coorte"], mat["m"])]
 
     def spiegata(gruppo):
@@ -146,7 +146,7 @@ def main() -> None:
     prova("coorti tutte nel 2010",
           int(tenuti["coorte"].astype(str).str[:4].eq("2010").all()), 1, 0)
 
-    # l'affermazione «24 mesi non si puo'»
+    # l'affermazione «24 mesi non si può»
     a_due_anni = cl[(cl["primo"] <= ultimo - pd.Timedelta(days=730)) & ~fuori]
     prova("clienti utili con 24 mesi interi", len(a_due_anni), 0, 0)
 
@@ -264,8 +264,8 @@ def main() -> None:
 
     f["dec_primo"] = pd.qcut(f["primo_valore"], 10, labels=False, duplicates="drop")
     f["dec_90"] = pd.qcut(f["s90"], 10, labels=False, duplicates="drop")
-    prova("a parita' di primo ordine", appaiata("dec_primo"), 756, 1)
-    prova("a parita' di spesa nei 90 giorni", appaiata("dec_90"), 150, 1)
+    prova("a parità di primo ordine", appaiata("dec_primo"), 756, 1)
+    prova("a parità di spesa nei 90 giorni", appaiata("dec_90"), 150, 1)
 
     print(f"\n{'=' * 76}")
     print(f"controlli: {sum(esiti)} su {len(esiti)} passati")

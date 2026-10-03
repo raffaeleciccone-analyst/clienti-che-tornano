@@ -81,11 +81,11 @@ section{padding:clamp(56px,8vw,92px) 0 0}
        grid-template-areas:"intro visivo" "dopo dopo";
        column-gap:clamp(32px,3.4vw,64px)}
   .intro{grid-area:intro}
-  /* Il testo che viene dopo il grafico non ha piu' niente accanto: sta largo quanto
+  /* Il testo che viene dopo il grafico non ha più niente accanto: sta largo quanto
      tutto il resto, non incolonnato a sinistra con mezzo schermo vuoto di fianco. */
   .dopo{grid-area:dopo;margin-top:34px;max-width:82ch}
   /* Niente «sticky»: il testo che segue attraversa entrambe le colonne, e un grafico
-     che resta incollato in alto gli finisce sopra. Sta fermo dov'e'. */
+     che resta incollato in alto gli finisce sopra. Sta fermo dov'è. */
   .visivo{grid-area:visivo}
 
   /* Sezione a grafico intero: quando il grafico guadagna a essere largo si prende
@@ -103,7 +103,7 @@ section{padding:clamp(56px,8vw,92px) 0 0}
   .ampio .griglia{--max-c:34px;--h:26px;width:fit-content;margin-inline:auto}
 }
 /* Il passo delle colonne si misura sullo spazio che la matrice ha davvero — la sua
-   colonna — non sulla finestra: da quando ci sono due colonne non coincidono piu'. */
+   colonna — non sulla finestra: da quando ci sono due colonne non coincidono più. */
 .scorre{overflow-x:auto;overflow-y:hidden;padding-bottom:6px;container-type:inline-size}
 .griglia{--n:23;--max-c:26px;--c:min(var(--max-c),calc((100cqw - var(--etichetta) - 10px) / var(--n)));--h:22px;--etichetta:104px;font-family:"IBM Plex Mono",monospace;font-size:.68rem}
 .intestazioni{display:flex;height:20px;margin-left:var(--etichetta);position:relative}
@@ -184,7 +184,7 @@ footer a{color:var(--tenue)}
 
 /* Sotto i 720px le ventitre colonne non ci stanno, e una matrice che scorre di
    lato si legge per un terzo. Allora le celle si stringono e perdono le cifre:
-   resta il colore, che e' quello che porta il senso. Il numero esatto sta nel
+   resta il colore, che è quello che porta il senso. Il numero esatto sta nel
    titolo di ogni cella, dove chi lo vuole lo trova. */
 @media (max-width:720px){
   .griglia{--max-c:14px;--h:13px;--etichetta:50px}
@@ -217,7 +217,7 @@ footer a{color:var(--tenue)}
 </header>
 
 <!-- ═══ 1. la matrice ═══════════════════════════════════════════════ -->
-<!-- «ampio»: la matrice e' l'unica figura che guadagna davvero a essere larga —
+<!-- «ampio»: la matrice è l'unica figura che guadagna davvero a essere larga —
      ventitre colonne per ventitre righe. Si prende la riga intera e le celle
      crescono da 26 a 34 px; il testo le sta sopra e sotto. -->
 <section class="ampio">
@@ -466,15 +466,15 @@ const D = {"coorti":[{"coorte":"2010-01","anno":2010,"mese":1,"entrati":368,"cel
 const MESI = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
 const MESI_LUNGHI = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio",
                      "agosto","settembre","ottobre","novembre","dicembre"];
-/* useGrouping:"always" e' voluto. In italiano il raggruppamento predefinito
+/* useGrouping:"always" è voluto. In italiano il raggruppamento predefinito
    parte da cinque cifre, quindi 1374 uscirebbe "1374" mentre i documenti del
    progetto scrivono "1.374": due modi di scrivere lo stesso numero nella stessa
    pagina sono un modo di far dubitare di tutti e due. */
 const FMT = new Intl.NumberFormat("it-IT", { useGrouping: "always" });
 const n0 = (x) => FMT.format(x);
 
-/* ── colore: diverge intorno alla media, cosi' i mesi sotto la media
-      leggono freddi e quelli sopra caldi. Non e' decorazione: e' la
+/* ── colore: diverge intorno alla media, così i mesi sotto la media
+      leggono freddi e quelli sopra caldi. Non è decorazione: è la
       differenza che la sezione 1 deve far vedere. ─────────────────── */
 const stile = getComputedStyle(document.documentElement);
 function tinta(q, media, min, max){
@@ -496,13 +496,13 @@ function misc(a, b, t){
 const griglia = document.getElementById("griglia");
 const didascalia = document.getElementById("didascalia");
 let vista = "eta";
-// Il passo delle colonne e la larghezza delle etichette stanno nel CSS, non qui: cosi'
-// una media query puo' stringerli su schermo piccolo e questo codice la segue da solo.
-// Erano scritti a mano — «26» in tre punti — ed e' il motivo per cui la matrice
+// Il passo delle colonne e la larghezza delle etichette stanno nel CSS, non qui: così
+// una media query può stringerli su schermo piccolo e questo codice la segue da solo.
+// Erano scritti a mano — «26» in tre punti — ed è il motivo per cui la matrice
 // esisteva a una larghezza sola.
 function misure(){
-  // Il passo NON si legge da getPropertyValue("--c"): una proprieta' personalizzata
-  // torna come testo della formula — «min(14px,calc(...))» — e parseFloat da' NaN.
+  // Il passo NON si legge da getPropertyValue("--c"): una proprietà personalizzata
+  // torna come testo della formula — «min(14px,calc(...))» — e parseFloat dà NaN.
   // Si misura invece un elemento che quella larghezza ce l'ha davvero.
   const m = griglia.querySelector(".misura");
   const cs = getComputedStyle(griglia);
@@ -521,8 +521,8 @@ const offset = (c) => (c.anno - inizio.anno) * 12 + (c.mese - inizio.mese);
 const larghezzaCal = Math.max(...D.coorti.map(c => offset(c) + c.celle.length));
 const larghezzaEta = Math.max(...D.coorti.map(c => c.celle.length));
 
-/* La media di ogni colonna. E' questa la riga che fa vedere la cosa: cinquecento
-   celle colorate non si confrontano a occhio, ventidue barre si'. La scala e' la
+/* La media di ogni colonna. È questa la riga che fa vedere la cosa: cinquecento
+   celle colorate non si confrontano a occhio, ventidue barre sì. La scala è la
    stessa nelle due viste, altrimenti il confronto sarebbe truccato. */
 function medieColonna(v){
   const acc = {};
@@ -555,7 +555,7 @@ function disegnaStriscia(){
   let h = "";
   for (const j in s){
     const o = s[j];
-    // Le colonne che poggiano su poche coorti sono piu' pallide: ci sono, ma non
+    // Le colonne che poggiano su poche coorti sono più pallide: ci sono, ma non
     // pesano quanto le altre.
     h += '<div class="colonnina" data-i="' + j + '" title="' + etColonna(j, vista) + ': '
        + un(o.m) + ' in media, su ' + o.n + (o.n === 1 ? ' coorte' : ' coorti') + '"'
@@ -569,10 +569,10 @@ function disegnaStriscia(){
   });
 }
 
-// Le intestazioni dipendono dalla vista: +0..+22 sono le eta' del cliente, i
+// Le intestazioni dipendono dalla vista: +0..+22 sono le età del cliente, i
 // mesi sono il calendario. Stavano dentro disegna(), che al cambio di vista non
 // viene richiamata: le celle si spostavano e le teste restavano quelle di prima,
-// cosi' la vista calendario mostrava colonne numerate come eta' — e ventitre
+// così la vista calendario mostrava colonne numerate come età — e ventitre
 // intestazioni per trentaquattro colonne.
 // (Portata qui il 2/10/2026: era stata corretta solo in index.html, e la
 // rigenerazione della pagina la cancellava.)
@@ -641,7 +641,7 @@ function posiziona(){
   });
   disegnaStriscia();
   // Le colonne tenute in piedi da meno di quattro coorti non entrano nel confronto:
-  // sono le prime e le ultime, e una media su due righe non e' un massimo.
+  // sono le prime e le ultime, e una media su due righe non è un massimo.
   const solide = (s) => Object.entries(s).filter(([,o]) => o.n >= 4);
   const estremo = (s, segno) => solide(s).reduce((a,b) => segno * b[1].m > segno * a[1].m ? b : a);
   if (vista === "eta"){
@@ -738,7 +738,7 @@ document.getElementById("p-medio").textContent = D.sopravvivenza_media + "%";
      + px(primo.giorni) + ' ' + py(0) + ' Z"/>';
   s += '<path class="linea" d="' + linea + '"/>';
   // L'ultima tacca si ancora a destra invece che al centro: centrata sul suo x finiva
-  // meta' fuori dal riquadro e si leggeva «365g».
+  // metà fuori dal riquadro e si leggeva «365g».
   const tacche = [30,90,180,365];
   tacche.forEach(g => {
     const ancora = g === tacche[tacche.length - 1] ? "end" : "middle";
@@ -749,7 +749,7 @@ document.getElementById("p-medio").textContent = D.sopravvivenza_media + "%";
   s += '<line x1="' + px(med) + '" y1="' + py(0) + '" x2="' + px(med) + '" y2="' + py(50)
      + '" stroke="var(--ottone)" stroke-width="1.5" stroke-dasharray="3 3"/>';
   s += '<circle cx="' + px(med) + '" cy="' + py(50) + '" r="4" fill="var(--ottone)"/>';
-  // Sotto il punto, non sopra: la linea sale ripida proprio li' e il testo ci finiva addosso.
+  // Sotto il punto, non sopra: la linea sale ripida proprio lì e il testo ci finiva addosso.
   s += '<text x="' + (px(med)+9) + '" y="' + (py(50)+18) + '" fill="var(--ottone)">meta’ a '
      + med + ' giorni</text>';
   s += '<line class="assi" x1="' + ml + '" y1="' + py(0) + '" x2="' + (W-mr) + '" y2="' + py(0) + '"/>';

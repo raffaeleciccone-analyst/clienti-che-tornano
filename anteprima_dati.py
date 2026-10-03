@@ -1,8 +1,8 @@
 """Genera una pagina HTML per guardare il file grezzo senza Excel.
 
-Non e' un'analisi: e' una finestra sul file. Mostra i due fogli, le fatture che
+Non è un'analisi: è una finestra sul file. Mostra i due fogli, le fatture che
 stanno in tutti e due, e un esempio per ogni difetto elencato in
-DATI-SPORCHI.md — cosi' i difetti si vedono invece di doverli credere.
+DATI-SPORCHI.md — così i difetti si vedono invece di doverli credere.
 
 Uso:  python anteprima_dati.py        (scrive e apre la pagina)
       python anteprima_dati.py --no-apri
@@ -29,7 +29,7 @@ COLONNE = ["Invoice", "StockCode", "Description", "Quantity", "InvoiceDate",
 
 
 def tabella(d: pd.DataFrame, evidenzia=None) -> str:
-    """Una tabella HTML da un pezzo di dataframe. `evidenzia` e' una funzione
+    """Una tabella HTML da un pezzo di dataframe. `evidenzia` è una funzione
     riga -> bool: le righe vere prendono la classe .segnata."""
     testa = "".join(f"<th>{html.escape(c)}</th>" for c in COLONNE)
     corpo = []
@@ -55,7 +55,7 @@ def tabella(d: pd.DataFrame, evidenzia=None) -> str:
 def main() -> None:
     if not FILE.is_file():
         raise SystemExit(f"Manca {FILE}")
-    print("Lettura del file (un minuto e mezzo, e' un xlsx da 43 MB)...")
+    print("Lettura del file (un minuto e mezzo, è un xlsx da 43 MB)...")
     fogli = pd.read_excel(FILE, sheet_name=None)
     nomi = list(fogli)
     for n, d in fogli.items():
@@ -131,7 +131,7 @@ tr:last-child td {{ border-bottom:0; }}
 </style>
 
 <div class="foglio">
-<h1>Online Retail II — il file com'e' arrivato</h1>
+<h1>Online Retail II — il file com'è arrivato</h1>
 <p class="sotto">{FILE.name} · {mb:.1f} MB · nessuna riga modificata</p>
 
 <div class="fatti">
@@ -143,7 +143,7 @@ tr:last-child td {{ border-bottom:0; }}
   <div class="fatto"><b>43</b><span>paesi</span></div>
 </div>
 <p class="tenue">Periodo: {df['InvoiceDate'].min():%d/%m/%Y} → {df['InvoiceDate'].max():%d/%m/%Y}.
-Una riga = una voce di fattura, cioe' un articolo dentro un ordine.</p>
+Una riga = una voce di fattura, cioè un articolo dentro un ordine.</p>
 
 <h2><span class="n">1</span>Il primo foglio: {html.escape(nomi[0])}</h2>
 <p class="tenue">{len(fogli[nomi[0]]):,} righe. Le prime venti, dalla prima fattura del file.</p>
@@ -153,7 +153,7 @@ Una riga = una voce di fattura, cioe' un articolo dentro un ordine.</p>
 <p class="tenue">{len(fogli[nomi[1]]):,} righe.</p>
 {tabella(fogli[nomi[1]].head(20))}
 
-<h2><span class="n">3</span>Il difetto piu' grosso: i due fogli si sovrappongono</h2>
+<h2><span class="n">3</span>Il difetto più grosso: i due fogli si sovrappongono</h2>
 <p><b>{len(comuni):,} fatture stanno in tutti e due i fogli.</b> Non sono due periodi
 separati da incollare uno sotto l'altro: chi lo fa conta due volte dicembre 2010.</p>
 <p>Ecco la stessa fattura, la <b>{html.escape(esempio)}</b>, presa una volta per foglio.
@@ -164,37 +164,37 @@ Guarda che sono identiche riga per riga.</p>
 </div>
 <div class="nota"><p>Su un'analisi che misura <i>quante volte un cliente torna</i>, una
 fattura contata due volte diventa un cliente che ha ordinato due volte. Il difetto
-spinge il risultato esattamente nella direzione che si spera di trovare — ed e' il
-motivo per cui la deduplica e' il primo passaggio della pulizia, non l'ultimo.</p></div>
+spinge il risultato esattamente nella direzione che si spera di trovare — ed è il
+motivo per cui la deduplica è il primo passaggio della pulizia, non l'ultimo.</p></div>
 
 <h2><span class="n">4</span>Le righe senza cliente</h2>
 <p><b>Il 22,8% delle righe non ha un Customer ID</b> ({df['Customer ID'].isna().sum():,} righe).
-Sono vendite vere — hanno articolo, quantita' e prezzo — ma non si sa a chi appartengono,
+Sono vendite vere — hanno articolo, quantità e prezzo — ma non si sa a chi appartengono,
 quindi non possono entrare in un'analisi di coorte.</p>
 {tabella(senza_cliente, lambda r: pd.isna(r["Customer ID"]))}
 
 <h2><span class="n">5</span>Gli storni</h2>
-<p>Le fatture che cominciano per <b>C</b> sono note di credito: quantita' negative, merce
-resa. Nota anche il tipo della colonna — qui <code>Invoice</code> e' testo, altrove e' un
+<p>Le fatture che cominciano per <b>C</b> sono note di credito: quantità negative, merce
+resa. Nota anche il tipo della colonna — qui <code>Invoice</code> è testo, altrove è un
 numero intero, e basta una join per inciamparci.</p>
 {tabella(storni, lambda r: str(r["Invoice"]).startswith("C"))}
 
 <h2><span class="n">6</span>I codici che non sono prodotti</h2>
-<p><code>POST</code> e' la spedizione, <code>M</code> una rettifica manuale,
+<p><code>POST</code> è la spedizione, <code>M</code> una rettifica manuale,
 <code>BANK CHARGES</code> una commissione. Contarli come articoli gonfia il numero di
 pezzi per ordine e sposta il valore medio dello scontrino.</p>
 {tabella(non_prodotti, lambda r: True)}
 
 <h2><span class="n">7</span>Le scritture contabili</h2>
 <p>Prezzi negativi, tutti con codice <code>B</code> e descrizione <i>Adjust bad debt</i>:
-crediti inesigibili, fino a −53.594 in una riga sola. Un credito inesigibile non e' un
+crediti inesigibili, fino a −53.594 in una riga sola. Un credito inesigibile non è un
 acquisto.</p>
 {tabella(debito, lambda r: True)}
 
 <h2><span class="n">8</span>I valori fuori scala — che restano dentro</h2>
 <p>80.995 pezzi di <i>PAPER CRAFT, LITTLE BIRDIE</i> in un ordine solo. Non si toglie:
-e' un ordine vero di un cliente vero, e togliere le code perche' sono grandi e' il modo
-piu' rapido di far dire a una media quello che si vuole.</p>
+è un ordine vero di un cliente vero, e togliere le code perché sono grandi è il modo
+più rapido di far dire a una media quello che si vuole.</p>
 {tabella(fuori_scala, lambda r: True)}
 
 <p class="tenue" style="margin-top:44px">

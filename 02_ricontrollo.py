@@ -82,7 +82,7 @@ def main() -> None:
     senza = df["Customer ID"].isna()
     q = ric[senza].sum() / ric.sum() * 100
     controlla("13,7% del ricavo lordo", abs(q - 13.7) < 0.15, f"calcolato {q:.2f}%")
-    # e su una base piu' onesta: senza duplicati e senza storni
+    # e su una base più onesta: senza duplicati e senza storni
     pulito = ~df.duplicated(subset=CHIAVE) & ~df["Invoice"].str.startswith("C")
     q2 = ric[senza & pulito].sum() / ric[pulito].sum() * 100
     print(f"  la stessa quota su base deduplicata e senza storni: {q2:.2f}%")
@@ -97,7 +97,7 @@ def main() -> None:
     cod = df["StockCode"].astype(str)
     n_gift = int(cod.str.startswith("gift_0001").sum())
     print(f"  righe con codice gift_0001_*: {n_gift}")
-    controlla("«circa 90» e' onesto", 60 <= n_gift <= 130, f"sono {n_gift}")
+    controlla("«circa 90» è onesto", 60 <= n_gift <= 130, f"sono {n_gift}")
 
     print("\n== 6. La sequenza di pulizia ==")
     m = pd.Series(True, index=df.index)
@@ -123,15 +123,15 @@ def main() -> None:
     print("\n== 7. «Esce il 27,2% delle righe ma solo l'11,5% del ricavo» ==")
     ric_fin = (fin["Quantity"] * fin["Price"]).sum()
     perse_righe = (1 - len(fin) / len(df)) * 100
-    # Il confronto onesto NON e' contro il lordo, che dentro ha i duplicati e gli
-    # storni negativi: e' contro il lordo deduplicato, senza il quale il
-    # denominatore e' esso stesso sbagliato.
+    # Il confronto onesto NON è contro il lordo, che dentro ha i duplicati e gli
+    # storni negativi: è contro il lordo deduplicato, senza il quale il
+    # denominatore è esso stesso sbagliato.
     ric_lordo = ric.sum()
     ric_dedup = ric[~df.duplicated(subset=CHIAVE)].sum()
     print(f"  righe perse            : {perse_righe:.1f}%")
     print(f"  ricavo finale / lordo  : {ric_fin / ric_lordo * 100:.1f}%  (perso {100 - ric_fin / ric_lordo * 100:.1f}%)")
     print(f"  ricavo finale / dedup. : {ric_fin / ric_dedup * 100:.1f}%  (perso {100 - ric_fin / ric_dedup * 100:.1f}%)")
-    print("  -> il secondo e' il confronto giusto: il lordo contiene le copie")
+    print("  -> il secondo è il confronto giusto: il lordo contiene le copie")
 
     print("\n== 8. Il riacquisto ==")
     per_cliente = fin.groupby("Customer ID")["Invoice"].nunique()

@@ -1,8 +1,8 @@
 /* Fa girare lo script della pagina fuori dal browser, con un DOM finto.
  *
  * Non sostituisce l'apertura in Chrome: non disegna niente e non sa niente di
- * layout. Serve a una cosa sola, ed e' quella che rompe le pagine piu' spesso —
- * un errore a runtime che lascia il documento vuoto senza dire perche'.
+ * layout. Serve a una cosa sola, ed è quella che rompe le pagine più spesso —
+ * un errore a runtime che lascia il documento vuoto senza dire perché.
  *
  * Uso:  node sito/prova_pagina.js
  */
@@ -15,7 +15,7 @@ const script = pagina.slice(pagina.lastIndexOf("<script>") + 8, pagina.lastIndex
 // gli id dichiarati nel documento, presi dall'HTML vero
 const idPresenti = [...pagina.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
 
-const scritture = {};      // id -> quanto contenuto ci e' finito dentro
+const scritture = {};      // id -> quanto contenuto ci è finito dentro
 const ascoltatori = {};    // id -> eventi collegati
 
 function nodo(id){
@@ -32,7 +32,7 @@ function nodo(id){
     get value(){ return "20"; },
     querySelectorAll: () => [],
     querySelector: () => nodo(id + "/figlio"),
-    // la larghezza di una colonna, che nel browser vera la da' il CSS
+    // la larghezza di una colonna, che nel browser vera la dà il CSS
     getBoundingClientRect: () => ({ width: 26, height: 22, left: 0, right: 26, top: 0, bottom: 22 }),
   };
   return el;

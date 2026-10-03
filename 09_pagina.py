@@ -1,8 +1,8 @@
-"""Costruisce index.html: il modello piu' i dati, cuciti insieme.
+"""Costruisce index.html: il modello più i dati, cuciti insieme.
 
-I dati vengono INCORPORATI nella pagina, non caricati con fetch. Non e' pigrizia:
-fetch su file:// e' bloccato dal browser, e una pagina che funziona solo quando
-e' su un server e' una pagina che chi la scarica vede rotta senza capire perche'.
+I dati vengono INCORPORATI nella pagina, non caricati con fetch. Non è pigrizia:
+fetch su file:// è bloccato dal browser, e una pagina che funziona solo quando
+è su un server è una pagina che chi la scarica vede rotta senza capire perché.
 
 Uso:  python 09_pagina.py            (costruisce e apre)
       python 09_pagina.py --no-apri
@@ -48,12 +48,12 @@ def main() -> None:
 
     print(f"scritta {USCITA}  ({USCITA.stat().st_size / 1024:.0f} KB)")
 
-    # ── controlli, prima di dire che e' fatta ────────────────────────────
+    # ── controlli, prima di dire che è fatta ────────────────────────────
     problemi = []
     if SEGNO in pagina:
-        problemi.append("il segnaposto dei dati e' ancora nella pagina")
+        problemi.append("il segnaposto dei dati è ancora nella pagina")
     if "NaN" in compatto:
-        problemi.append("c'e' un NaN nei dati: la pagina non caricherebbe")
+        problemi.append("c'è un NaN nei dati: la pagina non caricherebbe")
     # ogni id usato dallo script deve esistere nel documento
     usati = set(re.findall(r'getElementById\("([^"]+)"\)', pagina))
     presenti = set(re.findall(r'\bid="([^"]+)"', pagina))
@@ -62,7 +62,7 @@ def main() -> None:
     # le variabili di colore usate dal disegno devono essere dichiarate
     for nome in ("--freddo", "--tiepido", "--caldo"):
         if pagina.count(nome) < 2:
-            problemi.append(f"la variabile di colore {nome} non e' dichiarata")
+            problemi.append(f"la variabile di colore {nome} non è dichiarata")
 
     print(f"  coorti nella matrice   {len(dati['coorti'])}")
     print(f"  id verificati          {len(usati)}")

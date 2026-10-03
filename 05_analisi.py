@@ -30,7 +30,7 @@ FINESTRA = 365          # giorni di osservazione, uguali per ogni cliente
 RIPETIZIONI = 2000      # ricampionamenti per gli intervalli
 SEME = 20260827
 
-# Le due coorti escluse, e il perche' sta in MODELLO.md, punti 1 e 2.
+# Le due coorti escluse, e il perché sta in MODELLO.md, punti 1 e 2.
 COORTI_FUORI = ("2009-12", "2011-12")
 MESI = "gen feb mar apr mag giu lug ago set ott nov dic".split()
 
@@ -38,7 +38,7 @@ MESI = "gen feb mar apr mag giu lug ago set ott nov dic".split()
 def url() -> str:
     pwd = os.environ.get("DB_PASSWORD", "")
     if not pwd:
-        # la cartella si chiamava serie-a-index-engine: il nome nuovo e' football-index-engine
+        # la cartella si chiamava serie-a-index-engine: il nome nuovo è football-index-engine
         env = next((p for p in (QUI.parent / "football-index-engine" / ".env",
                                 QUI.parent / "serie-a-index-engine" / ".env") if p.is_file()),
                    QUI.parent / "football-index-engine" / ".env")
@@ -58,7 +58,7 @@ def titolo(n, t):
 
 def quota_spiegata(d, colonna, gruppo):
     """Quanta della variazione di `colonna` resta spiegata raggruppando per
-    `gruppo`. E' un R^2 fatto a mano sulle medie di gruppo: serve a confrontare
+    `gruppo`. È un R^2 fatto a mano sulle medie di gruppo: serve a confrontare
     due spiegazioni fra loro, non a dichiarare un modello."""
     m = d.groupby(gruppo)[colonna].transform("mean")
     return 1 - ((d[colonna] - m) ** 2).sum() / ((d[colonna] - d[colonna].mean()) ** 2).sum()
@@ -77,9 +77,9 @@ def matrice(eng):
     print("""  Una cella dice: di cento clienti entrati nel mese X, quanti hanno ordinato
   al mese X+n. Le celle che il calendario non ha ancora raggiunto restano
   vuote, non a zero: `mesi_osservabili` conta solo i mesi FINITI, e dicembre
-  2011 e' lungo nove giorni.""")
+  2011 è lungo nove giorni.""")
 
-    # una cella vale solo se il mese e' passato per davvero
+    # una cella vale solo se il mese è passato per davvero
     d["valida"] = d["mese_relativo"] <= d["mesi_osservabili"]
     print(f"\n  coorti utili                        {d['coorte'].nunique():>4}")
     print(f"  celle piene e osservate (n >= 1)    "
@@ -99,12 +99,12 @@ def matrice(eng):
         celle = "".join("    ." if pd.isna(riga.get(m)) else f"{riga.get(m):5.0f}"
                         for m in range(0, 13))
         print(f"  {etichetta:%Y-%m} {int(entrati[etichetta]):>5}  {celle}")
-    print("     (valori in percentuale; il punto e' una cella non ancora osservabile)")
+    print("     (valori in percentuale; il punto è una cella non ancora osservabile)")
     return d[d["valida"] & (d["mese_relativo"] >= 1)].copy()
 
 
 def stagionalita(d):
-    titolo(2, "La retention non e' una discesa: e' un calendario")
+    titolo(2, "La retention non è una discesa: è un calendario")
     print("""  Prima di leggere la matrice come una curva di abbandono, conviene chiedersi
   se scende per il motivo che sembra. Ogni cella sta a un mese di vita del
   cliente E a un mese del calendario. Si guarda quale dei due la spiega.""")
@@ -115,7 +115,7 @@ def stagionalita(d):
     print(f"\n  il mese di vita del cliente (+1, +2, +3...)  spiega il  {a*100:4.1f}%")
     print(f"  il mese del calendario (gennaio, febbraio...) spiega il  {b*100:4.1f}%")
     print(f"  tutti e due insieme                           spiegano l'{c*100:4.1f}%")
-    print("\n  Il calendario conta piu' del doppio dell'eta' del cliente.")
+    print("\n  Il calendario conta più del doppio dell'eta' del cliente.")
 
     print("\n  media della retention per mese del calendario:")
     quando = (d["coorte"].dt.to_period("M") + d["mese_relativo"])
@@ -126,28 +126,28 @@ def stagionalita(d):
 
     print("""
   Novembre 25%, gennaio 11%, e il picco arriva PRIMA di Natale, non durante.
-  La lettura naturale e' che molti di questi clienti siano negozi che si
+  La lettura naturale è che molti di questi clienti siano negozi che si
   riforniscono in autunno: la stagione sarebbe del compratore, non del
   venditore. I dati la sostengono — ordine mediano 303, con 15 righe e 153
-  pezzi — ma non la dimostrano. Il picco e' un fatto, il perche' e' una
-  lettura, e quello che segue non dipende dal perche'.
+  pezzi — ma non la dimostrano. Il picco è un fatto, il perché è una
+  lettura, e quello che segue non dipende dal perché.
 
-  I due estremi sono anche i meno sostenuti: nella finestra dei dati c'e' un
+  I due estremi sono anche i meno sostenuti: nella finestra dei dati c'è un
   dicembre solo e un gennaio solo. La forma regge sui mesi centrali, che hanno
   due anni a testa; sui due estremi si dice la direzione, non la cifra.
 
-  Conseguenza pratica, ed e' la ragione per cui questa sezione viene prima
+  Conseguenza pratica, ed è la ragione per cui questa sezione viene prima
   delle altre: due coorti non si confrontano se non hanno vissuto gli stessi
   mesi. Chi entra a ottobre ha Natale davanti; chi entra a gennaio ha undici
   mesi di attesa. Una classifica delle coorti per retention misurerebbe il mese
-  di ingresso, non la qualita' dei clienti.""")
+  di ingresso, non la qualità dei clienti.""")
 
 
 def decrescita(d):
-    titolo(3, "Quanto scende davvero, a parita' di coorti")
-    print("""  Nella tabella per mese di vita, ogni riga e' fatta di coorti diverse: al
+    titolo(3, "Quanto scende davvero, a parità di coorti")
+    print("""  Nella tabella per mese di vita, ogni riga è fatta di coorti diverse: al
   mese +12 arrivano solo le coorti vecchie. Se quelle fossero migliori, la
-  curva sembrerebbe piatta senza esserlo. Si rifa' il conto sulle coorti che
+  curva sembrerebbe piatta senza esserlo. Si rifà il conto sulle coorti che
   hanno tutti i dodici mesi, sempre le stesse in ogni riga.""")
     bil = d[d["mesi_osservabili"] >= 12]
     b = bil[bil["mese_relativo"] <= 12]
@@ -163,12 +163,12 @@ def decrescita(d):
         y = b[b["mese_relativo"] == m]["quota_attivi"].mean()
         print(f"    +{m:<3} sbilanciato {x:5.1f}%   bilanciato {y:5.1f}%   scarto {y - x:+.1f}")
     print("""
-  Lo scarto e' sotto il punto percentuale: il difetto c'era ma non mordeva. Si
-  usa comunque il panel bilanciato, perche' qui costa niente e altrove no.
+  Lo scarto è sotto il punto percentuale: il difetto c'era ma non mordeva. Si
+  usa comunque il panel bilanciato, perché qui costa niente e altrove no.
 
-  La curva scende dal 20% al 13% e poi RISALE al 18% al dodicesimo mese. Non e'
-  un ritorno di fiamma: per una coorte del 2010, il mese +12 e' lo stesso mese
-  del calendario un anno dopo. E' la stagionalita' della sezione 2 che rientra
+  La curva scende dal 20% al 13% e poi RISALE al 18% al dodicesimo mese. Non è
+  un ritorno di fiamma: per una coorte del 2010, il mese +12 è lo stesso mese
+  del calendario un anno dopo. È la stagionalità della sezione 2 che rientra
   dalla finestra.""")
 
 
@@ -207,9 +207,9 @@ def valore(eng, rng):
     print(f"  clienti nell'analisi del valore        {len(tenuti):>7,}")
     print(f"  coorti coinvolte: {tenuti['coorte'].min():%Y-%m} -> {tenuti['coorte'].max():%Y-%m}")
     print("""
-  Sono tutte coorti del 2010, e dopo la sezione 2 questo NON e' un dettaglio:
-  il gruppo non e' piu' un campione di tutti i clienti, e' un campione di chi
-  e' entrato nel 2010. Vale come confronto interno fra questi clienti, non come
+  Sono tutte coorti del 2010, e dopo la sezione 2 questo NON è un dettaglio:
+  il gruppo non è più un campione di tutti i clienti, è un campione di chi
+  è entrato nel 2010. Vale come confronto interno fra questi clienti, non come
   ritratto della base.""")
 
     o = (ordini.drop(columns=["coorte"])
@@ -241,18 +241,18 @@ def valore(eng, rng):
     p = float(np.mean(sopravvivenze[:5]))
     print(f"""
   Sopravvivenza media sui primi sei gradini: {p * 100:.1f}%, e non si muove.
-  Questo contraddice il conto della Fase 2, dove il primo salto sembrava il piu'
+  Questo contraddice il conto della Fase 2, dove il primo salto sembrava il più
   duro (72% e poi 78%, 80%, 81%). Quel conto guardava tutta la vita di ogni
-  cliente: chi e' entrato nel 2010 aveva due anni per arrivare all'ottavo
-  ordine, chi e' entrato a settembre 2011 ne aveva tre mesi. La sopravvivenza
-  che saliva era il tempo in piu' di chi era arrivato in fondo, non una fedelta'
+  cliente: chi è entrato nel 2010 aveva due anni per arrivare all'ottavo
+  ordine, chi è entrato a settembre 2011 ne aveva tre mesi. La sopravvivenza
+  che saliva era il tempo in più di chi era arrivato in fondo, non una fedeltà
   che cresce. A tempo fissato la salita sparisce.
 
   Il processo non ha memoria: arrivare al secondo ordine non mette al sicuro.
-  «Portali al secondo acquisto e sono tuoi» qui non e' vero.""")
+  «Portali al secondo acquisto e sono tuoi» qui non è vero.""")
 
-    # Se la sopravvivenza e' davvero costante, il numero di ordini deve essere
-    # una geometrica. E' un'ipotesi che si puo' controllare, quindi si controlla.
+    # Se la sopravvivenza è davvero costante, il numero di ordini deve essere
+    # una geometrica. È un'ipotesi che si può controllare, quindi si controlla.
     atteso = 1 / (1 - p)
     print(f"\n  Controllo: con una sopravvivenza costante il numero di ordini")
     print(f"  segue una geometrica. Confronto fra quello che quel modello")
@@ -263,10 +263,10 @@ def valore(eng, rng):
         q = (p ** (k - 1)) * (1 - p)
         print(f"     {k:>5}    {q * 100:5.1f}%    {(pc['ordini_365'] == k).mean() * 100:6.1f}%")
     print("""
-  Fino al sesto ordine lo scarto sta sotto il mezzo punto. Piu' in la' la
-  sopravvivenza sale davvero (dal 74% al 77%): li' non e' piu' il tempo, sono i
-  clienti — chi ha gia' comprato otto volte e' un negozio che si rifornisce, e
-  non somiglia piu' agli altri.""")
+  Fino al sesto ordine lo scarto sta sotto il mezzo punto. Più in là la
+  sopravvivenza sale davvero (dal 74% al 77%): lì non è più il tempo, sono i
+  clienti — chi ha già comprato otto volte è un negozio che si rifornisce, e
+  non somiglia più agli altri.""")
 
     titolo(6, "Quanto tempo passa fra il primo e il secondo ordine")
     sec = dentro[dentro["n_ordine"] == 2]["giorni_dal_precedente"].dropna()
@@ -275,12 +275,12 @@ def valore(eng, rng):
         print(f"    {int(q * 100)}o percentile: {sec.quantile(q):>4.0f} giorni")
     print("\n  Letto come soglia operativa:")
     for giorni in (30, 60, 90, 120, 180):
-        print(f"    entro {giorni:>3} giorni e' gia' tornato il "
+        print(f"    entro {giorni:>3} giorni è già tornato il "
               f"{(sec <= giorni).mean() * 100:5.1f}% di chi torna entro l'anno")
     print("""
-  Non c'e' un burrone: la curva non ha un punto in cui la probabilita' crolla.
-  A 90 giorni sono tornati sei su dieci, a 180 poco piu' di otto. Chi cercava
-  una soglia netta oltre la quale «il cliente e' perso» qui non la trova, e
+  Non c'è un burrone: la curva non ha un punto in cui la probabilità crolla.
+  A 90 giorni sono tornati sei su dieci, a 180 poco più di otto. Chi cercava
+  una soglia netta oltre la quale «il cliente è perso» qui non la trova, e
   dichiararne una sarebbe inventarla.""")
 
     # ── il valore ────────────────────────────────────────────────────────
@@ -290,7 +290,7 @@ def valore(eng, rng):
     print(f"  chi torna      {len(a):>6,} clienti   media {a.mean():>9,.0f}   mediana {np.median(a):>8,.0f}")
     print(f"  chi non torna  {len(b):>6,} clienti   media {b.mean():>9,.0f}   mediana {np.median(b):>8,.0f}")
     print("\n  Media e mediana sono lontane: la distribuzione ha una coda lunga e la")
-    print("  media la sente. Si mostrano tutte e due, non si sceglie la piu' comoda.")
+    print("  media la sente. Si mostrano tutte e due, non si sceglie la più comoda.")
 
     grezza = a.mean() - b.mean()
     d_boot = np.array([a[rng.integers(0, len(a), len(a))].mean()
@@ -304,8 +304,8 @@ def valore(eng, rng):
   due osservazioni indipendenti, e restituirebbe un intervallo troppo stretto.""")
 
     titolo(8, "La stessa differenza, fra clienti che partivano uguali")
-    print("""  Chi torna era gia' diverso il primo giorno: se ha speso di piu' al primo
-  ordine spendera' di piu' anche in totale, e quella parte del divario non
+    print("""  Chi torna era già diverso il primo giorno: se ha speso di più al primo
+  ordine spenderà di più anche in totale, e quella parte del divario non
   dipende dal ritorno. Si confrontano allora clienti appaiati per decile di
   primo ordine e per coorte, e si guarda quanto della differenza sopravvive.""")
     pc["decile"] = pd.qcut(pc["valore_primo"], 10, labels=False, duplicates="drop")
@@ -329,7 +329,7 @@ def valore(eng, rng):
     print(f"  resta il {app / grezza * 100:.0f}% della differenza grezza:"
           f" l'appaiamento ne toglie il {(1 - app / grezza) * 100:.0f}%.")
 
-    # da dove arrivano i soldi in piu'
+    # da dove arrivano i soldi in più
     tornati = dentro.merge(pc[["cliente_id", "torna"]], on="cliente_id")
     tornati = tornati[tornati["torna"]]
     secondo = tornati[tornati["n_ordine"] == 2]["valore"].sum() / len(a)
@@ -340,33 +340,33 @@ def valore(eng, rng):
     print(f"  Il secondo ordine porta solo il {secondo / (secondo + oltre) * 100:.0f}% "
           f"del maggior ricavo.")
     print("""
-  E si incastra con la sezione 5. Se la sopravvivenza e' la stessa a ogni
+  E si incastra con la sezione 5. Se la sopravvivenza è la stessa a ogni
   gradino, un cliente portato al secondo ordine non ha comprato una volta in
-  piu': e' entrato in una fila in cui ogni passo ha la stessa probabilita' di
-  averne un altro dietro. Quello che si compra riattivandolo non e' il secondo
-  ordine, e' la coda che gli si apre dietro — ed e' li' che stanno i quattro
+  più: è entrato in una fila in cui ogni passo ha la stessa probabilità di
+  averne un altro dietro. Quello che si compra riattivandolo non è il secondo
+  ordine, è la coda che gli si apre dietro — ed è lì che stanno i quattro
   quinti dei soldi.""")
 
     titolo(9, "Il punto di pareggio, e cosa non dice")
-    print(f"""  La cifra su cui si decide e' quella appaiata: {app:,.0f} in piu' in un anno,
+    print(f"""  La cifra su cui si decide è quella appaiata: {app:,.0f} in più in un anno,
   con un intervallo fra {lo_a:,.0f} e {hi_a:,.0f}.
 
-  Riattivare conviene finche' costa meno di   margine x differenza.
-  Il margine non sta nei dati — non c'e' il costo del venduto — quindi resta
+  Riattivare conviene finché costa meno di   margine x differenza.
+  Il margine non sta nei dati — non c'è il costo del venduto — quindi resta
   una manopola, e la tabella si legge per righe:
 
      {'margine':>8}   {'soglia sulla stima':>19}   {'soglia prudente':>16}""")
     for m in (0.10, 0.20, 0.30, 0.40, 0.50):
         print(f"     {m * 100:>7.0f}%   {m * app:>19,.0f}   {m * lo_a:>16,.0f}")
     print("""
-  La colonna di destra usa il capo basso dell'intervallo: e' la soglia che
-  regge anche se la stima e' ottimista, ed e' quella da portare a una riunione.
+  La colonna di destra usa il capo basso dell'intervallo: è la soglia che
+  regge anche se la stima è ottimista, ed è quella da portare a una riunione.
 
   Cosa NON dice questo numero. L'appaiamento toglie il pezzo di divario dovuto
-  al fatto che certi clienti partivano gia' piu' grossi. Non toglie quello che
-  non si e' misurato: chi torna magari aveva un bisogno ricorrente fin
+  al fatto che certi clienti partivano già più grossi. Non toglie quello che
+  non si è misurato: chi torna magari aveva un bisogno ricorrente fin
   dall'inizio, e sarebbe tornato comunque. Il conto vale se un cliente convinto
-  a tornare poi si comporta come i clienti che tornano da soli — ed e'
+  a tornare poi si comporta come i clienti che tornano da soli — ed è
   un'ipotesi, non un risultato. Con dati osservativi non si dimostra:
   servirebbe un test in cui la riattivazione viene assegnata a caso.""")
 
@@ -386,23 +386,23 @@ def valore(eng, rng):
     non tornati                 {v['altri_media']:>6,}    {v['altri_mediana']:>6,}        {v['altri_ancora']}%
 
   differenza grezza                    {v['grezza']:>6,}   IC [{v['grezza_ic'][0]:,}, {v['grezza_ic'][1]:,}]
-  a parita' di primo ordine e coorte   {pp['stima']:>6,}   IC [{pp['ic'][0]:,}, {pp['ic'][1]:,}]
-  a parita' di spesa nei 90 giorni     {ps['stima']:>6,}   IC [{ps['ic'][0]:,}, {ps['ic'][1]:,}]
+  a parità di primo ordine e coorte   {pp['stima']:>6,}   IC [{pp['ic'][0]:,}, {pp['ic'][1]:,}]
+  a parità di spesa nei 90 giorni     {ps['stima']:>6,}   IC [{ps['ic'][0]:,}, {ps['ic'][1]:,}]
 
-  La seconda riga dice che chi torna presto spende di piu' anche dopo, a parita'
-  di partenza. La terza dice che, a parita' di quanto ha gia' speso nei primi
-  tre mesi, sapere che ha fatto piu' di un ordine non aggiunge quasi niente alla
+  La seconda riga dice che chi torna presto spende di più anche dopo, a parità
+  di partenza. La terza dice che, a parità di quanto ha già speso nei primi
+  tre mesi, sapere che ha fatto più di un ordine non aggiunge quasi niente alla
   previsione: l'intervallo comprende lo zero. Per prevedere la spesa futura basta
-  la spesa iniziale; il numero di ordini non dice di piu'.
+  la spesa iniziale; il numero di ordini non dice di più.
 
-  Attenzione a cosa NON dice. La spesa dei primi 90 giorni contiene gia' il
+  Attenzione a cosa NON dice. La spesa dei primi 90 giorni contiene già il
   secondo ordine: appaiare su di lei toglie anche una parte del ritorno stesso.
-  E' una lettura predittiva, non causale. «Conta il volume» descrive cosa
+  È una lettura predittiva, non causale. «Conta il volume» descrive cosa
   prevede la spesa futura, non dimostra che il ritorno non abbia effetto.
 
   Cade comunque la soglia della sezione 9, che assumeva che un cliente riportato
   al secondo ordine si comporti come chi torna da solo: questi numeri dicono che
-  chi torna da solo e' soprattutto chi spende gia' di piu'.""")
+  chi torna da solo è soprattutto chi spende già di più.""")
 
 
 def main():
