@@ -49,7 +49,7 @@
   il mese del calendario (gennaio, febbraio...) spiega il  34.8%
   tutti e due insieme                           spiegano l'85.8%
 
-  Il calendario conta più del doppio dell'eta' del cliente.
+  Il calendario conta più del doppio dell'età del cliente.
 
   media della retention per mese del calendario:
     gen   11.3%  ###########   <- un anno solo (2011)

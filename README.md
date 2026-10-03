@@ -13,7 +13,7 @@ La domanda è una sola, ed è stata scritta prima di aprire SQL:
 ## Cos'è venuto fuori
 
 **La retention di questo negozio non è una curva di abbandono: è un calendario.** Il
-mese dell'anno spiega il doppio dell'eta' del cliente (34,8% contro 16,6% della
+mese dell'anno spiega il doppio dell'età del cliente (34,8% contro 16,6% della
 variazione). A novembre torna il 25% dei clienti, a febbraio il 12%. Una classifica
 delle coorti per retention misurerebbe il mese di ingresso, non la qualità dei clienti.
 
@@ -179,6 +179,6 @@ non stanno su nessuno dei due lati, quindi non li inclinano.
   con la riattivazione assegnata a caso. La differenza fra le due frasi è la differenza
   fra un'analisi che si può usare e una che fa perdere soldi.
 - **Età del cliente + coorte = mese del calendario, per costruzione.** Con due anni di
-  dati le tre cose non si separano: si può dire che il calendario spiega più dell'eta',
-  non che l'eta' non conti.
+  dati le tre cose non si separano: si può dire che il calendario spiega più dell'età,
+  non che l'età non conti.
 - **I dati sono del 2009-2011.** Il metodo si trasferisce, i numeri no.
