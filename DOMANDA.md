@@ -208,8 +208,8 @@ Due cose sono andate diversamente da come erano scritte qui, e una non era previ
 
 - **il valore a 24 mesi non si può misurare** — nessuna coorte utile ha 24 mesi;
 - **la soglia di silenzio non esiste** — la probabilità di ritorno non crolla mai;
-- **non previsto:** la retention di questo negozio è stagionale. Il mese del calendario
-  spiega il doppio dell'età del cliente (34,8% contro 16,6%), e leggere la matrice come
+- **non previsto:** la retention di questo negozio è stagionale. Il mese del calendario,
+  preso da solo, spiega il doppio della variazione rispetto all'età del cliente (34,8% contro 16,6%), e leggere la matrice come
   una curva di abbandono vuol dire leggere il Natale e chiamarlo fedeltà.
 
 La frase che questo file chiedeva di poter scrivere alla fine, con numeri veri:

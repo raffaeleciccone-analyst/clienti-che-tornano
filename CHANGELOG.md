@@ -15,7 +15,7 @@ con un margine del 20%.»
 **Perché era sbagliato.** «Chi torna» era definito dagli ordini dei primi 365 giorni, e
 la spesa confrontata era quella degli stessi 365 giorni: la differenza conteneva, per
 costruzione, i soldi degli ordini che facevano contare il cliente come uno che torna.
-L'ha notato una revisione fatta con l'IA.
+L'ha notato una revisione che ho chiesto all'IA.
 
 **Adesso.** Il gruppo si decide nei primi 90 giorni, la spesa si conta dal giorno 91 al
 365 (`valore_futuro.py`, ricontato a parte in `06_ricontrollo.py`). A parità di primo

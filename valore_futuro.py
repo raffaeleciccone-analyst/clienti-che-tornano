@@ -1,6 +1,6 @@
 """Il valore di chi torna, misurato senza girare in tondo.
 
-Aggiunto il 2 ottobre 2026, dopo una revisione fatta con l'IA.
+Aggiunto il 2 ottobre 2026, dopo una revisione che ho chiesto all'IA.
 
 Il confronto della sezione 7-8 di RISULTATI.md definiva «chi torna» con gli ordini
 del primo anno (ordini > 1) e poi misurava la spesa dello STESSO anno. La spesa

@@ -11,7 +11,7 @@ avuto una risposta diversa da quella che si aspettava, e stanno scritte così.
 ## In una frase
 
 > **La retention di questo negozio non è una curva di abbandono, è un calendario.**
-> Il mese dell'anno spiega il doppio dell'età del cliente (34,8% contro 16,6%).
+> Il mese dell'anno, preso da solo, spiega il doppio della variazione rispetto all'età del cliente (34,8% contro 16,6%).
 > Novembre 25%, febbraio 12%.
 >
 > **Chi torna presto spende di più anche dopo, ma lo prevede già quanto ha speso.**
@@ -381,7 +381,7 @@ Per questo la pagina scrive sempre **«i clienti che tornano valgono N volte»**
 
 ## 9. Corretto il 2 ottobre 2026: il gruppo nei primi 90 giorni, la spesa dopo
 
-Una revisione fatta con l'IA ha notato che le sezioni 6 e 8 misuravano la propria definizione.
+Una revisione che ho chiesto all'IA ha notato che le sezioni 6 e 8 misuravano la propria definizione.
 «Chi torna» voleva dire «più di un ordine nei primi 365 giorni», e la spesa confrontata
 era quella degli stessi 365 giorni: la differenza conteneva, per costruzione, i soldi
 degli ordini che facevano contare il cliente come uno che torna. L'appaiamento per primo
@@ -438,7 +438,7 @@ solo con un test: riattivazione assegnata a caso, a parità di volume.
 | mediana accanto alla media se la distribuzione è storta | **lo era**: £1.990 contro £1.091. Fatto. |
 | quanto si riduce il divario appaiando | **−17%** nella prima versione; rifatto nella sezione 9 |
 | il primo salto è il più duro (Fase 2) | **falso**: era il tempo di osservazione. La sopravvivenza è costante al 72%. |
-| — | **non previsto**: la retention è stagionale, e il calendario spiega il doppio dell'età del cliente |
+| — | **non previsto**: la retention è stagionale, e il calendario, preso da solo, spiega il doppio della variazione rispetto all'età del cliente |
 
 ## E quello che ha trovato l'audit
 

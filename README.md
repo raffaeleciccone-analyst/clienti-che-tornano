@@ -13,7 +13,7 @@ La domanda è una sola, ed è stata scritta prima di aprire SQL:
 ## Cos'è venuto fuori
 
 **La retention di questo negozio non è una curva di abbandono: è un calendario.** Il
-mese dell'anno spiega il doppio dell'età del cliente (34,8% contro 16,6% della
+mese dell'anno, preso da solo, spiega il doppio della variazione rispetto all'età del cliente (34,8% contro 16,6% della
 variazione). A novembre torna il 25% dei clienti, a febbraio il 12%. Una classifica
 delle coorti per retention misurerebbe il mese di ingresso, non la qualità dei clienti.
 
@@ -40,7 +40,7 @@ silenzio **non c'è**.
 
 ## Cosa ho deciso io
 
-La domanda è quella di base di ogni e-commerce: quanto vale un cliente che torna. Il legame tra ritorni e calendario è emerso dall'analisi. Il primo confronto, £1.374, l'ha messo in dubbio una revisione fatta con l'IA: ho rifatto il conto con il gruppo deciso nei primi 90 giorni. Le query SQL e il codice Python li ha scritti l'IA: io l'ho guidata e ho controllato i risultati.
+La domanda è quella di base di ogni e-commerce: quanto vale un cliente che torna. Il legame tra ritorni e calendario è emerso dall'analisi. Il primo confronto, £1.374, l'ha messo in dubbio una revisione che ho chiesto all'IA: ho rifatto il conto con il gruppo deciso nei primi 90 giorni.
 
 ---
 
