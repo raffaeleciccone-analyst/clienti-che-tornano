@@ -18,7 +18,7 @@ Su 12 test ne passava 6. Le differenze erano decisioni scritte solo nel codice, 
 - **«72,3% dei clienti identificati torna» era scritto a mano**, e sbagliato: 4.234 / 5.852 =
   72,35%, cioè **72,4%**. Ora `08_dati_pagina.py` lo calcola.
 - **«Età e calendario insieme spiegano l'85,8%» era gonfiato:** raggruppava per coppia, e 143
-  coppie su 198 hanno una cella sola. Con i due effetti sommati: **52,1%**. Il confronto fra i
+  coppie su 198 hanno una cella sola. Con i due effetti sommati: **52,0%** (calcolato sui conteggi esatti). Il confronto fra i
   due (34,8% contro 16,6%) non cambia.
 - **Le regole di calcolo** (finestre, strati con almeno 3 clienti per parte, media della
   sopravvivenza, arrotondamento) ora sono scritte in `SPEC.md` §5b.

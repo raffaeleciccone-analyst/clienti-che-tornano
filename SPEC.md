@@ -125,6 +125,8 @@ dovuto indovinarle. Erano scritte solo nel codice.)*
   fattura nello stesso giorno della prima conta come ritorno.
 - R7d. **Buoni regalo:** tutti i codici che cominciano con `gift_0001_`. **Curva del secondo ordine:** punti
   ogni 10 giorni fino a 360; percentili con il metodo lineare (quello predefinito di numpy).
+  I giorni dei percentili si arrotondano all'unità (230,8 → 231). Una fattura con più orari prende il
+  primo. La quota "insieme" si calcola sui conteggi esatti, non sulle percentuali già arrotondate.
 - R8. **Arrotondamento:** percentuali al decimale più vicino, sterline all'unità. Nessun numero si scrive a
   mano negli script che producono i dati: si calcola.
 

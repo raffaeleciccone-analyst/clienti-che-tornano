@@ -67,9 +67,9 @@ del calendario. Si può chiedere quale delle due la spiega.
 |---|---:|
 | il mese di vita del cliente (+1, +2, +3…) | 16,6% |
 | **il mese del calendario** (gennaio, febbraio…) | **34,8%** |
-| tutti e due insieme (sommati) | 52,1% (52,0% partendo dalle celle non arrotondate) |
+| tutti e due insieme (sommati) | 52,0% |
 
-`[corretto il 21/11]` Qui c'era scritto 85,8%. Era calcolato raggruppando le celle per coppia (mese di vita, mese del calendario): su 198 coppie 143 hanno una cella sola, che si spiega da sé, quindi il numero era alto per costruzione. Sommando i due effetti, come si fa di solito, viene 52,1%. Il confronto che conta non cambia: il calendario spiega il doppio dell'età.
+`[corretto il 21/11]` Qui c'era scritto 85,8%. Era calcolato raggruppando le celle per coppia (mese di vita, mese del calendario): su 198 coppie 143 hanno una cella sola, che si spiega da sé, quindi il numero era alto per costruzione. Sommando i due effetti, come si fa di solito, viene 52,0%. Il confronto che conta non cambia: il calendario spiega il doppio dell'età.
 
 Media della retention per mese del calendario, su tutte le coorti:
 

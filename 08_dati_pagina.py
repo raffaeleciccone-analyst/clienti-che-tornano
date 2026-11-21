@@ -87,7 +87,9 @@ def main() -> None:
         # le due spiegazioni sommate, non raggruppate per coppia (vedi 05_analisi.py)
         X = pd.get_dummies(vivi[["mese_relativo", "cal"]].astype(str), drop_first=True).astype(float)
         X.insert(0, "costante", 1.0)
-        y = vivi["quota_attivi"].to_numpy(float)
+        # dai conteggi, non da quota_attivi: la vista la arrotonda a due decimali e il
+        # risultato (52,05%) sta proprio sul confine dell'arrotondamento
+        y = (vivi["clienti_attivi"] * 100.0 / vivi["clienti_entrati"]).to_numpy(float)
         coef, *_ = np.linalg.lstsq(X.to_numpy(), y, rcond=None)
         res = y - X.to_numpy() @ coef
         return round(float(1 - (res ** 2).sum() / ((y - y.mean()) ** 2).sum()) * 100, 1)
