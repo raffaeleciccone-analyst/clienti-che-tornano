@@ -64,6 +64,20 @@ def quota_spiegata(d, colonna, gruppo):
     return 1 - ((d[colonna] - m) ** 2).sum() / ((d[colonna] - d[colonna].mean()) ** 2).sum()
 
 
+def quota_spiegata_insieme(d, colonna, a, b):
+    """Le due spiegazioni SOMMATE (un effetto per ogni valore di `a` più uno per ogni
+    valore di `b`), stimate con i minimi quadrati. Fino al 21/11/2026 si raggruppava
+    per coppia (a, b): su 198 coppie 143 hanno una cella sola, che si spiega da sé,
+    e il risultato (85,8%) era gonfiato per costruzione."""
+    import numpy as np
+    X = pd.get_dummies(d[[a, b]].astype(str), drop_first=True).astype(float)
+    X.insert(0, "costante", 1.0)
+    y = d[colonna].to_numpy(float)
+    coef, *_ = np.linalg.lstsq(X.to_numpy(), y, rcond=None)
+    residui = y - X.to_numpy() @ coef
+    return 1 - (residui ** 2).sum() / ((y - y.mean()) ** 2).sum()
+
+
 # ══════════════════════════════════════════════════════════════════════════
 def matrice(eng):
     d = pd.read_sql(text("""
@@ -111,7 +125,7 @@ def stagionalita(d):
     d["mese_calendario"] = (d["coorte"].dt.to_period("M") + d["mese_relativo"]).dt.month
     a = quota_spiegata(d, "quota_attivi", "mese_relativo")
     b = quota_spiegata(d, "quota_attivi", "mese_calendario")
-    c = quota_spiegata(d, "quota_attivi", ["mese_relativo", "mese_calendario"])
+    c = quota_spiegata_insieme(d, "quota_attivi", "mese_relativo", "mese_calendario")
     print(f"\n  il mese di vita del cliente (+1, +2, +3...)  spiega il  {a*100:4.1f}%")
     print(f"  il mese del calendario (gennaio, febbraio...) spiega il  {b*100:4.1f}%")
     print(f"  tutti e due insieme                           spiegano l'{c*100:4.1f}%")

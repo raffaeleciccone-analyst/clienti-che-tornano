@@ -42,7 +42,7 @@ principale:
 
 | se i clienti anonimi... | clienti | tornano |
 |---|---:|---:|
-| sono gli stessi già contati | 5.852 | 72,3% |
+| sono gli stessi già contati | 5.852 | 72,4% |
 | sono tutti clienti diversi, mai tornati | 14.604 | **29,0%** |
 
 Il tasso vero sta tra il 29% e il 72%, e con questi dati non si può stringere. Quindi

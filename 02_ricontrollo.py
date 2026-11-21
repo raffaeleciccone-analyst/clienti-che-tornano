@@ -19,11 +19,9 @@ except Exception:
     pass
 
 FILE = Path(__file__).parent / "dati_grezzi" / "online_retail_II.xlsx"
-CHIAVE = ["Invoice", "StockCode", "Quantity", "InvoiceDate", "Price", "Customer ID"]
-NON_PRODOTTI = {"POST", "DOT", "M", "m", "C2", "C3", "D", "S", "BANK CHARGES",
-                "AMAZONFEE", "ADJUST", "ADJUST2", "TEST001", "TEST002", "PADS",
-                "SP1002", "B", "CRUK", "gift_0001_10", "gift_0001_20",
-                "gift_0001_30", "gift_0001_40", "gift_0001_50"}
+from regole import CHIAVE as _REGOLE_CHIAVE, NON_PRODOTTI as _REGOLE_NON_PRODOTTI, PREZZO_MINIMO
+NON_PRODOTTI = set(_REGOLE_NON_PRODOTTI)  # una lista sola: regole.py
+CHIAVE = list(_REGOLE_CHIAVE)
 
 esiti = []
 
@@ -106,11 +104,11 @@ def main() -> None:
     m &= ~senza;                                  tappe["dopo senza cliente"] = int(m.sum())
     m &= ~storno;                                 tappe["dopo storni"] = int(m.sum())
     m &= df["Quantity"] > 0;                      tappe["dopo quantita"] = int(m.sum())
-    m &= df["Price"] > 0;                         tappe["dopo prezzi"] = int(m.sum())
+    m &= df["Price"] >= PREZZO_MINIMO;            tappe["dopo prezzi"] = int(m.sum())
     m &= ~cod.isin(NON_PRODOTTI);                 tappe["dopo non-prodotti"] = int(m.sum())
     attesi = {"dopo duplicati": 1033034, "dopo senza cliente": 797883,
               "dopo storni": 779493, "dopo quantita": 779493,
-              "dopo prezzi": 779423, "dopo non-prodotti": 776575}
+              "dopo prezzi": 779405, "dopo non-prodotti": 776577}
     for k, atteso in attesi.items():
         controlla(f"{k} = {atteso:,}", tappe[k] == atteso, f"trovato {tappe[k]:,}")
 

@@ -560,7 +560,7 @@
  "spiegata": {
   "eta": 16.6,
   "calendario": 34.8,
-  "insieme": 85.8
+  "insieme": 52.1
  },
  "panel_bilanciato": {
   "coorti": 11,
@@ -923,7 +923,7 @@
   "fatture": 8752,
   "clienti_noti": 5852,
   "tornano": 4234,
-  "quota_alta": 72.3,
+  "quota_alta": 72.4,
   "quota_bassa": 29.0
  }
 }

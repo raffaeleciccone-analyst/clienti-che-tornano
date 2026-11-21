@@ -32,15 +32,13 @@ FILE = QUI / "dati_grezzi" / "online_retail_II.xlsx"
 SCHEMA = QUI / "03_schema.sql"
 DB = "retail_clienti"
 
-CHIAVE = ["Invoice", "StockCode", "Quantity", "InvoiceDate", "Price", "Customer ID"]
 
 # Scritto a mano dopo aver guardato i codici, non dedotto da una regola: la
 # regola «non comincia con cinque cifre» prende anche DCGS0058, che è un
 # prodotto vero. Vedi DATI-SPORCHI.md §5.
-NON_PRODOTTI = {"POST", "DOT", "M", "m", "C2", "C3", "D", "S", "BANK CHARGES",
-                "AMAZONFEE", "ADJUST", "ADJUST2", "TEST001", "TEST002", "PADS",
-                "SP1002", "B", "CRUK", "gift_0001_10", "gift_0001_20",
-                "gift_0001_30", "gift_0001_40", "gift_0001_50"}
+from regole import CHIAVE as _REGOLE_CHIAVE, NON_PRODOTTI as _REGOLE_NON_PRODOTTI, PREZZO_MINIMO
+NON_PRODOTTI = set(_REGOLE_NON_PRODOTTI)  # una lista sola: regole.py
+CHIAVE = list(_REGOLE_CHIAVE)
 
 MESI = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio",
         "agosto", "settembre", "ottobre", "novembre", "dicembre"]
@@ -93,7 +91,7 @@ def pulisci(df: pd.DataFrame, stampa: bool = True):
         ("Togli le righe duplicate", lambda d: ~d.duplicated(subset=CHIAVE)),
         ("Tieni solo le righe con cliente", lambda d: d["Customer ID"].notna()),
         ("Togli le fatture di storno", lambda d: ~d["Invoice"].str.startswith("C")),
-        ("Togli i prezzi non positivi", lambda d: d["Price"] > 0),
+        ("Togli i prezzi sotto un penny", lambda d: d["Price"] >= PREZZO_MINIMO),
         ("Togli le quantita non positive", lambda d: d["Quantity"] > 0),
         ("Togli i codici non-prodotto", lambda d: ~d["StockCode"].isin(NON_PRODOTTI)),
     ]:

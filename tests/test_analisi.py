@@ -63,7 +63,9 @@ def test_c9_differenze_con_intervalli(dati):
 def test_c10_clienti_anonimi(dati):
     a = dati["anonimi"]
     assert a["fatture"] == 8_752
-    assert (a["quota_bassa"], a["quota_alta"]) == (29.0, 72.3)
+    assert (a["quota_bassa"], a["quota_alta"]) == (29.0, 72.4)
+    # calcolato, non scritto a mano: 4.234 / 5.852 = 72,35% -> 72,4
+    assert (a["tornano"], a["clienti_noti"]) == (4_234, 5_852)
 
 
 @pytest.mark.skipif(shutil.which("git") is None, reason="git non disponibile")

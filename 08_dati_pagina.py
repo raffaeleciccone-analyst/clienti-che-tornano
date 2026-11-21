@@ -83,9 +83,18 @@ def main() -> None:
         return round(float(1 - ((vivi["quota_attivi"] - med) ** 2).sum()
                            / ((vivi["quota_attivi"] - vivi["quota_attivi"].mean()) ** 2).sum()) * 100, 1)
 
+    def insieme():
+        # le due spiegazioni sommate, non raggruppate per coppia (vedi 05_analisi.py)
+        X = pd.get_dummies(vivi[["mese_relativo", "cal"]].astype(str), drop_first=True).astype(float)
+        X.insert(0, "costante", 1.0)
+        y = vivi["quota_attivi"].to_numpy(float)
+        coef, *_ = np.linalg.lstsq(X.to_numpy(), y, rcond=None)
+        res = y - X.to_numpy() @ coef
+        return round(float(1 - (res ** 2).sum() / ((y - y.mean()) ** 2).sum()) * 100, 1)
+
     d["spiegata"] = {"eta": spiegata("mese_relativo"),
                      "calendario": spiegata("cal"),
-                     "insieme": spiegata(["mese_relativo", "cal"])}
+                     "insieme": insieme()}
 
     bil = vivi[vivi["mesi_osservabili"] >= 12]
     d["panel_bilanciato"] = {
@@ -177,10 +186,24 @@ def main() -> None:
     # 2/10/2026: lo stesso confronto senza girare in tondo (vedi valore_futuro.py)
     d["valore_futuro"] = valore_futuro.misura(dd, tenuti["coorte"], rng)
 
-    # il limite: quanto è largo il tasso di ritorno vero
-    d["anonimi"] = {"fatture": 8752, "clienti_noti": 5852, "tornano": 4234,
-                    "quota_alta": 72.3,
-                    "quota_bassa": round(4234 / (5852 + 8752) * 100, 1)}
+    # il limite: quanto è largo il tasso di ritorno vero (RISULTATI.md §7).
+    # Fino al 21/11/2026 questi numeri erano scritti a mano, e «72.3» era un
+    # arrotondamento sbagliato di 4.234 / 5.852 = 72,35%. Ora si calcolano: i clienti
+    # dal database, le fatture senza cliente dal file originale (nel database non ci sono).
+    noti, tornano = eng.connect().execute(text("""
+        SELECT COUNT(*), SUM(n > 1) FROM
+          (SELECT cliente_key, COUNT(*) AS n FROM fatto_ordine GROUP BY cliente_key) t
+    """)).one()
+    noti, tornano = int(noti), int(tornano)
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("carica", QUI / "04_carica.py")
+    carica = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(carica)
+    grezzo = carica.leggi_grezzo()
+    fatture_anonime = int(grezzo.loc[grezzo["Customer ID"].isna(), "Invoice"].nunique())
+    d["anonimi"] = {"fatture": fatture_anonime, "clienti_noti": noti, "tornano": tornano,
+                    "quota_alta": round(tornano / noti * 100, 1),
+                    "quota_bassa": round(tornano / (noti + fatture_anonime) * 100, 1)}
 
     USCITA.parent.mkdir(exist_ok=True)
     USCITA.write_text(json.dumps(d, ensure_ascii=False, indent=1, allow_nan=False),

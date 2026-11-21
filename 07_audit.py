@@ -115,7 +115,7 @@ def a_clienti_senza_nome(eng):
           f"{tornano / clienti_noti * 100:.1f}%")
     print(f"  fatture SENZA cliente (DATI-SPORCHI §2)   {fatture_senza:>7,}")
     print("""
-  Il 72,3% è calcolato solo su chi ha un identificativo. Chi non ce l'ha è
+  Il 72,4% è calcolato solo su chi ha un identificativo. Chi non ce l'ha è
   fuori dal conto — e non è un pezzo neutro: se quelle fatture fossero clienti
   occasionali, sarebbero tutti «uno e basta».
 
@@ -130,9 +130,9 @@ def a_clienti_senza_nome(eng):
     esito(scritto,
           f"Il tasso di ritorno sta fra il {basso:.0f}% e il {tornano/clienti_noti*100:.0f}% "
           f"a seconda di chi sono gli anonimi.\n    "
-          + ("RISULTATI.md lo dice, e dice che il 72,3% è sui clienti identificati."
+          + ("RISULTATI.md lo dice, e dice che il 72,4% è sui clienti identificati."
              if scritto else
-             "RISULTATI.md NON lo dice: presenta il 72,3% come se fosse la clientela."))
+             "RISULTATI.md NON lo dice: presenta il 72,4% come se fosse la clientela."))
 
 
 def b_squilibrio_residuo(pc, rng):

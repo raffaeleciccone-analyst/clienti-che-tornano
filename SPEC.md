@@ -50,8 +50,8 @@ I numeri attesi sono quelli di `DATI-SPORCHI.md` e `RISULTATI.md` (sezione 9 per
 
 **Pulizia (F1)**
 - C1. Dal file originale: 1.067.371 righe → 1.033.034 senza duplicati → 797.883 con cliente →
-  779.493 senza storni e quantità negative → 779.423 senza prezzi non positivi → 776.575 senza codici
-  che non sono prodotti (POST, DOT, M, BANK CHARGES…).
+  779.493 senza storni e quantità negative → 779.405 senza prezzi sotto un penny → 776.577 senza codici
+  che non sono prodotti (lista chiusa in `regole.py`; SP1002 e PADS restano, vedi R1).
 - C2. L'impronta sha256 del file originale è quella scritta nel README: nessuno script lo modifica.
 - C3. Le 1.088 fatture presenti in tutti e due i fogli contano una volta sola.
 
@@ -74,7 +74,8 @@ I numeri attesi sono quelli di `DATI-SPORCHI.md` e `RISULTATI.md` (sezione 9 per
 
 **Limite dei clienti anonimi (F7)**
 - C10. 22,8% delle righe senza `Customer ID` (8.752 fatture); il tasso di chi torna sta fra il 29,0% e
-  il 72,3% a seconda di chi sono gli anonimi.
+  il 72,4% a seconda di chi sono gli anonimi (4.234 clienti che tornano su 5.852 identificati;
+  fino al 21/11 era scritto a mano «72,3%», un arrotondamento sbagliato di 72,35%).
 
 **Consegne (F8)**
 - C11. La pagina `index.html` funziona aperta da file (dati incorporati, nessun `fetch`), le cifre chiave
@@ -94,6 +95,30 @@ I numeri attesi sono quelli di `DATI-SPORCHI.md` e `RISULTATI.md` (sezione 9 per
   quanto i dati permettono.
 - C16. I numeri citati nel README e in `DOMANDA.md` coincidono con quelli dei criteri (oggi `DOMANDA.md`
   parla di 63 controlli, sono 68).
+
+## 5b. Regole di calcolo
+*(aggiunte il 21/11/2026 dopo una ricostruzione alla cieca: un agente che aveva solo i documenti ha
+dovuto indovinarle. Erano scritte solo nel codice.)*
+
+- R1. **Pulizia:** le regole stanno in `regole.py` e solo lì. Duplicato = uguale nelle sei colonne di
+  `CHIAVE`. Prezzo minimo £0,01 (sotto non è una vendita). La lista dei codici non-prodotto è chiusa e
+  ogni codice ha il suo motivo; `SP1002` (lavagnetta) e `PADS` (imbottiture) **sono prodotti**.
+- R2. **Giorni:** si contano fra date del calendario, non fra istanti. Le finestre includono gli estremi:
+  "entro 90 giorni" = giorno 0-90, la spesa "dopo" = giorni 91-365, l'anno = giorni 0-365.
+- R3. **Coorti:** la coorte è il mese della prima fattura; dicembre 2009 e dicembre 2011 sono fuori. Una
+  cella esiste solo se il mese è finito; le 253 celle osservate non contano il mese +0 (che vale sempre 100%).
+- R4. **Media per mese del calendario:** media semplice delle celle di quel mese, non pesata per clienti.
+- R5. **Quota di variazione spiegata:** 1 − (scarti dal modello)² / (scarti dalla media)². Per età e per
+  calendario il modello è la media del gruppo; per "insieme" è la somma dei due effetti (minimi quadrati),
+  non il raggruppamento per coppia.
+- R6. **Sopravvivenza media:** media semplice della quota che sopravvive dal 2º al 6º gradino.
+- R7. **Confronti a parità (£756 e £150):** i decili si calcolano su tutti i 3.334 clienti; lo strato è
+  decile × coorte; uno strato entra solo se ha **almeno 3 clienti da ogni parte** (tornati e non); la
+  differenza è la media delle differenze degli strati pesata per la dimensione dello strato. Intervallo:
+  2.000 ricampionamenti dei clienti dentro ogni strato, percentili 2,5 e 97,5, generatore con seme
+  fisso 20260827. Con un altro generatore gli estremi possono cambiare di qualche sterlina.
+- R8. **Arrotondamento:** percentuali al decimale più vicino, sterline all'unità. Nessun numero si scrive a
+  mano negli script che producono i dati: si calcola.
 
 ## 6. Vincoli
 - MySQL 8 (funzioni finestra), password in `DB_PASSWORD`. Python per pulizia, analisi, Excel e pagina.

@@ -67,7 +67,9 @@ del calendario. Si può chiedere quale delle due la spiega.
 |---|---:|
 | il mese di vita del cliente (+1, +2, +3…) | 16,6% |
 | **il mese del calendario** (gennaio, febbraio…) | **34,8%** |
-| tutti e due insieme | 85,8% |
+| tutti e due insieme (sommati) | 52,1% |
+
+`[corretto il 21/11]` Qui c'era scritto 85,8%. Era calcolato raggruppando le celle per coppia (mese di vita, mese del calendario): su 198 coppie 143 hanno una cella sola, che si spiega da sé, quindi il numero era alto per costruzione. Sommando i due effetti, come si fa di solito, viene 52,1%. Il confronto che conta non cambia: il calendario spiega il doppio dell'età.
 
 Media della retention per mese del calendario, su tutte le coorti:
 
@@ -305,15 +307,15 @@ dei soldi.
 `DATI-SPORCHI.md` dichiara che il **22,8% delle righe non ha un `Customer ID`** — 8.752
 fatture — e avverte che il fatturato citato non è quello del negozio. Giusto. Ma quella
 avvertenza era stata applicata **solo ai soldi**, e non alla cifra che apre tutto il
-progetto: il 72,3% di clienti che tornano.
+progetto: il 72,4% di clienti che tornano.
 
-Quel 72,3% è calcolato su chi ha un identificativo. Chi non ce l'ha è fuori dal conto,
+Quel 72,4% è calcolato su chi ha un identificativo. Chi non ce l'ha è fuori dal conto,
 e non è un pezzo neutro: se le fatture anonime fossero clienti occasionali, sarebbero
 tutti «uno e basta».
 
 | ipotesi sugli anonimi | clienti | tornano |
 |---|---:|---:|
-| sono gli stessi già contati (nessun cliente in più) | 5.852 | **72,3%** |
+| sono gli stessi già contati (nessun cliente in più) | 5.852 | **72,4%** |
 | ogni fattura anonima è un cliente diverso mai più tornato | 14.604 | **29,0%** |
 
 **Il tasso di ritorno vero sta fra il 29% e il 72%**, e con questi dati non si stringe:
@@ -338,7 +340,7 @@ del confronto, quindi non lo inclinano. Sposterebbero il livello di una percentu
 il segno di una differenza.
 
 **E il confronto con Olist regge lo stesso.** In `DOMANDA.md` la scelta del dataset si
-appoggia a 72,3% contro 3,1%. Olist non ha ordini anonimi, quindi i due denominatori non
+appoggia a 72,4% contro 3,1%. Olist non ha ordini anonimi, quindi i due denominatori non
 sono la stessa cosa e il paragone è generoso verso questo dataset. Anche prendendo
 l'estremo pessimista — **29% contro 3,1%** — la conclusione non cambia: lì una matrice
 di coorte sarebbe stata una tabella di zeri, qui no.
@@ -449,7 +451,7 @@ quattro cose da sistemare, tutte sistemate qui sopra:
 
 | trovato | com'era | com'è adesso |
 |---|---|---|
-| il 22,8% senza cliente non era mai stato applicato al tasso di ritorno | «il 72,3% torna» | «il 72,3% dei clienti **identificati** torna», con l'intervallo 29–72% — sezione 7 |
+| il 22,8% senza cliente non era mai stato applicato al tasso di ritorno | «il 72,4% torna» | «il 72,4% dei clienti **identificati** torna», con l'intervallo 29–72% — sezione 7 |
 | i percentili del tempo sono tagliati a 365 giorni | «di chi tornerà» | «di chi torna **entro l'anno**» |
 | la geometrica usa il `p` stimato dagli stessi dati | «il controllo» | «una riscrittura, non una prova» |
 | per la cifra appaiata ci sono due bootstrap possibili | un intervallo senza dire quale | dichiarati tutti e due, pubblicato il più largo |

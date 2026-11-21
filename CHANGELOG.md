@@ -5,6 +5,24 @@ I numeri vecchi restano qui, non nel README.
 
 ---
 
+## 21 novembre 2026 (sera): una ricostruzione alla cieca ha trovato quattro cose
+
+Un agente che non aveva mai visto il codice ha rifatto i calcoli partendo solo dai documenti.
+Su 12 test ne passava 6. Le differenze erano decisioni scritte solo nel codice, o sbagliate.
+
+- **La lista dei codici non-prodotto era incompleta nei documenti**, e copiata in tre script.
+  Ora sta in `regole.py`, con il motivo di ogni codice. Due codici erano esclusi senza motivo e
+  sono prodotti veri: **`SP1002`** (lavagnetta per bambini, £2,95) e **`PADS`** (imbottiture per
+  cuscini). Nuova regola: **sotto un penny non è una vendita** (le righe di PADS a £0,001).
+  Prima: 776.575 righe. Adesso: **776.577**. Nessun risultato cambia.
+- **«72,3% dei clienti identificati torna» era scritto a mano**, e sbagliato: 4.234 / 5.852 =
+  72,35%, cioè **72,4%**. Ora `08_dati_pagina.py` lo calcola.
+- **«Età e calendario insieme spiegano l'85,8%» era gonfiato:** raggruppava per coppia, e 143
+  coppie su 198 hanno una cella sola. Con i due effetti sommati: **52,1%**. Il confronto fra i
+  due (34,8% contro 16,6%) non cambia.
+- **Le regole di calcolo** (finestre, strati con almeno 3 clienti per parte, media della
+  sopravvivenza, arrotondamento) ora sono scritte in `SPEC.md` §5b.
+
 ## 21 novembre 2026: requisiti scritti, test, e la soglia ritirata esce dall'Excel
 
 **Prima.** La correzione del 2 ottobre era arrivata in `RISULTATI.md`, ma non dappertutto:

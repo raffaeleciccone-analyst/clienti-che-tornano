@@ -23,10 +23,8 @@ FILE = Path(__file__).parent / "dati_grezzi" / "online_retail_II.xlsx"
 # I codici che non sono prodotti: spedizione, rettifiche, spese bancarie, campioni.
 # Si riconoscono perché non cominciano con cinque cifre, ma l'elenco si guarda a
 # occhio prima di fidarsi della regola.
-NON_PRODOTTI = {"POST", "DOT", "M", "m", "C2", "C3", "D", "S", "BANK CHARGES",
-                "AMAZONFEE", "ADJUST", "ADJUST2", "TEST001", "TEST002", "PADS",
-                "SP1002", "B", "CRUK", "gift_0001_10", "gift_0001_20",
-                "gift_0001_30", "gift_0001_40", "gift_0001_50"}
+from regole import CHIAVE as _REGOLE_CHIAVE, NON_PRODOTTI as _REGOLE_NON_PRODOTTI, PREZZO_MINIMO
+NON_PRODOTTI = set(_REGOLE_NON_PRODOTTI)  # una lista sola: regole.py
 
 
 def titolo(n, t):
@@ -182,7 +180,7 @@ def main() -> None:
     print(f"  [nota] delle {int(fuori_storno.sum()):,} quantità negative fuori dagli storni, "
           f"{int((fuori_storno & senza).sum()):,} sono su righe senza cliente")
     m &= df["Quantity"] > 0;   passi.append(("tolte le quantità <= 0", m.copy()))
-    m &= df["Price"] > 0;      passi.append(("tolti i prezzi <= 0", m.copy()))
+    m &= df["Price"] >= PREZZO_MINIMO;  passi.append(("tolti i prezzi sotto un penny", m.copy()))
     m &= ~veri_non_prod;       passi.append(("tolti i codici non-prodotto", m.copy()))
     precedente = tot
     for etichetta, maschera in passi:

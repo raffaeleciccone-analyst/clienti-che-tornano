@@ -46,7 +46,9 @@ Non è un dettaglio contabile: una fattura contata due volte diventa un cliente 
 ordinato due volte. Su un'analisi che misura *quante volte un cliente torna*, questo
 difetto spinge il risultato esattamente nella direzione che si spera di trovare.
 
-Le righe identiche in tutto sono 34.337 (3,2%), e **tutte e 45.046 le righe delle
+Le righe uguali nelle sei colonne della chiave (fattura, articolo, quantità, data, prezzo,
+cliente: `CHIAVE` in `regole.py`) sono 34.337 (3,2%); identiche in tutte le colonne,
+descrizione e paese compresi, 34.335 `[precisato il 21/11]`. E **tutte e 45.046 le righe delle
 fatture in comune sono duplicati esatti**: la sovrapposizione è una riesportazione
 pulita, non due versioni discordanti della stessa fattura. Controllato apposta, perché
 se i due fogli avessero avuto valori diversi per la stessa riga la deduplica avrebbe
@@ -119,7 +121,7 @@ valore di chi ha reso, mescolando due cose diverse — la frequenza e la soddisf
 **Passaggio: `Togli le fatture di storno`.** Il valore stornato resta scritto qui, e
 va citato quando si parla di ricavo.
 
-## 4. Prezzi non positivi (779.493 → 779.423)
+## 4. Prezzi sotto un penny (779.493 → 779.405)
 
 - **6.202 righe a prezzo zero**, di cui solo 71 con cliente noto: sono in larghissima
   parte campioni e rettifiche già escluse al passaggio 2.
@@ -127,9 +129,11 @@ va citato quando si parla di ricavo.
   debt`**: fino a −53.594 in una riga sola. Sono crediti inesigibili, cioè scritture
   contabili. Un credito inesigibile non è un acquisto.
 
-**Passaggio: `Togli i prezzi non positivi` (70 righe residue).**
+- `[aggiunto il 21/11]` **18 righe a prezzo positivo ma sotto un penny**: 17 di `PADS` a £0,001 e una di `BANK CHARGES`. Non sono vendite: sono segnaposto e omaggi.
 
-## 5. Codici che non sono prodotti (779.423 → 776.575)
+**Passaggio: `Togli i prezzi sotto un penny` (88 righe residue).** La soglia, £0,01, sta in `regole.py` (`PREZZO_MINIMO`). Fino al 21/11 la regola era «prezzo > 0» e toglieva 70 righe.
+
+## 5. Codici che non sono prodotti (779.405 → 776.577)
 
 Fra i 5.305 codici articolo ce ne sono che prodotti non sono:
 
@@ -146,6 +150,10 @@ Fra i 5.305 codici articolo ce ne sono che prodotti non sono:
 | `AMAZONFEE` | 43 | commissione Amazon |
 | `gift_0001_*` | 100 | buoni regalo |
 
+L'elenco completo, con il motivo di ogni codice, sta in **`regole.py`**, l'unico posto da cui lo leggono gli script. Oltre a quelli della tabella: `m` (rettifica, minuscolo), `C3` (spedizione), `B` (debito inesigibile), `CRUK` (commissione a un ente benefico), `ADJUST2` (rettifica manuale), `TEST001` e `TEST002` (prodotti di prova).
+
+`[corretto il 21/11]` Fino al 21/11 questa tabella era incompleta e il codice escludeva anche **`SP1002`** e **`PADS`** senza motivo scritto. Una ricostruzione fatta solo dai documenti se n'è accorta: arrivava a 776.607 righe invece di 776.575. Guardandoli, `SP1002` è una lavagnetta per bambini venduta a £2,95 e `PADS` sono imbottiture per cuscini: **sono prodotti, e restano**. Le righe di `PADS` a £0,001 escono comunque, con la regola del penny (§4). Effetto: due righe in più (776.577), nessun risultato cambia.
+
 `POST` in un carrello è spedizione, non un articolo comprato: contarlo gonfia il
 numero di articoli per ordine e altera il valore medio dello scontrino.
 
@@ -157,7 +165,7 @@ prende anche `DCGS0058` (*MISO PRETTY GUM*), `DCGSSGIRL`, `DCGSSBOY`: quelli son
 prodotti veri con una sigla diversa. L'elenco dei non-prodotti è scritto a mano dopo
 averli guardati, non dedotto da un'espressione regolare.
 
-**Passaggio: `Togli i codici non-prodotto` (2.848 righe).**
+**Passaggio: `Togli i codici non-prodotto` (2.828 righe).**
 
 ## 6. Valori fuori scala — che vanno tenuti
 
@@ -207,12 +215,12 @@ estere non basta a dire niente sui mercati esteri.
 | 1 — via i duplicati | 1.033.034 | −34.337 |
 | 2 — via le righe senza cliente | 797.883 | −235.151 |
 | 3 — via gli storni | 779.493 | −18.390 |
-| 4 — via i prezzi non positivi | 779.423 | −70 |
-| 5 — via i codici non-prodotto | **776.575** | −2.848 |
+| 4 — via i prezzi sotto un penny | 779.405 | −88 |
+| 5 — via i codici non-prodotto | **776.577** | −2.828 |
 
 | | |
 |---|---:|
-| righe che restano | 776.575 (**72,8%**) |
+| righe che restano | 776.577 (**72,8%**) |
 | clienti | 5.852 |
 | fatture | 36.594 |
 | ricavo | 17.068.016 |

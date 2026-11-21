@@ -9,7 +9,7 @@ Costruito il 27 agosto 2026. Lo schema sta in `03_schema.sql`, il caricamento in
 
 | tabella | una riga è | righe |
 |---|---|---:|
-| `fatto_riga` | una riga di fattura (fattura × articolo) | 776.575 |
+| `fatto_riga` | una riga di fattura (fattura × articolo) | 776.577 |
 | `fatto_ordine` | una fattura | 36.594 |
 | `dim_cliente` | un cliente | 5.852 |
 | `dim_articolo` | un codice articolo | 4.619 |
@@ -25,7 +25,7 @@ aveva **tre difetti che si vedono solo provando a chiamarlo con il suo nome**:
    di dimensione: derivate dai fatti, e libere di andare fuori sincrono senza che
    nessuno se ne accorga. Al momento del cambio coincidevano ancora, ma niente lo
    garantiva.
-2. **La descrizione dell'articolo stava ripetuta su 776.575 righe** — 19,8 MB di testo
+2. **La descrizione dell'articolo stava ripetuta su 776.577 righe** — 19,8 MB di testo
    per 5.254 valori diversi. E **622 codici avevano più di una descrizione**, una cosa
    che nessuno era mai stato costretto a decidere finché non è esistita una
    dimensione a cui serviva una riga sola per codice.
@@ -180,7 +180,7 @@ coorti, non per questo conteggio):
 | gradino | clienti | quota | giorni dal precedente |
 |---|---:|---:|---:|
 | 1º ordine | 5.852 | 100% | — |
-| 2º | 4.234 | **72,3%** | 99,0 |
+| 2º | 4.234 | **72,4%** | 99,0 |
 | 3º | 3.289 | 56,2% | 83,7 |
 | 4º | 2.630 | 44,9% | 73,4 |
 | 5º | 2.141 | 36,6% | 66,0 |
