@@ -116,7 +116,8 @@ dovuto indovinarle. Erano scritte solo nel codice.)*
   decile × coorte; uno strato entra solo se ha **almeno 3 clienti da ogni parte** (tornati e non); la
   differenza è la media delle differenze degli strati pesata per la dimensione dello strato. Intervallo:
   2.000 ricampionamenti dentro ogni strato, tornati e non tornati ricampionati separatamente, percentili 2,5 e 97,5, generatore con seme
-  fisso 20260827. Con un altro generatore gli estremi possono cambiare di qualche sterlina.
+  fisso 20260827. Con un altro generatore gli estremi cambiano: una ricostruzione indipendente
+  è "uguale" se le stime coincidono e ogni estremo sta entro £25 da quello pubblicato.
 - R7b. Strati validi: 110 (98,6% dei clienti) a parità di primo ordine, 89 (84,3%) a parità di spesa a
   90 giorni. *(i "105 strati, 95%" di RISULTATI §6 sono del metodo ritirato il 2/10)*
 - R7c. **Dettagli del valore:** il "primo ordine" per i decili è il valore della prima fattura; un cliente
