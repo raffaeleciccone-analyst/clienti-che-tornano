@@ -202,7 +202,7 @@ Scritto adesso, non alla fine, così non diventa una giustificazione a posterior
 ## Com'è finita
 
 Le risposte stanno in `RISULTATI.md`, ricontrollate una a una da `06_ricontrollo.py`
-(63 controlli, rifatti dalle tabelle di base senza passare dalle viste).
+(68 controlli, rifatti dalle tabelle di base senza passare dalle viste).
 
 Due cose sono andate diversamente da come erano scritte qui, e una non era prevista:
 

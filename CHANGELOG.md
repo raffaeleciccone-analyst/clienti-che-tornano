@@ -5,6 +5,24 @@ I numeri vecchi restano qui, non nel README.
 
 ---
 
+## 21 novembre 2026: requisiti scritti, test, e la soglia ritirata esce dall'Excel
+
+**Prima.** La correzione del 2 ottobre era arrivata in `RISULTATI.md`, ma non dappertutto:
+il foglio Leggimi dell'Excel apriva ancora «LA RISPOSTA» con «Riattivare conviene finché
+costa meno di margine × 1.125 £», e il foglio «Valore e pareggio» calcolava quella soglia con
+le formule. Il README la presentava come una funzione, e diceva che l'analisi indica «a
+quale costo le due strade si equivalgono». `DOMANDA.md` parlava di 63 controlli.
+
+**Perché era sbagliato.** Un numero ritirato non deve restare calcolabile in un file che si
+passa di mano: chi apre l'Excel legge la prima risposta e si ferma lì.
+
+**Adesso.** Il foglio si chiama «Valore» e mostra la sezione 9 (£1.355 contro £432, £756 e
+£150 con gli intervalli), con la spiegazione del perché una soglia non si può calcolare.
+`10_excel.py` controlla che le cifre ritirate non ricompaiano. I controlli sono 68.
+Il progetto ha ora [`SPEC.md`](SPEC.md) (17 criteri), [`PIANO.md`](PIANO.md) e un test per
+criterio in `tests/`; la pulizia di `04_carica.py` è una funzione (`pulisci()`) che i test
+possono contare senza caricare il database.
+
 ## 2 ottobre 2026: il valore di chi torna girava in tondo
 
 **Prima.** «Fra i clienti entrati nel 2010, chi arriva al secondo ordine spende nel primo

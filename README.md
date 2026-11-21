@@ -54,10 +54,11 @@ parti.
 
 ## Cosa l'analisi non può dire
 
-- **Se convenga trattenere o acquisire:** manca il costo di acquisizione. L'analisi dice
-  a quale costo le due strade si equivalgono.
-- **Il profitto:** manca il costo del venduto, quindi si misura il ricavo. Il margine è un
-  parametro da impostare.
+- **Se convenga trattenere o acquisire:** manca il costo di acquisizione.
+- **Fino a quanto conviene spendere per far tornare un cliente:** chi torna da solo è
+  soprattutto chi spendeva già di più, quindi non si può assumere che un cliente riportato
+  con una campagna si comporti come lui. Serve un test con la riattivazione assegnata a caso.
+- **Il profitto:** manca il costo del venduto, quindi si misura il ricavo.
 - **Perché un cliente torna:** non ci sono dati su campagne, canali o visite al sito.
 - **Un rapporto di causa:** "i clienti che tornano valgono di più" è vero; "farli tornare
   li fa valere di più" andrebbe provato con un esperimento.
@@ -69,9 +70,9 @@ parti.
 
 ## Cosa contiene il progetto
 
-- **`clienti-che-tornano.xlsx`**: cartella Excel con sei fogli: istruzioni, matrici di
-  retention, riacquisto, valore e punto di pareggio (con formule vere: si cambia il
-  margine e la soglia si ricalcola), dati in formato lungo pronti per una tabella pivot.
+- **`clienti-che-tornano.xlsx`**: cartella Excel con sei fogli: istruzioni, le due matrici
+  di retention (per età e per calendario), riacquisto, valore (con gli intervalli), dati in
+  formato lungo pronti per una tabella pivot.
 - **`index.html`**: la [pagina interattiva](https://raffaeleciccone-analyst.github.io/clienti-che-tornano/). La matrice di retention si
   può allineare per età del cliente o per mese del calendario, così la stagionalità si
   vede direttamente.
@@ -108,6 +109,19 @@ e l'ho rifatto decidendo chi "torna" nei primi 90 giorni e contando la spesa sol
 | `sito/prova_pagina.js` | prova la pagina fuori dal browser (Node) |
 
 Serve **MySQL 8** e la password del database nella variabile `DB_PASSWORD`.
+
+### Requisiti e test
+
+Cosa deve fare l'analisi e come si controlla è scritto in [`SPEC.md`](SPEC.md) (17 criteri) e
+[`PIANO.md`](PIANO.md). Ogni criterio ha un test in `tests/`:
+
+```
+pip install -r requirements-test.txt
+python -m pytest tests -v
+```
+
+Senza MySQL i test che rifanno i conti sul database si saltano; gli altri controllano la
+pulizia sul file originale, i numeri della pagina e dell'Excel, e i documenti.
 
 ---
 

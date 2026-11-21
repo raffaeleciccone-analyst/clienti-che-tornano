@@ -62,31 +62,53 @@ def url() -> str:
     return f"mysql+pymysql://root:{quote_plus(pwd)}@localhost/{DB}"
 
 
-def passo(df: pd.DataFrame, nome: str, tieni: pd.Series) -> pd.DataFrame:
+def passo(df: pd.DataFrame, nome: str, tieni: pd.Series, stampa: bool = True) -> pd.DataFrame:
     prima = len(df)
     fuori = df[tieni]
-    print(f"  {nome:<38} {len(fuori):>9,}  ({len(fuori) - prima:+,})")
+    if stampa:
+        print(f"  {nome:<38} {len(fuori):>9,}  ({len(fuori) - prima:+,})")
     return fuori
 
 
-def main() -> None:
-    print("Lettura del grezzo...")
+def leggi_grezzo(con_foglio: bool = False) -> pd.DataFrame:
+    """Il file com'è, i due fogli uno sotto l'altro. con_foglio aggiunge il nome del
+    foglio di provenienza: serve ai test (SPEC C3), non al caricamento."""
     fogli = pd.read_excel(FILE, sheet_name=None)
+    if con_foglio:
+        fogli = {n: f.assign(foglio=n) for n, f in fogli.items()}
     df = pd.concat(fogli.values(), ignore_index=True)
     df.columns = [c.strip() for c in df.columns]
     # Invoice arriva con due tipi: interi per le fatture normali, stringhe per
     # gli storni. Vedi DATI-SPORCHI.md, nota al §1.
     df["Invoice"] = df["Invoice"].astype(str)
     df["StockCode"] = df["StockCode"].astype(str)
+    return df
+
+
+def pulisci(df: pd.DataFrame, stampa: bool = True):
+    """Le pulizie di DATI-SPORCHI.md, nell'ordine. Restituisce le righe rimaste e,
+    per ogni passaggio, quante righe restano dopo (SPEC C1)."""
+    passaggi = []
+    for nome, regola in [
+        ("Togli le righe duplicate", lambda d: ~d.duplicated(subset=CHIAVE)),
+        ("Tieni solo le righe con cliente", lambda d: d["Customer ID"].notna()),
+        ("Togli le fatture di storno", lambda d: ~d["Invoice"].str.startswith("C")),
+        ("Togli i prezzi non positivi", lambda d: d["Price"] > 0),
+        ("Togli le quantita non positive", lambda d: d["Quantity"] > 0),
+        ("Togli i codici non-prodotto", lambda d: ~d["StockCode"].isin(NON_PRODOTTI)),
+    ]:
+        df = passo(df, nome, regola(df), stampa)
+        passaggi.append((nome, len(df)))
+    return df, passaggi
+
+
+def main() -> None:
+    print("Lettura del grezzo...")
+    df = leggi_grezzo()
 
     print("\nPulizia — i nomi sono quelli di DATI-SPORCHI.md")
     print(f"  {'il file com e':<38} {len(df):>9,}")
-    df = passo(df, "Togli le righe duplicate", ~df.duplicated(subset=CHIAVE))
-    df = passo(df, "Tieni solo le righe con cliente", df["Customer ID"].notna())
-    df = passo(df, "Togli le fatture di storno", ~df["Invoice"].str.startswith("C"))
-    df = passo(df, "Togli i prezzi non positivi", df["Price"] > 0)
-    df = passo(df, "Togli le quantita non positive", df["Quantity"] > 0)
-    df = passo(df, "Togli i codici non-prodotto", ~df["StockCode"].isin(NON_PRODOTTI))
+    df, _ = pulisci(df)
 
     df["cliente_id"] = df["Customer ID"].astype(int)
     df["valore"] = (df["Quantity"] * df["Price"]).round(2)

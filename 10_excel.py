@@ -4,10 +4,10 @@ Legge sito/dati.json, gli stessi numeri della pagina e di RISULTATI.md. Non
 rifà nessun conto: se una cifra qui non torna con i documenti, il colpevole è
 uno solo ed è 08_dati_pagina.py.
 
-Il foglio del pareggio contiene FORMULE VERE, non valori incollati: chi apre il
-file cambia il margine nella sua cella e la soglia si ricalcola. Era la
-richiesta di DOMANDA.md — «il margine resta un parametro dichiarato, non un
-risultato» — e in un foglio di calcolo si mantiene meglio che altrove.
+Fino al 21/11/2026 c'era un foglio «Valore e pareggio» con le formule di una
+soglia di spesa. La soglia è stata ritirata il 2/10 (RISULTATI.md §9) e il
+foglio ora si chiama «Valore»: mostra i numeri corretti e spiega perché una
+soglia non si può calcolare (SPEC C17).
 
 Uso:  python 10_excel.py
 """
@@ -21,7 +21,6 @@ from openpyxl import Workbook
 from openpyxl.formatting.rule import ColorScaleRule
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
-from openpyxl.worksheet.datavalidation import DataValidation
 
 try:
     sys.stdout.reconfigure(encoding="utf-8")
@@ -39,7 +38,6 @@ INCHIOSTRO = "FF15181B"
 TENUE = "FF5D656C"
 OTTONE = "FF8A6414"
 CARTA = "FFF2F3F4"
-INPUT = "FFFDF3D6"
 
 T_TITOLO = Font(name="Calibri", size=17, bold=True, color=INCHIOSTRO)
 T_H2 = Font(name="Calibri", size=12, bold=True, color=OTTONE)
@@ -47,12 +45,9 @@ T_TESTA = Font(name="Calibri", size=9, bold=True, color=TENUE)
 T_NORM = Font(name="Calibri", size=10.5, color=INCHIOSTRO)
 T_TENUE = Font(name="Calibri", size=9.5, color=TENUE)
 T_FORTE = Font(name="Calibri", size=10.5, bold=True, color=INCHIOSTRO)
-T_GROSSO = Font(name="Calibri", size=20, bold=True, color=OTTONE)
 
 SOTTILE = Side(style="thin", color="FFD6DADE")
 BORDO = Border(bottom=SOTTILE)
-BOX = Border(left=Side(style="medium", color=OTTONE), right=Side(style="medium", color=OTTONE),
-             top=Side(style="medium", color=OTTONE), bottom=Side(style="medium", color=OTTONE))
 
 
 def scrivi(ws, cella, valore, font=T_NORM, formato=None, riemp=None,
@@ -101,34 +96,22 @@ def foglio_leggimi(wb, d):
         "",
     ])
 
-    v = d["valore"]
+    # La risposta è quella corretta il 2/10/2026 (RISULTATI.md §9). La versione del
+    # 27 agosto e la soglia di spesa sono ritirate e non compaiono qui (SPEC C17).
+    f = d["valore_futuro"]
     scrivi(ws, f"B{r}", "LA RISPOSTA", T_H2); r += 1
     r = testo(ws, r, [
-        f"Fra i clienti entrati nel 2010, chi arriva al secondo ordine spende nel primo "
-        f"anno {v['torna']['media']:,} £ contro {v['non_torna']['media']:,} £."
+        f"Fra i {f['clienti']:,} clienti entrati nel 2010, chi torna entro 90 giorni spende dal "
+        f"giorno 91 al 365 in media {f['tornati_media']:,} £, gli altri {f['altri_media']:,} £."
         .replace(",", "."),
-        f"Confrontando solo clienti che al primo acquisto erano uguali, il divario resta "
-        f"{v['appaiata']:,} £ (intervallo {v['appaiata_ic'][0]:,}–{v['appaiata_ic'][1]:,}): "
-        f"ne sopravvive l'{round(v['appaiata']/v['grezza']*100)}%.".replace(",", "."),
-        "Riattivare conviene finché costa meno di  margine × 1.125 £.  "
-        "Il foglio «Valore e pareggio» lo calcola col tuo margine.",
-        "",
-    ])
-
-    # 2/10/2026: il confronto sopra girava in tondo (vedi valore_futuro.py)
-    f = d["valore_futuro"]
-    scrivi(ws, f"B{r}", "CORRETTO IL 2 OTTOBRE 2026", T_H2); r += 1
-    r = testo(ws, r, [
-        "Il confronto qui sopra definiva «chi torna» con gli ordini del primo anno e "
-        "misurava la spesa dello stesso anno: la differenza conteneva gli ordini del ritorno.",
-        f"Rifatto con i primi 90 giorni che decidono il gruppo e la spesa dal giorno 91 al "
-        f"365: a parità di primo ordine chi è tornato spende {f['pari_partenza']['stima']:,} £ "
-        f"in più; a parità di spesa nei primi 90 giorni solo {f['pari_spesa_90']['stima']:,} £ "
-        f"(intervallo {f['pari_spesa_90']['ic'][0]:,}–{f['pari_spesa_90']['ic'][1]:,}, "
-        f"comprende lo zero).".replace(",", "."),
-        "Per prevedere la spesa futura basta la spesa iniziale (lettura predittiva, non "
-        "causale). La soglia del foglio «Valore e pareggio» è ritirata: resta per mostrare "
-        "cosa diceva.",
+        f"A parità di primo ordine il divario resta {f['pari_partenza']['stima']:,} £ "
+        f"(intervallo {f['pari_partenza']['ic'][0]:,}–{f['pari_partenza']['ic'][1]:,}); a parità "
+        f"di spesa nei primi 90 giorni scende a {f['pari_spesa_90']['stima']:,} £ (intervallo "
+        f"{f['pari_spesa_90']['ic'][0]:,}–{f['pari_spesa_90']['ic'][1]:,}, comprende lo zero)."
+        .replace(",", "."),
+        "Per prevedere la spesa futura basta la spesa iniziale. È una lettura predittiva, "
+        "non causale: quanto renda riattivare un cliente lo può dire solo un test con la "
+        "riattivazione assegnata a caso. Il foglio «Valore» spiega perché.",
         "",
     ])
 
@@ -147,9 +130,8 @@ def foglio_leggimi(wb, d):
     scrivi(ws, f"B{r}", "COSA QUESTI NUMERI NON DICONO", T_H2); r += 1
     r = testo(ws, r, [
         "• Non dicono se trattenere convenga più che acquisire: manca il costo di "
-        "acquisizione. Dicono a che prezzo le due cose si equivalgono.",
-        "• Misurano ricavo, non profitto: manca il costo del venduto. Il margine è un "
-        "parametro dichiarato, non un risultato.",
+        "acquisizione.",
+        "• Misurano ricavo, non profitto: manca il costo del venduto.",
         f"• Il 22,8% delle righe non ha un identificativo cliente. Il tasso di ritorno "
         f"vero sta fra il {d['anonimi']['quota_bassa']}% e il {d['anonimi']['quota_alta']}%: "
         f"si scrive «tre clienti IDENTIFICATI su quattro tornano».",
@@ -164,7 +146,7 @@ def foglio_leggimi(wb, d):
         "Python e SQL (MySQL 8, funzioni finestra). Le pulizie, il modello, le verifiche e "
         "i limiti stanno nel repo, un documento per ognuno.",
         "Le cifre di questo file escono dallo stesso file di dati della pagina web, e sono "
-        "ricontrollate da uno script che rifà 63 conti dalle tabelle di base.",
+        "ricontrollate da uno script che rifà 68 conti dalle tabelle di base.",
     ], font=T_TENUE)
 
 
@@ -318,103 +300,70 @@ def foglio_riacquisto(wb, d):
 
 
 # ═════════════════════════════════════════════════════════════════════════
-def foglio_pareggio(wb, d):
-    ws = wb.create_sheet("Valore e pareggio")
-    ws.sheet_view.showGridLines = False
-    for col, w in (("A", 34), ("B", 14), ("C", 14), ("D", 4), ("E", 58)):
-        ws.column_dimensions[col].width = w
-    v = d["valore"]
+def foglio_valore(wb, d):
+    """Quanto spende dopo chi torna presto: RISULTATI.md §9, corretto il 2/10/2026.
 
-    scrivi(ws, "A1", "Quanto vale chi torna, e fino a quanto conviene spendere", T_TITOLO)
-    scrivi(ws, "A2", "Spesa nei primi 365 giorni dal primo ordine, finestra uguale per "
-                     "tutti.", T_TENUE)
+    Fino al 21/11 questo foglio si chiamava «Valore e pareggio» e calcolava con le
+    formule una soglia di spesa. La soglia è stata ritirata il 2/10 (il confronto su
+    cui poggiava girava in tondo) e il 21/11 è uscita dal foglio: un numero ritirato
+    non deve restare calcolabile in un file che si passa di mano (SPEC C17)."""
+    ws = wb.create_sheet("Valore")
+    ws.sheet_view.showGridLines = False
+    for col, w in (("A", 44), ("B", 14), ("C", 14), ("D", 14), ("E", 4)):
+        ws.column_dimensions[col].width = w
+    f = d["valore_futuro"]
+
+    scrivi(ws, "A1", "Quanto spende dopo chi torna presto", T_TITOLO)
+    scrivi(ws, "A2", f"I {f['clienti']:,} clienti entrati nel 2010. I primi 90 giorni dal primo "
+                     f"ordine decidono il gruppo; la spesa si conta dal giorno 91 al 365."
+                     .replace(",", "."), T_TENUE)
 
     R0 = 4
-    for i, t in enumerate(["", "clienti", "spesa media", "", "mediana"]):
+    for i, t in enumerate(["", "clienti", "spesa media", "mediana"]):
         if t:
             scrivi(ws, f"{get_column_letter(1+i)}{R0}", t, T_TESTA, bordo=BORDO,
                    allinea=Alignment(horizontal="right" if i else "left"))
-    scrivi(ws, f"A{R0+1}", "chi torna", T_FORTE)
-    scrivi(ws, f"B{R0+1}", v["torna"]["clienti"], T_FORTE, "#,##0")
-    scrivi(ws, f"C{R0+1}", v["torna"]["media"], T_FORTE, '#,##0 "£"')
-    scrivi(ws, f"E{R0+1}", v["torna"]["mediana"], T_NORM, '#,##0 "£"')
-    scrivi(ws, f"A{R0+2}", "chi si ferma al primo ordine", T_NORM)
-    scrivi(ws, f"B{R0+2}", v["non_torna"]["clienti"], T_NORM, "#,##0")
-    scrivi(ws, f"C{R0+2}", v["non_torna"]["media"], T_NORM, '#,##0 "£"')
-    scrivi(ws, f"E{R0+2}", v["non_torna"]["mediana"], T_NORM, '#,##0 "£"')
-    scrivi(ws, f"A{R0+4}", "Media e mediana sono lontane: la distribuzione ha una coda "
-                           "lunga. Si mostrano tutte e due.", T_TENUE)
+    scrivi(ws, f"A{R0+1}", "tornati entro 90 giorni", T_FORTE)
+    scrivi(ws, f"B{R0+1}", f["tornati"], T_FORTE, "#,##0")
+    scrivi(ws, f"C{R0+1}", f["tornati_media"], T_FORTE, '#,##0 "£"')
+    scrivi(ws, f"D{R0+1}", f["tornati_mediana"], T_NORM, '#,##0 "£"')
+    scrivi(ws, f"A{R0+2}", "non tornati", T_NORM)
+    scrivi(ws, f"B{R0+2}", f["clienti"] - f["tornati"], T_NORM, "#,##0")
+    scrivi(ws, f"C{R0+2}", f["altri_media"], T_NORM, '#,##0 "£"')
+    scrivi(ws, f"D{R0+2}", f["altri_mediana"], T_NORM, '#,##0 "£"')
+    scrivi(ws, f"A{R0+3}", "Media e mediana sono lontane: la spesa ha una coda lunga.", T_TENUE)
 
-    r = R0 + 6
-    scrivi(ws, f"A{r}", "MA CHI TORNA ERA GIÀ DIVERSO IL PRIMO GIORNO", T_H2); r += 1
-    scrivi(ws, f"A{r}", "Se aveva speso di più al primo acquisto spenderà di più anche in "
-                        "totale, e quella parte del divario non dipende dal ritorno. Si "
-                        "confrontano allora solo clienti appaiati per dimensione del primo "
-                        "ordine e mese di ingresso.", T_TENUE); r += 2
-
-    for i, t in enumerate(["confronto", "differenza", "intervallo 95%"]):
+    r = R0 + 5
+    scrivi(ws, f"A{r}", "MA CHI TORNA ERA GIÀ DIVERSO", T_H2); r += 1
+    scrivi(ws, f"A{r}", "Si confrontano clienti che partivano uguali. Intervalli al 95%, "
+                        "2.000 ricampionamenti dentro ogni strato.", T_TENUE); r += 2
+    for i, t in enumerate(["confronto", "differenza", "da", "a"]):
         scrivi(ws, f"{get_column_letter(1+i)}{r}", t, T_TESTA, bordo=BORDO,
                allinea=Alignment(horizontal="right" if i else "left"))
-    scrivi(ws, f"A{r+1}", "grezzo", T_NORM)
-    scrivi(ws, f"B{r+1}", v["grezza"], T_NORM, '#,##0 "£"')
-    scrivi(ws, f"C{r+1}", f"{v['grezza_ic'][0]:,} – {v['grezza_ic'][1]:,}".replace(",", "."),
-           T_NORM, allinea=Alignment(horizontal="right"))
-    scrivi(ws, f"A{r+2}", "fra clienti appaiati", T_FORTE)
-    dif = scrivi(ws, f"B{r+2}", v["appaiata"], T_FORTE, '#,##0 "£"')
-    scrivi(ws, f"C{r+2}", f"{v['appaiata_ic'][0]:,} – {v['appaiata_ic'][1]:,}".replace(",", "."),
-           T_NORM, allinea=Alignment(horizontal="right"))
-    r += 4
-    scrivi(ws, f"A{r}", f"Sopravvive l'{round(v['appaiata']/v['grezza']*100)}% della "
-                        f"differenza grezza. Non si dimezza: la dimensione del primo ordine "
-                        f"spiega una fetta del divario, e non la fetta grossa.", T_TENUE)
-
-    # ── il pareggio, con formule vere ────────────────────────────────────
-    r += 3
-    scrivi(ws, f"A{r}", "IL PUNTO DI PAREGGIO", T_H2); r += 1
-    scrivi(ws, f"A{r}", "Cambia il margine nella cella gialla: la soglia si ricalcola.",
-           T_NORM); r += 2
-
-    r_marg = r
-    scrivi(ws, f"A{r}", "Il tuo margine", T_FORTE)
-    cel = scrivi(ws, f"B{r}", 0.20, Font(name="Calibri", size=12, bold=True, color=INCHIOSTRO),
-                 "0%", riemp=INPUT, allinea=Alignment(horizontal="center"), bordo=BOX)
-    scrivi(ws, f"E{r}", "← scrivi qui il tuo margine, fra 0% e 100%", T_TENUE)
-    dv = DataValidation(type="decimal", operator="between", formula1=0, formula2=1,
-                        allow_blank=False, showErrorMessage=True,
-                        errorTitle="Margine fuori scala",
-                        error="Il margine è una quota fra 0% e 100%.")
-    ws.add_data_validation(dv)
-    dv.add(cel)
+    righe = [("grezzo", f["grezza"], f["grezza_ic"], T_NORM),
+             ("a parità di primo ordine e coorte", f["pari_partenza"]["stima"],
+              f["pari_partenza"]["ic"], T_FORTE),
+             ("a parità di spesa nei primi 90 giorni", f["pari_spesa_90"]["stima"],
+              f["pari_spesa_90"]["ic"], T_FORTE)]
+    for nome, stima, ic, font in righe:
+        r += 1
+        scrivi(ws, f"A{r}", nome, font)
+        scrivi(ws, f"B{r}", stima, font, '#,##0 "£"')
+        scrivi(ws, f"C{r}", ic[0], T_NORM, '#,##0 "£";-#,##0 "£"')
+        scrivi(ws, f"D{r}", ic[1], T_NORM, '#,##0 "£"')
     r += 2
 
-    r_stima = r
-    scrivi(ws, f"A{r}", "Differenza appaiata (stima)", T_NORM)
-    scrivi(ws, f"B{r}", v["appaiata"], T_NORM, '#,##0 "£"'); r += 1
-    r_basso = r
-    scrivi(ws, f"A{r}", "Estremo basso dell'intervallo", T_NORM)
-    scrivi(ws, f"B{r}", v["appaiata_ic"][0], T_NORM, '#,##0 "£"'); r += 2
-
-    scrivi(ws, f"A{r}", "Soglia sulla stima", T_NORM)
-    scrivi(ws, f"B{r}", f"=B{r_marg}*B{r_stima}", T_NORM, '#,##0 "£"')
-    scrivi(ws, f"E{r}", "quanto rende in media riportare un cliente al secondo ordine",
-           T_TENUE); r += 1
-
-    scrivi(ws, f"A{r}", "Soglia prudente", T_FORTE)
-    scrivi(ws, f"B{r}", f"=B{r_marg}*B{r_basso}", T_GROSSO, '#,##0 "£"')
-    ws.row_dimensions[r].height = 28
-    scrivi(ws, f"E{r}", "LA CIFRA SU CUI DECIDERE: regge anche se la stima è ottimista",
-           T_FORTE); r += 3
-
+    scrivi(ws, f"A{r}", "PERCHÉ QUI NON C'È UNA SOGLIA DI SPESA", T_H2); r += 1
     testo(ws, r, [
-        "Perché una soglia e non un verdetto. La domanda di partenza era se convenga "
-        "trattenere o acquisire: questi dati non possono dirlo, perché non contengono il "
-        "costo di acquisizione né il costo del venduto.",
-        "Ma il buco non si tappa dichiarandolo — si chiude cambiando cosa si consegna. "
-        "Chi decide mette il proprio margine e legge la sua risposta, e il conto regge "
-        "anche quando i suoi numeri cambiano.",
-        "",
-        "Il margine è un parametro dichiarato, non un risultato: senza il costo del "
-        "venduto quello che si misura è ricavo, non profitto.",
+        "La domanda di partenza chiedeva fino a quanto conviene spendere per far tornare un "
+        "cliente. Questi numeri non lo permettono:",
+        "• a parità di spesa nei primi 90 giorni il ritorno aggiunge "
+        f"{f['pari_spesa_90']['stima']} £ e l'intervallo comprende lo zero: chi torna da solo è "
+        "soprattutto chi spendeva già di più;",
+        "• quindi non si può assumere che un cliente riportato con una campagna si comporti "
+        "come chi è tornato da solo.",
+        "Per rispondere serve un test: due gruppi di clienti con la stessa spesa iniziale, la "
+        "riattivazione mandata a uno solo, scelto a caso.",
     ], font=T_TENUE)
 
 
@@ -458,7 +407,7 @@ def verifica(d) -> list[str]:
     wb = load_workbook(USCITA)
 
     attesi = ["Leggimi", "Matrice per età", "Matrice per calendario",
-              "Riacquisto", "Valore e pareggio", "Coorti (mese d'ingresso)"]
+              "Riacquisto", "Valore", "Coorti (mese d'ingresso)"]
     for nome in attesi:
         if nome not in wb.sheetnames:
             guai.append(f"manca il foglio «{nome}»")
@@ -495,21 +444,20 @@ def verifica(d) -> list[str]:
     if miste:
         guai.append(f"colonne che mescolano mesi diversi: {miste}")
 
-    # il pareggio deve contenere FORMULE, non numeri incollati
-    ws = wb["Valore e pareggio"]
-    formule = [c.value for riga in ws.iter_rows() for c in riga
-               if isinstance(c.value, str) and c.value.startswith("=")]
-    if len(formule) < 2:
-        guai.append(f"il foglio del pareggio ha {len(formule)} formule invece di 2: "
-                    f"i valori sono incollati, e cambiare il margine non farebbe niente")
+    # la soglia di spesa è ritirata (2/10) e non deve ricomparire (SPEC C17)
+    testi_min = " ".join(str(c.value) for ws in wb for riga in ws.iter_rows()
+                         for c in riga if c.value is not None).lower()
+    for ritirato in ("pareggio", "margine ×", "1.125", "1.374"):
+        if ritirato in testi_min:
+            guai.append(f"compare ancora «{ritirato}», che appartiene alla soglia ritirata")
 
     # le cifre chiave devono comparire da qualche parte
     testi = " ".join(str(c.value) for ws in wb for riga in ws.iter_rows()
                      for c in riga if c.value is not None)
-    v = d["valore"]
-    for nome, atteso in (("differenza appaiata", v["appaiata"]),
-                         ("estremo basso", v["appaiata_ic"][0]),
-                         ("media di chi torna", v["torna"]["media"])):
+    f = d["valore_futuro"]
+    for nome, atteso in (("a parità di primo ordine", f["pari_partenza"]["stima"]),
+                         ("a parità di spesa nei 90 giorni", f["pari_spesa_90"]["stima"]),
+                         ("spesa media di chi torna", f["tornati_media"])):
         if str(atteso) not in testi and f"{atteso:,}".replace(",", ".") not in testi:
             guai.append(f"la cifra «{nome}» ({atteso}) non compare nel file")
     return guai
@@ -525,7 +473,7 @@ def main() -> None:
     foglio_matrice(wb, d, per_calendario=False)
     foglio_matrice(wb, d, per_calendario=True)
     foglio_riacquisto(wb, d)
-    foglio_pareggio(wb, d)
+    foglio_valore(wb, d)
     n = foglio_dati(wb, d)
 
     wb.properties.title = "Clienti che tornano"
@@ -536,8 +484,9 @@ def main() -> None:
     print(f"scritto {USCITA.name}  ({USCITA.stat().st_size / 1024:.0f} KB)")
     print(f"  fogli: {', '.join(wb.sheetnames)}")
     print(f"  righe nel foglio dati: {n}")
-    print(f"  differenza appaiata: {d['valore']['appaiata']:,} "
-          f"[{d['valore']['appaiata_ic'][0]:,}, {d['valore']['appaiata_ic'][1]:,}]")
+    f = d["valore_futuro"]
+    print(f"  a parità di primo ordine: {f['pari_partenza']['stima']:,} "
+          f"[{f['pari_partenza']['ic'][0]:,}, {f['pari_partenza']['ic'][1]:,}]")
 
     guai = verifica(d)
     if guai:
@@ -546,7 +495,7 @@ def main() -> None:
             print(f"  - {g}")
         sys.exit(1)
     print("  riaperto e ricontrollato: le due matrici contengono le stesse celle,")
-    print("  le colonne del calendario sono mesi veri, il pareggio ha formule vive")
+    print("  le colonne del calendario sono mesi veri, la soglia ritirata non compare")
 
 
 if __name__ == "__main__":
