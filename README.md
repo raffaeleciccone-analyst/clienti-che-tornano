@@ -1,190 +1,127 @@
 # Quanto vale un cliente che torna
 
-Analisi di coorte, retention e riacquisto su **Online Retail II** — un negozio online
-britannico di articoli da regalo, dicembre 2009 – dicembre 2011, 1.067.371 righe.
+Analisi di coorte, retention e riacquisto sul dataset **Online Retail II**: un negozio
+online britannico di articoli da regalo, da dicembre 2009 a dicembre 2011, 1.067.371 righe.
 
-La domanda è una sola, ed è stata scritta prima di aprire SQL:
+**Domanda:** quanto vale un cliente che torna? Conviene di più trattenerlo o acquisirne
+uno nuovo?
 
-> **Quanto vale un cliente che torna, e conviene di più trattenerlo o acquisirne uno
-> nuovo?**
+**Strumenti:** MySQL 8 (funzioni finestra), Python, Excel.
 
----
-
-## Cos'è venuto fuori
-
-**La retention di questo negozio non è una curva di abbandono: è un calendario.** Il
-mese dell'anno, preso da solo, spiega il doppio della variazione rispetto all'età del cliente (34,8% contro 16,6% della
-variazione). A novembre torna il 25% dei clienti, a febbraio il 12%. Una classifica
-delle coorti per retention misurerebbe il mese di ingresso, non la qualità dei clienti.
-
-**Chi torna presto spende di più anche dopo, ma lo prevede già quanto ha speso.** Fra i
-3.334 clienti entrati nel 2010, il gruppo si decide nei primi 90 giorni e la spesa si
-conta dal giorno 91 al 365. A parità di primo ordine chi è tornato spende **£756** in
-più (£548–£1.025). A parità di spesa nei primi 90 giorni il vantaggio scende a **£150**
-(da −£67 a £374): sapere che ha fatto più di un ordine non aggiunge quasi niente a
-quanto ha speso. È una lettura predittiva, non causale: la spesa dei primi 90 giorni
-contiene già il secondo ordine (`RISULTATI.md`, sezione 9).
-
-**La sopravvivenza da un ordine al successivo è costante: 72,3% a ogni gradino.**
-Arrivare al secondo ordine non mette al sicuro — «portali al secondo acquisto e sono
-tuoi» qui è falso.
-
-**La soglia di silenzio oltre la quale un cliente è perso non esiste.** La probabilità
-di ritorno cala in modo regolare e non crolla mai. Resta la mediana: 64 giorni.
-
-Due domande poste all'inizio non hanno avuto risposta, e sta scritto: il valore a 24
-mesi **non è misurabile** (nessuna coorte utile ha 24 mesi interi), e la soglia di
-silenzio **non c'è**.
+**[Apri la pagina interattiva](https://raffaeleciccone-analyst.github.io/clienti-che-tornano/)**
 
 ---
 
-## Cosa ho deciso io
+## Risultati
 
-La domanda è quella di base di ogni e-commerce: quanto vale un cliente che torna. Il legame tra ritorni e calendario è emerso dall'analisi. Il primo confronto, £1.374, l'ha messo in dubbio una revisione che ho chiesto all'IA: ho rifatto il conto con il gruppo deciso nei primi 90 giorni.
+- **La retention segue il calendario, non l'anzianità del cliente.** Il mese dell'anno
+  spiega il doppio della variazione rispetto all'età del cliente (34,8% contro 16,6%).
+  A novembre torna il 25% dei clienti, a febbraio il 12%. Confrontare le coorti per
+  retention vuol dire confrontare il mese in cui sono entrate, non la qualità dei clienti.
+- **Chi torna presto spende di più anche dopo, ma lo si capisce già da quanto ha speso.**
+  Sui 3.334 clienti entrati nel 2010: a parità di primo ordine, chi torna nei primi 90
+  giorni spende **£756 in più** nei mesi successivi (intervallo £548–£1.025). A parità di
+  spesa nei primi 90 giorni il vantaggio scende a **£150** (da −£67 a £374). Il numero di
+  ordini aggiunge poco a quanto il cliente ha già speso.
+- **A ogni ordine torna il 72,3% dei clienti, sempre uguale.** Arrivare al secondo
+  acquisto non rende il cliente più fedele: "portali al secondo ordine e sono tuoi" qui
+  non vale.
+- **Non c'è un momento in cui il cliente è perso.** La probabilità di ritorno cala
+  piano, senza un crollo. Il tempo mediano tra un ordine e l'altro è 64 giorni.
+
+Due domande iniziali sono rimaste senza risposta: il valore del cliente a 24 mesi non si
+può misurare (nessuna coorte ha 24 mesi completi di dati) e una soglia di abbandono non
+esiste.
 
 ---
 
-## I documenti, nell'ordine in cui sono stati scritti
+## Il limite più importante
 
-| file | cos'è |
+**Il 22,8% delle righe non ha il codice cliente** (8.752 fatture). Questo cambia la cifra
+principale:
+
+| se i clienti anonimi... | clienti | tornano |
+|---|---:|---:|
+| sono gli stessi già contati | 5.852 | 72,3% |
+| sono tutti clienti diversi, mai tornati | 14.604 | **29,0%** |
+
+Il tasso vero sta tra il 29% e il 72%, e con questi dati non si può stringere. Quindi
+la frase corretta è "tre clienti **identificati** su quattro tornano".
+
+Gli altri risultati restano validi perché sono confronti interni (chi torna contro chi
+non torna, novembre contro gennaio), e i clienti anonimi non stanno da nessuna delle due
+parti.
+
+## Cosa l'analisi non può dire
+
+- **Se convenga trattenere o acquisire:** manca il costo di acquisizione. L'analisi dice
+  a quale costo le due strade si equivalgono.
+- **Il profitto:** manca il costo del venduto, quindi si misura il ricavo. Il margine è un
+  parametro da impostare.
+- **Perché un cliente torna:** non ci sono dati su campagne, canali o visite al sito.
+- **Un rapporto di causa:** "i clienti che tornano valgono di più" è vero; "farli tornare
+  li fa valere di più" andrebbe provato con un esperimento.
+- **Età del cliente e calendario non si separano del tutto** con soli due anni di dati:
+  il calendario pesa di più, ma questo non vuol dire che l'età non conti.
+- **I dati sono del 2009-2011:** il metodo si può riusare, i numeri no.
+
+---
+
+## Cosa contiene il progetto
+
+- **`clienti-che-tornano.xlsx`**: cartella Excel con sei fogli: istruzioni, matrici di
+  retention, riacquisto, valore e punto di pareggio (con formule vere: si cambia il
+  margine e la soglia si ricalcola), dati in formato lungo pronti per una tabella pivot.
+- **`index.html`**: la [pagina interattiva](https://raffaeleciccone-analyst.github.io/clienti-che-tornano/). La matrice di retention si
+  può allineare per età del cliente o per mese del calendario, così la stagionalità si
+  vede direttamente.
+
+Excel e pagina leggono gli stessi dati (`sito/dati.json`), quindi i numeri coincidono.
+
+Ho usato un assistente IA per scrivere il codice. La domanda, il metodo e la verifica dei
+numeri sono miei. Per esempio, il primo confronto dava £1.374 di differenza: era falsato,
+e l'ho rifatto decidendo chi "torna" nei primi 90 giorni e contando la spesa solo dopo.
+
+### Documenti
+
+| File | Contenuto |
 |---|---|
-| `DOMANDA.md` | la domanda e le cinque sotto-domande, scritte prima di guardare i dati |
-| `DATI-SPORCHI.md` | otto difetti contati sul file vero, con quante righe toglie ogni pulizia |
-| `MODELLO.md` | lo schema a stella, perché non era così all'inizio, e le quattro trappole della finestra di osservazione |
-| `RISULTATI.md` | le risposte, con gli intervalli e ciò che i numeri non dicono |
-| `CHANGELOG.md` | le correzioni dopo la pubblicazione: cosa diceva prima, perché era sbagliato, cosa dice adesso |
+| [`DOMANDA.md`](DOMANDA.md) | la domanda e le cinque sotto-domande, scritte prima di aprire i dati |
+| [`DATI-SPORCHI.md`](DATI-SPORCHI.md) | otto problemi trovati nei dati e quante righe toglie ogni pulizia |
+| [`MODELLO.md`](MODELLO.md) | lo schema a stella e le trappole della finestra di osservazione |
+| [`RISULTATI.md`](RISULTATI.md) | i risultati completi, con intervalli e limiti |
+| [`CHANGELOG.md`](CHANGELOG.md) | le correzioni fatte dopo la pubblicazione |
 
-I documenti non sono stati riscritti quando una verifica li ha smentiti: la correzione
-sta accanto a quello che diceva prima. `MODELLO.md` registrava «il salto più grande è
-il primo»; era un artefatto del tempo di osservazione, e sta lì con scritto perché.
+### Script, nell'ordine in cui si lanciano
 
----
+| Script | Cosa fa |
+|---|---|
+| `01_censimento.py` | conta i problemi nel file grezzo, senza modificarlo |
+| `02_ricontrollo.py` | ricontrolla quanto scritto in `DATI-SPORCHI.md` |
+| `04_carica.py` | pulisce i dati, crea lo schema (`03_schema.sql`) e carica MySQL |
+| `05_analisi.py` | calcola le misure |
+| `06_ricontrollo.py` | 68 controlli sui numeri di `RISULTATI.md`, rifatti dalle tabelle di base |
+| `07_audit.py` | controlla le scelte di analisi: pulizie eccessive, confronti sbilanciati, conclusioni troppo forti |
+| `08_dati_pagina.py` | prepara i dati per la pagina e per Excel |
+| `09_pagina.py` | genera `index.html` |
+| `10_excel.py` | genera la cartella Excel e la ricontrolla |
+| `sito/prova_pagina.js` | prova la pagina fuori dal browser (Node) |
 
-## Gli script, nell'ordine in cui si lanciano
-
-```
-python 01_censimento.py     conta lo sporco sul file grezzo, senza modificarlo
-python 02_ricontrollo.py    riverifica le affermazioni di DATI-SPORCHI.md
-python 04_carica.py         pulisce, carica MySQL, controlla dopo il caricamento
-python 05_analisi.py        le misure -> risultati/misure.txt
-python 06_ricontrollo.py    68 controlli sulle cifre di RISULTATI.md
-python 07_audit.py          cerca errori e bias nelle DECISIONI, non nelle cifre
-python 08_dati_pagina.py    quello che serve alla pagina -> sito/dati.json
-python 09_pagina.py         cuce dati e modello -> index.html
-python 10_excel.py          la cartella di lavoro -> clienti-che-tornano.xlsx
-node   sito/prova_pagina.js fa girare lo script della pagina con un DOM finto
-python anteprima_dati.py    una pagina per guardare il file grezzo senza Excel
-```
-
-### La cartella di lavoro
-
-`clienti-che-tornano.xlsx` e la pagina web sono due consegne della stessa analisi, e
-leggono lo stesso `sito/dati.json`: se una cifra non torna fra le due, il colpevole è
-uno solo.
-
-Sei fogli: il **Leggimi** con la domanda, la risposta e i limiti; **due matrici** con le
-stesse celle nei due allineamenti, da confrontare; il **riacquisto** col funnel e il
-tempo al secondo ordine; **valore e pareggio**; e i **dati in formato lungo**, una riga
-per cella, da cui si fa una tabella pivot senza dover disfare una matrice larga.
-
-Il foglio del pareggio contiene **formule vere**, non valori incollati: si cambia il
-margine nella cella gialla e la soglia si ricalcola. Era la richiesta di `DOMANDA.md` —
-il margine resta un parametro dichiarato, non un risultato — e in un foglio di calcolo
-si mantiene meglio che altrove, perché chi legge può cliccare sulla cella e vedere da
-dove viene il numero.
-
-Lo script riapre il file dopo averlo scritto e lo confronta con i dati di partenza:
-openpyxl scrive senza lamentarsi anche quando il risultato è sbagliato — una cella
-spostata di una riga, una formula diventata testo, una matrice allineata male.
-
-### La pagina
-
-`index.html` è la pagina pubblicata. I dati sono **incorporati**, non caricati con
-`fetch`: `fetch` su `file://` è bloccato dal browser, e una pagina che funziona solo
-quando sta su un server è una pagina che chi la scarica vede rotta senza capire
-perché.
-
-Il problema di progetto era uno solo: **impedire che la matrice si legga come una
-discesa**. Quindi la matrice non è un'illustrazione, è l'interazione centrale — le
-stesse celle, allineabili per età del cliente o per mese del calendario. Nel secondo
-allineamento ogni riga parte dal suo mese vero e le colonne si accendono tutte insieme:
-la stagionalità si vede invece di doverla credere. Nessun dato viene rimaneggiato per
-ottenere l'effetto, cambiano solo le posizioni.
-
-`sito/prova_pagina.js` fa girare lo script della pagina fuori dal browser con un DOM
-finto. Non disegna niente e non sa niente di layout: serve a intercettare l'errore che
-rompe le pagine più spesso, cioè quello che lascia il documento vuoto senza dire
-perché. Controlla anche che le cifre chiave compaiano davvero nel testo prodotto, non
-solo nei dati.
-
-`03_schema.sql` lo applica `04_carica.py`. Serve **MySQL 8** (funzioni finestra) e la
-password in `DB_PASSWORD`.
-
-### Perché due script di verifica separati
-
-`06_ricontrollo.py` rifà i conti **dalle tabelle di base, senza passare dalle viste**:
-se una vista è sbagliata, la differenza salta fuori. Non rilancia `05_analisi.py`,
-perché rifarebbe gli stessi passaggi e confermerebbe gli stessi errori.
-
-`07_audit.py` fa un'altra cosa: attacca le decisioni. Le pulizie che potevano aver tolto
-troppo, i confronti che potevano essere ancora sbilanciati, le interpretazioni che
-potevano non reggere. Cinque dei suoi nove controlli **leggono `RISULTATI.md`**: se un
-giorno quelle frasi vengono riscritte in modo più generoso di quanto i dati permettano,
-lo script torna rosso. Ha già trovato quattro cose, tutte corrette — la più grossa è
-in fondo a questa pagina.
+Serve **MySQL 8** e la password del database nella variabile `DB_PASSWORD`.
 
 ---
 
 ## I dati
 
-**Online Retail II**, UCI Machine Learning Repository, [dataset 502](https://archive.ics.uci.edu/dataset/502/online+retail+ii).
-Il file sta in `dati_grezzi/`, **come è arrivato**:
+**Online Retail II**, UCI Machine Learning Repository,
+[dataset 502](https://archive.ics.uci.edu/dataset/502/online+retail+ii).
+Il file originale è in `dati_grezzi/`, non modificato:
 
 ```
 online_retail_II.xlsx   45.622.278 byte
 sha256                  bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980
 ```
 
-**Sta nel repo apposta, e va tenuto in due fogli.** Il difetto più grosso del dataset —
-1.088 fatture presenti in tutte e due le annate, che raddoppiano dicembre 2010 — si può
-contare solo sapendo da quale foglio viene ogni riga. Convertendolo in un CSV unico quel
-conto non sarebbe più rifacibile da nessuno, e resterebbe solo la nostra parola.
-
-Il file è in sola lettura. Nessuno script lo modifica: se una decisione di pulizia
-cambia, si ricarica il database, non si aggiusta il file.
-
----
-
-## Il limite più grosso, e non è fra quelli previsti
-
-**Il 22,8% delle righe non ha un `Customer ID`** — 8.752 fatture. `DATI-SPORCHI.md` lo
-dichiarava, ma l'avvertenza era stata applicata solo al fatturato, non alla cifra che
-apre tutto: il 72,3% di clienti che tornano.
-
-| ipotesi sugli anonimi | clienti | tornano |
-|---|---:|---:|
-| sono gli stessi già contati | 5.852 | 72,3% |
-| ognuno un cliente diverso mai più tornato | 14.604 | **29,0%** |
-
-**Il tasso vero sta fra il 29% e il 72%**, e con questi dati non si stringe. Quindi si
-scrive «tre clienti **identificati** su quattro tornano», mai «tre clienti su quattro».
-
-Le altre conclusioni reggono, e non è un salvataggio: sono confronti *interni* — chi
-torna contro chi non torna, novembre contro gennaio, gradino contro gradino. Gli anonimi
-non stanno su nessuno dei due lati, quindi non li inclinano.
-
-## Cosa questa analisi non può dire
-
-- **Non dice se trattenere convenga più che acquisire**: manca il costo di acquisizione.
-  Dice a che prezzo le due cose si equivalgono.
-- **Misura ricavo, non profitto**: manca il costo del venduto. Il margine è una manopola
-  dichiarata, non un risultato.
-- **Non dice perché un cliente è tornato**: non ci sono sessioni, campagne, canali.
-- **Non dimostra un rapporto di causa.** «I clienti che tornano valgono N volte» è vero;
-  «farli tornare li fa valere N volte» non è dimostrato qui, e servirebbe un esperimento
-  con la riattivazione assegnata a caso. La differenza fra le due frasi è la differenza
-  fra un'analisi che si può usare e una che fa perdere soldi.
-- **Età del cliente + coorte = mese del calendario, per costruzione.** Con due anni di
-  dati le tre cose non si separano: si può dire che il calendario spiega più dell'età,
-  non che l'età non conti.
-- **I dati sono del 2009-2011.** Il metodo si trasferisce, i numeri no.
+L'ho lasciato in Excel con i suoi due fogli apposta: 1.088 fatture compaiono in tutti e
+due i fogli e raddoppierebbero dicembre 2010. Si possono contare solo sapendo da quale
+foglio viene ogni riga, cosa che un unico CSV non permetterebbe.
