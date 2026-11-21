@@ -171,7 +171,7 @@ riattivazione mandata a uno solo. Si può però fare due cose, e si fanno:
    (−17%), ma misurava la spesa degli stessi mesi che decidono chi torna: il confronto
    girava in tondo (`CHANGELOG.md`). Rifatto con il gruppo deciso nei primi 90 giorni e
    la spesa contata dopo: a parità di primo ordine il divario è **£756** (£548–£1.025).
-   L'appaiamento è per decile di primo ordine e coorte (105 strati, il 95% dei
+   L'appaiamento è per decile di primo ordine e coorte (110 strati, il 98,6% dei
    clienti); il paese è rimasto fuori perché il 92% è Regno Unito e gli strati
    esteri sarebbero stati troppo piccoli per stare in piedi.
 

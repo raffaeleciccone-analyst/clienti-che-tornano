@@ -115,8 +115,10 @@ dovuto indovinarle. Erano scritte solo nel codice.)*
 - R7. **Confronti a parità (£756 e £150):** i decili si calcolano su tutti i 3.334 clienti; lo strato è
   decile × coorte; uno strato entra solo se ha **almeno 3 clienti da ogni parte** (tornati e non); la
   differenza è la media delle differenze degli strati pesata per la dimensione dello strato. Intervallo:
-  2.000 ricampionamenti dei clienti dentro ogni strato, percentili 2,5 e 97,5, generatore con seme
+  2.000 ricampionamenti dentro ogni strato, tornati e non tornati ricampionati separatamente, percentili 2,5 e 97,5, generatore con seme
   fisso 20260827. Con un altro generatore gli estremi possono cambiare di qualche sterlina.
+- R7b. Strati validi: 110 (98,6% dei clienti) a parità di primo ordine, 89 (84,3%) a parità di spesa a
+  90 giorni. *(i "105 strati, 95%" di RISULTATI §6 sono del metodo ritirato il 2/10)*
 - R8. **Arrotondamento:** percentuali al decimale più vicino, sterline all'unità. Nessun numero si scrive a
   mano negli script che producono i dati: si calcola.
 
