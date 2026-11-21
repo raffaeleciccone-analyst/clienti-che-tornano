@@ -119,6 +119,11 @@ dovuto indovinarle. Erano scritte solo nel codice.)*
   fisso 20260827. Con un altro generatore gli estremi possono cambiare di qualche sterlina.
 - R7b. Strati validi: 110 (98,6% dei clienti) a parità di primo ordine, 89 (84,3%) a parità di spesa a
   90 giorni. *(i "105 strati, 95%" di RISULTATI §6 sono del metodo ritirato il 2/10)*
+- R7c. **Dettagli del valore:** il "primo ordine" per i decili è il valore della prima fattura; un cliente
+  "ha 365 giorni davanti" se l'ultima data del file meno la data del primo ordine è almeno 365; una seconda
+  fattura nello stesso giorno della prima conta come ritorno.
+- R7d. **Buoni regalo:** tutti i codici che cominciano con `gift_0001_`. **Curva del secondo ordine:** punti
+  ogni 10 giorni fino a 360; percentili con il metodo lineare (quello predefinito di numpy).
 - R8. **Arrotondamento:** percentuali al decimale più vicino, sterline all'unità. Nessun numero si scrive a
   mano negli script che producono i dati: si calcola.
 
