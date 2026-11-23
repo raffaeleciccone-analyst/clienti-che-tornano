@@ -14,10 +14,10 @@ uno nuovo?
 
 ## Risultati
 
-- **La retention segue il calendario, non l'anzianità del cliente.** Il mese dell'anno
+- **La retention segue il calendario.** Il mese dell'anno
   spiega il doppio della variazione rispetto all'età del cliente (34,8% contro 16,6%).
   A novembre torna il 25% dei clienti, a febbraio il 12%. Confrontare le coorti per
-  retention vuol dire confrontare il mese in cui sono entrate, non la qualità dei clienti.
+  retention vuol dire soprattutto confrontare il mese in cui sono entrate.
 - **Chi torna presto spende di più anche dopo, ma lo si capisce già da quanto ha speso.**
   Sui 3.334 clienti entrati nel 2010: a parità di primo ordine, chi torna nei primi 90
   giorni spende **£756 in più** nei mesi successivi (intervallo £548–£1.025). A parità di
