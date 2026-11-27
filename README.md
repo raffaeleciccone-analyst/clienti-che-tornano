@@ -23,7 +23,7 @@ uno nuovo?
   giorni spende **£756 in più** nei mesi successivi (intervallo £548–£1.025). A parità di
   spesa nei primi 90 giorni il vantaggio scende a **£150** (da −£67 a £374). Il numero di
   ordini aggiunge poco a quanto il cliente ha già speso.
-- **A ogni ordine torna il 72,3% dei clienti, sempre uguale.** Arrivare al secondo
+- **A ogni ordine torna il 72,4% dei clienti, sempre uguale.** Arrivare al secondo
   acquisto non rende il cliente più fedele: "portali al secondo ordine e sono tuoi" qui
   non vale.
 - **Non c'è un momento in cui il cliente è perso.** La probabilità di ritorno cala
